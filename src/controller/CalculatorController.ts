@@ -8,15 +8,11 @@ class CalculatorController {
     this.view.render();
 
     // Attach event listeners to buttons
+    // TODO could be to view class
     this.view.buttons.forEach((button: HTMLButtonElement) => {
       button.addEventListener("click", () => {
         this.handleButtonClick(button.innerText);
       });
-    });
-
-    // attach input from keyboard
-    this.view.expressionInput.addEventListener("input", (e: any) => {
-      this.model.setExpression(e.target.value);
     });
 
     this.view.expressionInput.addEventListener("keypress", (event: any) => {

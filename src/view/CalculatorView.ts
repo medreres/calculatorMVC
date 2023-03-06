@@ -15,6 +15,10 @@ class CalculatorView {
     this.expressionInput.type = "text";
     // this.expressionInput.disabled = true;
     this.container.appendChild(this.expressionInput);
+    // attach input from keyboard
+    this.expressionInput.addEventListener("input", () => {
+      this.model.setExpression(this.expressionInput.value);
+    });
 
     // Create the result input field
     this.resultInput = document.createElement("input");
@@ -43,6 +47,9 @@ class CalculatorView {
         const button = document.createElement("button");
         button.innerText = buttonValue;
         buttonRow.appendChild(button);
+        button.addEventListener('click', () => {
+          // this.model.setExpression()
+        })
         this.buttons.push(button);
       });
 
