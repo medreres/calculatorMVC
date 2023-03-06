@@ -56,7 +56,13 @@ class CalculatorView {
       this.buttonContainer.appendChild(buttonRow);
     });
 
+    // example
+    const example = document.createElement("p");
+    example.innerHTML = 'Example of expression: ( 1 + 2 ) * 3'
+    
     this.container.appendChild(this.buttonContainer);
+    
+    this.container.appendChild(example)
   }
 
   setModel(model: any) {
