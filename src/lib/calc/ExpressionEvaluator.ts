@@ -113,8 +113,9 @@ class ExpressionEvaluator {
     }
   }
 
-  evaluate(expression: string) {
+  evaluate(expression: string): number {
     // TODO create parses to make evalute function more flexible
+    // TODO add implicit multiplication operation
     const tokens = expression.split(' ')
 
     tokens.forEach((ch) => {
@@ -127,12 +128,12 @@ class ExpressionEvaluator {
       const operation = this.#getOperation(ch);
       if (operation) return this.#evaluateExpression(operation);
 
-      throw new Error("Invalid operator");
+      throw new Error("Invalid expression");
     });
 
     this.#performResidualOperations();
 
-    return this.numberStack.pop();
+    return this.numberStack.pop() as number;
   }
 }
 

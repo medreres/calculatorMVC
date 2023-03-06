@@ -1,4 +1,4 @@
-import ExpressionEvaluator, { Operation } from "../calc";
+import ExpressionEvaluator, { Operation } from "..";
 
 describe("testing evaluating algorithm", () => {
   const evaluator = initializeClass();
