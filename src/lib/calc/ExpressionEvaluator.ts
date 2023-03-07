@@ -1,5 +1,6 @@
 import Operation from "./Operation";
 
+// TODO spaces handler
 interface ExpressionEvaluator {
   expression: string;
 }
@@ -43,6 +44,7 @@ class ExpressionEvaluator {
    * @description adds new operation to the class
    * @param {Operation} operation  add
    */
+  // TODO check for existence of the operation being added
   addNewOperation(operation: Operation) {
     this.operations.push(operation);
   }
@@ -78,7 +80,7 @@ class ExpressionEvaluator {
     do {
       this.#performLastOperation();
       symbol = this.operatorStack.pop() as string;
-      console.log(symbol);
+      // console.log(symbol);
     } while (symbol !== "(");
 
     // let operator = operatorStack.pop();
@@ -116,7 +118,7 @@ class ExpressionEvaluator {
   evaluate(expression: string): number {
     // TODO create parses to make evalute function more flexible
     // TODO add implicit multiplication operation
-    const tokens = expression.split(' ')
+    const tokens = expression.split(" ");
 
     tokens.forEach((ch) => {
       if (!isNaN(+ch)) return this.numberStack.push(Number(ch));

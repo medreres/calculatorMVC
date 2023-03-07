@@ -1,12 +1,18 @@
-class CalculatorView {
-  model: any;
+// import Observer from "../lib/observer";
+
+import Observer from "../lib/observer";
+import ICalculatorView from "./interface";
+
+class CalculatorView extends ICalculatorView {
+  // model: any;
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
   resultInput: HTMLInputElement;
   buttonContainer: HTMLDivElement;
   buttons: HTMLButtonElement[];
   constructor() {
-    this.model = null;
+    super();
+    // this.model = null;
     this.container = document.createElement("div");
     this.container.classList.add("calculator");
 
@@ -16,9 +22,6 @@ class CalculatorView {
     // this.expressionInput.disabled = true;
     this.container.appendChild(this.expressionInput);
     // attach input from keyboard
-    this.expressionInput.addEventListener("input", () => {
-      this.model.setExpression(this.expressionInput.value);
-    });
 
     // Create the result input field
     this.resultInput = document.createElement("input");
@@ -47,9 +50,6 @@ class CalculatorView {
         const button = document.createElement("button");
         button.innerText = buttonValue;
         buttonRow.appendChild(button);
-        button.addEventListener('click', () => {
-          // this.model.setExpression()
-        })
         this.buttons.push(button);
       });
 
@@ -58,21 +58,67 @@ class CalculatorView {
 
     // example
     const example = document.createElement("p");
-    example.innerHTML = 'Example of expression: ( 1 + 2 ) * 3'
-    
+    example.innerHTML = "Example of expression: ( 1 + 2 ) * 3";
+
     this.container.appendChild(this.buttonContainer);
-    
-    this.container.appendChild(example)
+
+    this.container.appendChild(example);
   }
 
-  setModel(model: any) {
-    this.model = model;
+  setExpression(expression: string) {
+    this.expressionInput.value = expression;
+  }
+  getExpression(): string {
+    return this.expressionInput.value;
   }
 
-  render() {
-    this.expressionInput.value = this.model.expression;
-    this.resultInput.value = this.model.result;
+  setObservers(observer: Observer) {
+    // set event broadcasting for button clicks
+    this.buttons.forEach((button) => {
+      let clickHandler;
+      if (button.innerHTML === "=")
+        clickHandler = () => {
+          observer.notify("calculate", button.innerHTML);
+        };
+      else {
+        clickHandler = (e: any) => {
+          const data = e.target.innerHTML;
+          const isNumber = !isNaN(+data);
+          const expression = `${this.expressionInput.value}${isNumber ? "" : " "}${data}${isNumber ? "" : " "}`;
+          this.expressionInput.value = expression;
+          observer.notify("expressionInputChange", expression);
+        };
+      }
+
+      button.addEventListener("click", clickHandler);
+    });
+
+    // set event broadcasting for input
+    this.expressionInput.addEventListener("input", (e: any) => {
+      observer.notify("expressionInputChange", e.target.value);
+    });
+
+    // evaluate event
+    this.expressionInput.addEventListener("keypress", (event: any) => {
+      // If the user presses the "Enter" key on the keyboard
+      if (event.key === "Enter") {
+        observer.notify("calculate");
+      }
+    });
+
+    observer.on("calculated", (data: string) => {
+      this.resultInput.value = data;
+    });
   }
+
+  // setModel(model: any) {
+  //   this.model = model;
+  // }
+
+  // render() {
+  //   this.expressionInput.value = this.model.expression;
+  //   this.resultInput.value = this.model.result;
+  // }
 }
 
 export default CalculatorView;

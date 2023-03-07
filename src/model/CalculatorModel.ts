@@ -1,29 +1,28 @@
 import ExpressionEvaluator from "../lib/calc";
-interface CalculatorModel {
-  expression: string;
-  result: number | string;
-}
-class CalculatorModel {
+import Observer from "../lib/observer";
+import ICalculatorModel from "./interface";
+class CalculatorModel extends ICalculatorModel {
   private calculator = new ExpressionEvaluator();
-  constructor() {
-    this.expression = "";
-    this.result = 0;
-  }
-
-  setExpression(expression: string) {
-    this.expression = expression;
-  }
-
-  setResult(result: number) {
-    this.result = result;
-  }
 
   calculate() {
     try {
       this.result = this.calculator.evaluate(this.expression);
-    } catch (error ) {
+    } catch (error) {
       this.result = error as any;
     }
+  }
+
+  setObservers(observer: Observer) {
+    observer.on("calculate", () => {
+      this.calculate();
+      observer.notify("calculated", this.result);
+    });
+
+    observer.on("expressionInputChange", (data: string) => {
+      // const isNumber = !isNaN(+data);
+      // const expression = `${this.expression}${isNumber ? "" : " "}${data}${isNumber ? "" : " "}`;
+      this.setExpression(data);
+    });
   }
 }
 
