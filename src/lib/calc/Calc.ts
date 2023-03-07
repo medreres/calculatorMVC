@@ -1,7 +1,7 @@
 import Operation from "./Operation";
 
 // TODO spaces handler
-// TODO negative numbers not handled correctly
+// TODO negative numbers not handled correctly -1 + 2
 interface ExpressionEvaluator {
   expression: string;
 }
@@ -26,7 +26,7 @@ class ExpressionEvaluator {
       new Operation("lg", 3, (a: number) => Math.log10(a)),
       new Operation("ln", 3, (a: number) => Math.log(a)),
       new Operation("exp", 3, (a: number) => Math.exp(a)),
-      new Operation("extanp", 3, (a: number) => Math.tan(a)),
+      new Operation("tan", 3, (a: number) => Math.tan(a)),
       new Operation("(", 0, () => 0),
       new Operation(")", 0, () => 0),
     ];
@@ -54,6 +54,8 @@ class ExpressionEvaluator {
     const lastOperationSymbol = this.operatorStack.pop() as string;
     const lastOperation = this.#getOperation(lastOperationSymbol) as Operation;
 
+    if (lastOperationSymbol === "(") throw new Error("Invald expression");
+
     const result = this.#performOperation(lastOperation);
     this.numberStack.push(result);
     return lastOperationSymbol;
@@ -63,7 +65,11 @@ class ExpressionEvaluator {
     const operands = [];
 
     for (let i = 0; i < operation.operation.length; i++) {
-      operands.push(this.numberStack.pop());
+      const number = this.numberStack.pop();
+
+      if (isNaN(number as number)) throw new Error("Invalid expression");
+
+      operands.push(number);
     }
 
     // reverse beacuse operands come in reverse order
@@ -80,9 +86,11 @@ class ExpressionEvaluator {
     // let operator;
     do {
       this.#performLastOperation();
-      symbol = this.operatorStack.pop() as string;
+      symbol = this.operatorStack[this.operatorStack.length - 1];
       // console.log(symbol);
     } while (symbol !== "(");
+
+    this.operatorStack.pop();
 
     // let operator = operatorStack.pop();
     // while (operator !== "(") {
@@ -98,7 +106,7 @@ class ExpressionEvaluator {
     // const currentOperation = this.#getOperation(operation) as Operation;
     const prevOperation = this.#getOperation(this.operatorStack[this.operatorStack.length - 1]) as Operation;
 
-    if (operation.precedence < prevOperation.precedence) {
+    if (operation.precedence <= prevOperation.precedence) {
       this.#performLastOperation();
     }
 
@@ -116,12 +124,130 @@ class ExpressionEvaluator {
     }
   }
 
-  evaluate(expression: string): number {
-    // TODO create parses to make evalute function more flexible
-    // TODO add implicit multiplication operation
-    const tokens = expression.split(" ");
+  #parseExpression(expr: string) {
+    const tokens = [];
+    let currentToken = "";
+    const regexRaw = `[${this.operations
+      .filter((operation) => operation.symbol.length === 1)
+      .map((operation) => `\\${operation.symbol}`)}]`;
+    const regex = new RegExp(regexRaw);
 
-    tokens.forEach((ch) => {
+    // const tokens = [];
+    // let currentToken = "";
+
+    for (let i = 0; i < expr.length; i++) {
+      const char = expr.charAt(i);
+
+      if (char === " ") {
+        // ignore whitespace
+        continue;
+      } else if (/\d/.test(char) || char === "." || (char === "-" && currentToken.length === 0)) {
+        // append digits and decimal points to current token
+        currentToken += char;
+      } else if (regex.test(char)) {
+        // push current token and operator to tokens array
+        if (currentToken !== "") {
+          tokens.push(currentToken);
+          currentToken = "";
+        }
+        tokens.push(char);
+      } else if (/[a-zA-Z]/.test(char)) {
+        // parse function name and push to tokens array
+        let functionName = char;
+        i++;
+
+        while (i < expr.length && /[a-zA-Z]/.test(expr.charAt(i))) {
+          functionName += expr.charAt(i);
+          i++;
+        }
+
+        if (currentToken !== "") {
+          tokens.push(currentToken);
+          currentToken = "";
+        }
+
+        tokens.push(functionName);
+        i--;
+      } else if (char === "-" && (i === 0 || /[^\d\.]/.test(expr.charAt(i - 1)))) {
+        // handle negative numbers
+        currentToken = "-";
+      } else {
+        // invalid character
+        throw new Error(`Invalid character '${char}' at position ${i}`);
+      }
+    }
+
+    // push last token to array (if it exists)
+    if (currentToken !== "") {
+      tokens.push(currentToken);
+    }
+
+    if (tokens[0] === "-") {
+      tokens.shift();
+      tokens[0] = -tokens[0];
+    }
+
+    return tokens;
+
+    // // console.log(regexRaw);
+
+    // for (let i = 0; i < expr.length; i++) {
+    //   const char = expr.charAt(i);
+
+    //   if (char === " ") {
+    //     // ignore whitespace
+    //     continue;
+    //   } else if (/\-?\d/.test(char) || char === ".") {
+    //     // append digits and decimal points to current token
+    //     currentToken += char;
+    //     // TODO dynamic regex expression depending on available opertions
+    //   } else if (regex.test(char)) {
+    //     // push current token and operator to tokens array
+    //     if (currentToken !== "") {
+    //       tokens.push(currentToken);
+    //       currentToken = "";
+    //     }
+    //     tokens.push(char);
+    //   } else if (/[a-zA-Z]/.test(char)) {
+    //     // parse function name and push to tokens array
+    //     let functionName = char;
+    //     i++;
+
+    //     while (i < expr.length && /[a-zA-Z]/.test(expr.charAt(i))) {
+    //       functionName += expr.charAt(i);
+    //       i++;
+    //     }
+
+    //     if (currentToken !== "") {
+    //       tokens.push(currentToken);
+    //       currentToken = "";
+    //     }
+
+    //     tokens.push(functionName);
+    //     i--;
+    //   } else {
+    //     // invalid character
+    //     throw new Error(`Invalid character '${char}' at position ${i}`);
+    //   }
+    // }
+
+    // // push last token to array (if it exists)
+    // if (currentToken !== "") {
+    //   tokens.push(currentToken);
+    // }
+
+    // console.log(tokens)
+    // return tokens;
+  }
+
+  evaluate(expression: string): number {
+    // TODO add implicit multiplication operation
+    // const tokens = expression.split(" ");
+    const tokens = this.#parseExpression(expression);
+
+    // console.log(tokens);
+
+    tokens.forEach((ch: any, index: number) => {
       if (!isNaN(+ch)) return this.numberStack.push(Number(ch));
 
       // ? can be better?
@@ -131,13 +257,18 @@ class ExpressionEvaluator {
       const operation = this.#getOperation(ch);
       if (operation) return this.#evaluateExpression(operation);
 
-      throw new Error("Invalid expression");
+      throw new Error(`Invalid character ${ch} at position ${index}`);
     });
 
     this.#performResidualOperations();
 
-    return this.numberStack.pop() as number;
+    return (this.numberStack.pop() as number) ?? 0;
   }
 }
 
 export default ExpressionEvaluator;
+
+const exp = "-2 - 3 - 5";
+const calc = new ExpressionEvaluator();
+const res = calc.evaluate(exp);
+// console.log(res);

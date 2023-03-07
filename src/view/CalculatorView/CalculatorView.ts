@@ -1,65 +1,40 @@
-import Observer from "../lib/Observer";
-import CalculatorViewBaseClass from "./interface";
+import Observer from "../../lib/Observer";
+import CalculatorViewBaseClass from "../interface";
+import { ExpressionInput, ResultInput, ButtonContainer } from "./utils/elements";
 
-// all new new classes must extend from IC
 class CalculatorView extends CalculatorViewBaseClass {
   // model: any;
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
   resultInput: HTMLInputElement;
-  buttonContainer: HTMLDivElement;
+  // buttonContainer: HTMLDivElement;
   buttons: HTMLButtonElement[];
   constructor() {
     super();
     // this.model = null;
     this.container = document.createElement("div");
-    this.container.classList.add("calculator");
+    this.container.classList.add("calculator", "d-flex", "flex-column", "my-5");
 
-    // Create the expression input field
-    this.expressionInput = document.createElement("input");
-    this.expressionInput.type = "text";
-    // this.expressionInput.disabled = true;
-    this.container.appendChild(this.expressionInput);
+    const inputContainer = document.createElement("div");
+    inputContainer.classList.add("d-flex", "flex-column", "align-items-center");
+    this.container.appendChild(inputContainer);
+
     // attach input from keyboard
+    this.expressionInput = new ExpressionInput(inputContainer).expressionInput;
 
     // Create the result input field
-    this.resultInput = document.createElement("input");
-    this.resultInput.type = "text";
-    this.resultInput.disabled = true;
-    this.container.appendChild(this.resultInput);
+    this.resultInput = new ResultInput(inputContainer).resultInput;
 
     // Create the button container
-    this.buttonContainer = document.createElement("div");
-    this.buttonContainer.classList.add("buttons");
-
+    const buttonContainer = new ButtonContainer();
+    this.buttons = buttonContainer.buttons;
     // Create the buttons
-    this.buttons = [];
-    const buttonValues = [
-      ["7", "8", "9", "+"],
-      ["4", "5", "6", "-"],
-      ["1", "2", "3", "*"],
-      ["C", "0", "=", "/"],
-    ];
 
-    buttonValues.forEach((row) => {
-      const buttonRow = document.createElement("div");
-      buttonRow.classList.add("button-row");
-
-      row.forEach((buttonValue) => {
-        const button = document.createElement("button");
-        button.innerText = buttonValue;
-        buttonRow.appendChild(button);
-        this.buttons.push(button);
-      });
-
-      this.buttonContainer.appendChild(buttonRow);
-    });
-
-    // example
+    // example text
     const example = document.createElement("p");
-    example.innerHTML = "Example of expression: ( 1 + 2 ) * 3";
-
-    this.container.appendChild(this.buttonContainer);
+    example.innerHTML = "Example of expression: ( 1 + 2 ) * 3. Use parentheses to get the priorities right";
+    example.classList.add("text-center", "mt-5");
+    this.container.appendChild(buttonContainer.buttonContainer);
 
     this.container.appendChild(example);
   }
@@ -82,6 +57,12 @@ class CalculatorView extends CalculatorViewBaseClass {
       if (button.innerHTML === "=")
         clickHandler = () => {
           observer.notify("calculate", button.innerHTML);
+        };
+      else if (button.innerHTML == "C")
+        clickHandler = () => {
+          observer.notify("clearExpressionInput");
+          this.setExpression("");
+          this.setResult("");
         };
       else {
         clickHandler = (e: any) => {

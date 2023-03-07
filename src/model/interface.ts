@@ -17,6 +17,6 @@ export default abstract class CalculatorModelBaseClass {
     this.result = result;
   }
 
-  abstract calculate(): void;
+  abstract calculate(): number | string;
   abstract setObservers(observer: Observer): void;
 }

@@ -4,7 +4,7 @@ import CalculatorModelBaseClass from "./interface";
 class CalculatorModel extends CalculatorModelBaseClass {
   private calculator = new Calc();
 
-  calculate(): number {
+  calculate(): number | string {
     try {
       const result = this.calculator.evaluate(this.expression);
       this.setResult(result);
@@ -12,7 +12,9 @@ class CalculatorModel extends CalculatorModelBaseClass {
     } catch (error) {
       const errorMsg: string = (error as any).message;
       this.setResult(errorMsg);
-      throw new Error(errorMsg);
+      // console.log(error);
+      return errorMsg;
+      // throw new Error(errorMsg);
     }
   }
 
@@ -26,6 +28,11 @@ class CalculatorModel extends CalculatorModelBaseClass {
       // const isNumber = !isNaN(+data);
       // const expression = `${this.expression}${isNumber ? "" : " "}${data}${isNumber ? "" : " "}`;
       this.setExpression(data);
+    });
+
+    observer.on("clearExpressionInput", () => { 
+      this.setExpression("");
+      this.setResult("");
     });
   }
 }
