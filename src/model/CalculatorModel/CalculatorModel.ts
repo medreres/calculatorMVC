@@ -1,6 +1,6 @@
-import Calc from "../lib/Calc";
-import Observer from "../lib/Observer";
-import CalculatorModelBaseClass from "./interface";
+import Calc from "../../lib/Calc";
+import Observer from "../../lib/Observer";
+import CalculatorModelBaseClass from "../interface";
 class CalculatorModel extends CalculatorModelBaseClass {
   private calculator = new Calc();
 
@@ -30,7 +30,7 @@ class CalculatorModel extends CalculatorModelBaseClass {
       this.setExpression(data);
     });
 
-    observer.on("clearExpressionInput", () => { 
+    observer.on("clearExpressionInput", () => {
       this.setExpression("");
       this.setResult("");
     });

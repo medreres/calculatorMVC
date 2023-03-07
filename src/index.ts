@@ -1,5 +1,5 @@
 import CalculatorController from "./controller/CalculatorController";
-import CalculatorModel from "./model/CalculatorModel";
+import CalculatorModel from "./model/CalculatorModel/CalculatorModel";
 import CalculatorView from "./view/CalculatorView";
 
 const model = new CalculatorModel();

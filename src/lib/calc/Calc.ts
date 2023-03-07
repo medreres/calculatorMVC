@@ -1,7 +1,4 @@
 import Operation from "./Operation";
-
-// TODO spaces handler
-// TODO negative numbers not handled correctly -1 + 2
 interface ExpressionEvaluator {
   expression: string;
 }
@@ -45,8 +42,10 @@ class ExpressionEvaluator {
    * @description adds new operation to the class
    * @param {Operation} operation  add
    */
-  // TODO check for existence of the operation being added
   addNewOperation(operation: Operation) {
+    if (this.operations.find((op) => op.symbol === operation.symbol))
+      throw new Error(`Operation "${operation.symbol} already exists`);
+
     this.operations.push(operation);
   }
 
@@ -200,7 +199,6 @@ class ExpressionEvaluator {
     //   } else if (/\-?\d/.test(char) || char === ".") {
     //     // append digits and decimal points to current token
     //     currentToken += char;
-    //     // TODO dynamic regex expression depending on available opertions
     //   } else if (regex.test(char)) {
     //     // push current token and operator to tokens array
     //     if (currentToken !== "") {
@@ -241,7 +239,6 @@ class ExpressionEvaluator {
   }
 
   evaluate(expression: string): number {
-    // TODO add implicit multiplication operation
     // const tokens = expression.split(" ");
     const tokens = this.#parseExpression(expression);
 
