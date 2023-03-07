@@ -1,5 +1,6 @@
 import Observer from "../Observer";
 
+
 describe("Observer", () => {
   test("Observer initializes", () => {
     const foo = () => {

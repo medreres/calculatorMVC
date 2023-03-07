@@ -1,6 +1,6 @@
-import Observer from "../lib/observer";
+import Observer from "../lib/Observer";
 
-export default abstract class ICalculatorModel {
+export default abstract class CalculatorModelBaseClass {
   expression: string;
   result: number | string;
 
@@ -13,7 +13,7 @@ export default abstract class ICalculatorModel {
     this.expression = expression;
   }
 
-  setResult(result: number) {
+  setResult(result: number | string) {
     this.result = result;
   }
 

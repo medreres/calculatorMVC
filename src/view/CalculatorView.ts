@@ -1,9 +1,8 @@
-// import Observer from "../lib/observer";
+import Observer from "../lib/Observer";
+import CalculatorViewBaseClass from "./interface";
 
-import Observer from "../lib/observer";
-import ICalculatorView from "./interface";
-
-class CalculatorView extends ICalculatorView {
+// all new new classes must extend from IC
+class CalculatorView extends CalculatorViewBaseClass {
   // model: any;
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
@@ -72,6 +71,10 @@ class CalculatorView extends ICalculatorView {
     return this.expressionInput.value;
   }
 
+  setResult(result: string) {
+    this.resultInput.value = result;
+  }
+
   setObservers(observer: Observer) {
     // set event broadcasting for button clicks
     this.buttons.forEach((button) => {
@@ -85,7 +88,7 @@ class CalculatorView extends ICalculatorView {
           const data = e.target.innerHTML;
           const isNumber = !isNaN(+data);
           const expression = `${this.expressionInput.value}${isNumber ? "" : " "}${data}${isNumber ? "" : " "}`;
-          this.expressionInput.value = expression;
+          this.setExpression(expression);
           observer.notify("expressionInputChange", expression);
         };
       }
@@ -107,7 +110,7 @@ class CalculatorView extends ICalculatorView {
     });
 
     observer.on("calculated", (data: string) => {
-      this.resultInput.value = data;
+      this.setResult(data);
     });
   }
 

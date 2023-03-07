@@ -1,6 +1,7 @@
 import Operation from "./Operation";
 
 // TODO spaces handler
+// TODO negative numbers not handled correctly
 interface ExpressionEvaluator {
   expression: string;
 }
