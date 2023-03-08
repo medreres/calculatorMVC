@@ -1,8 +1,8 @@
-import ExpressionEvaluator from "../Calc";
-import Operation from "../Operation";
+// import { initializeClass } from "./utils";
+import { evaluator } from "./utils";
 
+// const evaluator = initializeClass();
 describe("Respecting priorities", () => {
-  const evaluator = initializeClass();
   test("2 + 2 * 2 = 6", () => {
     expect(evaluator.evaluate("2 + 2 * 2")).toBe(6);
   });
@@ -35,35 +35,3 @@ describe("Respecting priorities", () => {
     expect(evaluator.evaluate("2 ^ (3 !)")).toBe(64);
   });
 });
-
-function initializeClass() {
-  const evaluator = new ExpressionEvaluator();
-
-  // adding new operations
-  evaluator.addNewOperation(
-    new Operation("!", 3, (a: number) => {
-      function fact(n: number): number {
-        if (n === 0 || n === 1) {
-          return 1;
-        } else return n * fact(n - 1);
-      }
-
-      return fact(a);
-    })
-  );
-  evaluator.addNewOperation(
-    new Operation("!", 3, (a: number) => {
-      function fact(n: number): number {
-        if (n === 0 || n === 1) {
-          return 1;
-        } else return n * fact(n - 1);
-      }
-
-      return fact(a);
-    })
-  );
-
-  evaluator.addNewOperation(new Operation("tan", 3, (a: number) => Math.tan(a)));
-
-  return evaluator;
-}

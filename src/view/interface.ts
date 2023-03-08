@@ -1,8 +1,8 @@
 import Observer from "../lib/Observer";
 
-export default abstract class CalculatorViewBaseClass {
-  abstract setExpression(expression: string): void;
-  abstract getExpression(): string;
-  abstract setResult(result: string): void;
-  abstract setObservers(observer: Observer): void;
+export default interface ICalculatorView {
+  setExpression(expression: string): void;
+  getExpression(): string;
+  setResult(result: string): void;
+  setObservers(observer: Observer): void;
 }

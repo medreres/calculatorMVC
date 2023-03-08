@@ -1,8 +1,26 @@
-import Calc from "../../lib/Calc";
+import Calc from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
-import CalculatorModelBaseClass from "../interface";
-class CalculatorModel extends CalculatorModelBaseClass {
+import ICalculatorModel from "../interface";
+class CalculatorModel implements ICalculatorModel {
   private calculator = new Calc();
+  expression: string;
+  result: number | string;
+
+  constructor() {
+    this.expression = "";
+    this.result = "";
+  }
+
+  setExpression(expression: string) {
+    this.expression = expression;
+  }
+
+  setResult(result: number | string) {
+    this.result = result;
+  }
+  getResult(): string {
+    return this.result as string;
+  }
 
   calculate(): number | string {
     try {
@@ -12,9 +30,8 @@ class CalculatorModel extends CalculatorModelBaseClass {
     } catch (error) {
       const errorMsg: string = (error as any).message;
       this.setResult(errorMsg);
-      // console.log(error);
+
       return errorMsg;
-      // throw new Error(errorMsg);
     }
   }
 
@@ -25,8 +42,6 @@ class CalculatorModel extends CalculatorModelBaseClass {
     });
 
     observer.on("expressionInputChange", (data: string) => {
-      // const isNumber = !isNaN(+data);
-      // const expression = `${this.expression}${isNumber ? "" : " "}${data}${isNumber ? "" : " "}`;
       this.setExpression(data);
     });
 

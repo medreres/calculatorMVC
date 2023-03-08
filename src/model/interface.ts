@@ -1,25 +1,12 @@
 import Observer from "../lib/Observer";
 
-export default abstract class CalculatorModelBaseClass {
+export default interface ICalculatorModel {
   expression: string;
   result: number | string;
 
-  constructor() {
-    this.expression = "";
-    this.result = "";
-  }
-
-  setExpression(expression: string) {
-    this.expression = expression;
-  }
-
-  setResult(result: number | string) {
-    this.result = result;
-  }
-  getResult(): string {
-    return this.result as string;
-  }
-
-  abstract calculate(): number | string;
-  abstract setObservers(observer: Observer): void;
+  setExpression(expression: string): void;
+  setResult(result: string): void;
+  getResult(): string;
+  calculate(): number | string;
+  setObservers(observer: Observer): void;
 }

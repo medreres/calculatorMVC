@@ -1,17 +1,13 @@
 import Observer from "../../lib/Observer";
-import CalculatorViewBaseClass from "../interface";
+import ICalculatorView from "../interface";
 import { ExpressionInput, ResultInput, ButtonContainer } from "./utils/elements";
 
-class CalculatorView extends CalculatorViewBaseClass {
-  // model: any;
+class CalculatorView implements ICalculatorView {
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
   resultInput: HTMLInputElement;
-  // buttonContainer: HTMLDivElement;
   buttons: HTMLButtonElement[];
   constructor() {
-    super();
-    // this.model = null;
     this.container = document.createElement("div");
     this.container.classList.add("calculator", "d-flex", "flex-column", "my-5");
 
@@ -28,7 +24,6 @@ class CalculatorView extends CalculatorViewBaseClass {
     // Create the button container
     const buttonContainer = new ButtonContainer();
     this.buttons = buttonContainer.buttons;
-    // Create the buttons
 
     // example text
     const example = document.createElement("p");
@@ -94,15 +89,6 @@ class CalculatorView extends CalculatorViewBaseClass {
       this.setResult(data);
     });
   }
-
-  // setModel(model: any) {
-  //   this.model = model;
-  // }
-
-  // render() {
-  //   this.expressionInput.value = this.model.expression;
-  //   this.resultInput.value = this.model.result;
-  // }
 }
 
 export default CalculatorView;

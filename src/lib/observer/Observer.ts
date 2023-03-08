@@ -10,10 +10,6 @@ class Observer {
     this.observers.set(evt, [fn]);
   }
 
-  // subscribe(func: any) {
-  //   this.observers.push(func);
-  // }
-
   unsubscribe(evt: string, func: Function) {
     if (this.observers.get(evt))
       return this.observers.set(
