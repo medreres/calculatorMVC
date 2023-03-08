@@ -1,5 +1,6 @@
 import Operation from "./Operation";
 import ICalculator from "./interface";
+import { parseExpression } from "./utils";
 /**
  * @description  Shunting Yard Algorithm, parses expression, splits it into operands
  * and operators and returns result of evaluation, support extending with new operations via method
@@ -7,12 +8,12 @@ import ICalculator from "./interface";
  * @returns {number} result of evaluation
  */
 class Calculator implements ICalculator {
-  private operations: Operation[];
+  private operations: Map<string, Operation>;
   private numberStack: number[] = [];
   private operatorStack: string[] = [];
 
   constructor() {
-    this.operations = [
+    const operations = [
       new Operation("+", 1, (a: number, b: number) => a + b),
       new Operation("-", 1, (a: number, b: number) => a - b),
       new Operation("*", 2, (a: number, b: number) => a * b),
@@ -25,6 +26,9 @@ class Calculator implements ICalculator {
       new Operation("(", 0, () => 0),
       new Operation(")", 0, () => 0),
     ];
+
+    this.operations = new Map();
+    operations.forEach((operation) => this.operations.set(operation.symbol, operation));
   }
 
   /**
@@ -33,7 +37,7 @@ class Calculator implements ICalculator {
    * @returns operation if defined, otherwise undefined
    */
   #getOperation(operationSymbol: string): Operation | undefined {
-    return this.operations.find((operation) => operation.symbol === operationSymbol);
+    return this.operations.get(operationSymbol);
   }
 
   /**
@@ -41,10 +45,9 @@ class Calculator implements ICalculator {
    * @param {Operation} operation  add
    */
   addNewOperation(operation: Operation) {
-    if (this.operations.find((op) => op.symbol === operation.symbol))
-      throw new Error(`Operation "${operation.symbol} already exists`);
+    if (this.operations.has(operation.symbol)) throw new Error(`Operation "${operation.symbol} already exists`);
 
-    this.operations.push(operation);
+    this.operations.set(operation.symbol, operation);
   }
 
   #performLastOperation(): string {
@@ -113,80 +116,14 @@ class Calculator implements ICalculator {
     }
   }
 
-  #parseExpression(expr: string) {
-    const tokens = [];
-    let currentToken = "";
-    const regexRaw = `[${this.operations
-      .filter((operation) => operation.symbol.length === 1)
-      .map((operation) => `\\${operation.symbol}`)}]`;
-    const regex = new RegExp(regexRaw);
-
-    // const tokens = [];
-    // let currentToken = "";
-
-    for (let i = 0; i < expr.length; i++) {
-      const char = expr.charAt(i);
-
-      if (char === " ") {
-        // ignore whitespace
-        continue;
-      } else if (/\d/.test(char) || char === "." || (char === "-" && currentToken.length === 0)) {
-        // append digits and decimal points to current token
-        currentToken += char;
-      } else if (regex.test(char)) {
-        // push current token and operator to tokens array
-        if (currentToken !== "") {
-          tokens.push(currentToken);
-          currentToken = "";
-        }
-        tokens.push(char);
-      } else if (/[a-zA-Z]/.test(char)) {
-        // parse function name and push to tokens array
-        let functionName = char;
-        i++;
-
-        while (i < expr.length && /[a-zA-Z]/.test(expr.charAt(i))) {
-          functionName += expr.charAt(i);
-          i++;
-        }
-
-        if (currentToken !== "") {
-          tokens.push(currentToken);
-          currentToken = "";
-        }
-
-        tokens.push(functionName);
-        i--;
-      } else if (char === "-" && (i === 0 || /[^\d\.]/.test(expr.charAt(i - 1)))) {
-        // handle negative numbers
-        currentToken = "-";
-      } else {
-        // invalid character
-        throw new Error(`Invalid character '${char}' at position ${i}`);
-      }
-    }
-
-    // push last token to array (if it exists)
-    if (currentToken !== "") {
-      tokens.push(currentToken);
-    }
-
-    if (tokens[0] === "-") {
-      tokens.shift();
-      tokens[0] = -tokens[0];
-    }
-
-    return tokens;
-  }
-
   evaluate(expression: string): number {
-    const tokens = this.#parseExpression(expression);
+    // get all the operation symbols, except function names
+    const operationSymbols = Array.from(this.operations.keys()).filter((operation) => operation.length === 1);
+    const tokens = parseExpression(expression, operationSymbols);
 
     tokens.forEach((ch: any, index: number) => {
       if (!isNaN(+ch)) return this.numberStack.push(Number(ch));
 
-      // ? can be better?
-      // perform same comparision twice
       if (ch === "(" || ch === ")") return this.#handleParentesis(ch);
 
       const operation = this.#getOperation(ch);
