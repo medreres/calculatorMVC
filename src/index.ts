@@ -1,6 +1,7 @@
 import CalculatorController from "./controller/CalculatorController";
 import CalculatorModel from "./model/CalculatorModel/CalculatorModel";
 import CalculatorView from "./view/CalculatorView";
+import "bootstrap/dist/css/bootstrap.css";
 
 const model = new CalculatorModel();
 const view = new CalculatorView();

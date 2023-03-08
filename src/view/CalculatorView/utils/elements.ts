@@ -1,73 +1,48 @@
-export class ExpressionInput {
-  expressionInput: HTMLInputElement;
-  constructor(inputContainer: HTMLDivElement) {
-    // Create the expression input field
-    const expressionInputContainer = document.createElement("div");
-    expressionInputContainer.classList.add("input-group", "input-group-sm", "mb-3", "w-25");
-    expressionInputContainer.innerHTML = `
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="expressionInput">Expression</span>
-  </div>
-  
-  `;
-    this.expressionInput = document.createElement("input");
-    this.expressionInput.classList.add("form-control");
-    this.expressionInput.id = "expressionInput";
-    this.expressionInput.type = "text";
-    this.expressionInput.autofocus = true;
-    expressionInputContainer.appendChild(this.expressionInput);
-    inputContainer.appendChild(expressionInputContainer);
-  }
+export function ExpressionInput(): HTMLInputElement {
+  const expressionInput = document.createElement("input");
+  expressionInput.classList.add("calculator-screen", "z-depth-1");
+  return expressionInput;
 }
 
-export class ResultInput {
-  resultInput: HTMLInputElement;
-  constructor(inputContainer: HTMLDivElement) {
-    const resultContainer = document.createElement("div");
-    resultContainer.classList.add("input-group", "input-group-sm", "mb-3", "d-flex", "justify-content-center");
-    resultContainer.innerHTML = `
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="resultInput">Result</span>
-    </div>`;
-    this.resultInput = document.createElement("input");
-    this.resultInput.id = "resultInput";
-    this.resultInput.classList.add('form-control"');
-    this.resultInput.type = "text";
-    this.resultInput.disabled = true;
-    resultContainer.appendChild(this.resultInput);
-    inputContainer.appendChild(resultContainer);
-  }
+export function ResultInput(): HTMLInputElement {
+  const resultInput = document.createElement("input");
+  resultInput.classList.add("result-screen", "z-depth-1", "fs-3");
+  resultInput.disabled = true;
+  return resultInput;
 }
 
-export class ButtonContainer {
+export function ButtonContainer(): {
   buttons: HTMLButtonElement[];
   buttonContainer: HTMLDivElement;
-  constructor() {
-    this.buttons = [];
-    this.buttonContainer = document.createElement("div");
-    this.buttonContainer.classList.add("buttons", "container", "text-center", "w-25");
+} {
+  const buttons: HTMLButtonElement[] = [];
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.classList.add("calculator-keys");
 
-    const buttonValues = [
-      ["7", "8", "9", "+"],
-      ["4", "5", "6", "-"],
-      ["1", "2", "3", "*"],
-      ["C", "0", "=", "/"],
-    ];
+  const buttonValues = [
+    ["+", "-", "*", "/"],
+    ["7", "8", "9"],
+    ["4", "5", "6"],
+    ["1", "2", "3"],
+    ["0", ".", "AC", "="],
+  ];
 
-    buttonValues.forEach((row) => {
-      const buttonRow = document.createElement("div");
-      buttonRow.classList.add("button-row", "row");
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("calculator-keys");
+  buttonValues.forEach((row) =>
+    row.forEach((value) => {
+      const button = document.createElement("button");
+      if (!isNaN(+value)) button.classList.add("btn", "btn-light", "waves-effect");
+      else if (value === ".") button.classList.add("decimal", "function", "btn", "btn-secondary");
+      else if (value === "AC") button.classList.add("all-clear", "function", "btn", "btn-danger", "btn-sm");
+      else if (value === "=") button.classList.add("equal-sign", "operator", "btn", "btn-light");
+      else button.classList.add("operator", "btn", "btn-info");
 
-      row.forEach((buttonValue) => {
-        const button = document.createElement("button");
-        button.classList.add("col", "m-1", "btn", "btn-outline-primary");
-        if (buttonValue === "0") button.classList.add("w-200");
-        button.innerText = buttonValue;
-        buttonRow.appendChild(button);
-        this.buttons.push(button);
-      });
+      button.innerHTML = value;
+      buttons.push(button);
+      buttonContainer.appendChild(button);
+    })
+  );
 
-      this.buttonContainer.appendChild(buttonRow);
-    });
-  }
+  return { buttons, buttonContainer };
 }

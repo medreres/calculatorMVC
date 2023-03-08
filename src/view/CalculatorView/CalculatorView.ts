@@ -1,6 +1,8 @@
 import Observer from "../../lib/Observer";
 import ICalculatorView from "../interface";
-import { ExpressionInput, ResultInput, ButtonContainer } from "./utils/elements";
+import { ButtonContainer, ExpressionInput, ResultInput } from "./utils/elements";
+import { btnClickHandler } from "./utils/handlers";
+import "./styles.css";
 
 class CalculatorView implements ICalculatorView {
   container: HTMLDivElement;
@@ -8,35 +10,27 @@ class CalculatorView implements ICalculatorView {
   resultInput: HTMLInputElement;
   buttons: HTMLButtonElement[];
   constructor() {
+    // main wrapper
     this.container = document.createElement("div");
-    this.container.classList.add("calculator", "d-flex", "flex-column", "my-5");
+    this.container.classList.add("calculator", "card");
 
-    const inputContainer = document.createElement("div");
-    inputContainer.classList.add("d-flex", "flex-column", "align-items-center");
-    this.container.appendChild(inputContainer);
+    // expression input
+    this.expressionInput = ExpressionInput();
+    this.container.appendChild(this.expressionInput);
 
-    // attach input from keyboard
-    this.expressionInput = new ExpressionInput(inputContainer).expressionInput;
+    // result input
+    this.resultInput = ResultInput();
+    this.container.appendChild(this.resultInput);
 
-    // Create the result input field
-    this.resultInput = new ResultInput(inputContainer).resultInput;
-
-    // Create the button container
-    const buttonContainer = new ButtonContainer();
-    this.buttons = buttonContainer.buttons;
-
-    // example text
-    const example = document.createElement("p");
-    example.innerHTML = "Example of expression: ( 1 + 2 ) * 3. Use parentheses to get the priorities right";
-    example.classList.add("text-center", "mt-5");
-    this.container.appendChild(buttonContainer.buttonContainer);
-
-    this.container.appendChild(example);
+    const { buttons, buttonContainer } = ButtonContainer();
+    this.buttons = buttons;
+    this.container.appendChild(buttonContainer);
   }
 
   setExpression(expression: string) {
     this.expressionInput.value = expression;
   }
+
   getExpression(): string {
     return this.expressionInput.value;
   }
@@ -48,27 +42,7 @@ class CalculatorView implements ICalculatorView {
   setObservers(observer: Observer) {
     // set event broadcasting for button clicks
     this.buttons.forEach((button) => {
-      let clickHandler;
-      if (button.innerHTML === "=")
-        clickHandler = () => {
-          observer.notify("calculate", button.innerHTML);
-        };
-      else if (button.innerHTML == "C")
-        clickHandler = () => {
-          observer.notify("clearExpressionInput");
-          this.setExpression("");
-          this.setResult("");
-        };
-      else {
-        clickHandler = (e: any) => {
-          const data = e.target.innerHTML;
-          const isNumber = !isNaN(+data);
-          const expression = `${this.expressionInput.value}${isNumber ? "" : " "}${data}${isNumber ? "" : " "}`;
-          this.setExpression(expression);
-          observer.notify("expressionInputChange", expression);
-        };
-      }
-
+      let clickHandler = btnClickHandler(button.innerHTML, this, observer);
       button.addEventListener("click", clickHandler);
     });
 
@@ -77,9 +51,8 @@ class CalculatorView implements ICalculatorView {
       observer.notify("expressionInputChange", e.target.value);
     });
 
-    // evaluate event
+    // if the user presses the "Enter" key on the keyboard fire calcualte event
     this.expressionInput.addEventListener("keypress", (event: any) => {
-      // If the user presses the "Enter" key on the keyboard
       if (event.key === "Enter") {
         observer.notify("calculate");
       }

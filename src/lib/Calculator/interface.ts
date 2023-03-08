@@ -1,9 +1,7 @@
-
 export interface ICalculator {
   addNewOperation(operation: IOperation): void;
   evaluate(expression: string): number;
 }
-
 
 export interface IOperation {
   symbol: string;

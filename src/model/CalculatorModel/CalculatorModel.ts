@@ -28,13 +28,14 @@ class CalculatorModel implements ICalculatorModel {
       this.setResult(result);
       return result;
     } catch (error) {
+      // if calculation throws an error, just return it
       const errorMsg: string = (error as any).message;
       this.setResult(errorMsg);
-
       return errorMsg;
     }
   }
 
+  // initialize all event listeners
   setObservers(observer: Observer) {
     observer.on("calculate", () => {
       const result = this.calculate();

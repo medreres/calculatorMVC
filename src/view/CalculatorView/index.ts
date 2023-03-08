@@ -1,1 +1,1 @@
-export {default} from './CalculatorView'
+export { default } from "./CalculatorView";

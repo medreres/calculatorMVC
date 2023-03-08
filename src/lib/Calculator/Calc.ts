@@ -29,15 +29,6 @@ class Calculator implements ICalculator {
   }
 
   /**
-   *
-   * @param {string} operationSymbol symbol that represents the operation
-   * @returns operation if defined, otherwise undefined
-   */
-  #getOperation(operationSymbol: string): Operation | undefined {
-    return this.operations.get(operationSymbol);
-  }
-
-  /**
    * @description adds new operation to the class
    * @param {Operation} operation operation being added
    */
@@ -45,6 +36,36 @@ class Calculator implements ICalculator {
     if (this.operations.has(operation.symbol)) throw new Error(`Operation "${operation.symbol} already exists`);
 
     this.operations.set(operation.symbol, operation);
+  }
+
+  evaluate(expression: string): number {
+    // get all the operation symbols, except function names
+    const operationSymbols = Array.from(this.operations.keys()).filter((operation) => operation.length === 1);
+    const tokens = parseExpression(expression, operationSymbols);
+
+    tokens.forEach((ch, index) => {
+      if (!isNaN(ch as number)) return this.numberStack.push(Number(ch));
+
+      if (ch === "(" || ch === ")") return this.#handleParentesis(ch);
+
+      const operation = this.#getOperation(ch as string);
+      if (operation) return this.#evaluateExpression(operation);
+
+      throw new Error(`Invalid character ${ch} at position ${index}`);
+    });
+
+    this.#performResidualOperations();
+
+    return (this.numberStack.pop() as number) ?? 0;
+  }
+
+  /**
+   *
+   * @param {string} operationSymbol symbol that represents the operation
+   * @returns operation if defined, otherwise undefined
+   */
+  #getOperation(operationSymbol: string): Operation | undefined {
+    return this.operations.get(operationSymbol);
   }
 
   /**
@@ -63,7 +84,7 @@ class Calculator implements ICalculator {
   }
 
   /**
-   * @description takes quantity of numbers needed to perform operation from 
+   * @description takes quantity of numbers needed to perform operation from
    * number stack and performs the operation via operation.operation method
    * @param {Operation} operation operation to perform
    * @returns result of operation
@@ -99,7 +120,6 @@ class Calculator implements ICalculator {
     this.operatorStack.pop();
   }
 
-  
   #evaluateExpression(operation: Operation) {
     if (this.operatorStack.length === 0) {
       return this.operatorStack.push(operation.symbol);
@@ -123,27 +143,6 @@ class Calculator implements ICalculator {
       const result = this.#performOperation(operator);
       this.numberStack.push(result);
     }
-  }
-
-  evaluate(expression: string): number {
-    // get all the operation symbols, except function names
-    const operationSymbols = Array.from(this.operations.keys()).filter((operation) => operation.length === 1);
-    const tokens = parseExpression(expression, operationSymbols);
-
-    tokens.forEach((ch, index) => {
-      if (!isNaN(ch as number)) return this.numberStack.push(Number(ch));
-
-      if (ch === "(" || ch === ")") return this.#handleParentesis(ch);
-
-      const operation = this.#getOperation(ch as string);
-      if (operation) return this.#evaluateExpression(operation);
-
-      throw new Error(`Invalid character ${ch} at position ${index}`);
-    });
-
-    this.#performResidualOperations();
-
-    return (this.numberStack.pop() as number) ?? 0;
   }
 }
 
