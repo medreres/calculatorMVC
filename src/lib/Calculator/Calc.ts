@@ -1,10 +1,10 @@
 import Operation from "./Operation";
-import ICalculator from "./interface";
+import { ICalculator } from "./interface";
 import { parseExpression } from "./utils";
 /**
  * @description  Shunting Yard Algorithm, parses expression, splits it into operands
- * and operators and returns result of evaluation, support extending with new operations via method
- * add addNewOperation
+ * and operators and returns result of evaluation, support extending with new operations
+ *  via method add addNewOperation
  * @returns {number} result of evaluation
  */
 class Calculator implements ICalculator {
@@ -13,16 +13,13 @@ class Calculator implements ICalculator {
   private operatorStack: string[] = [];
 
   constructor() {
+    // initialize with some basics operaions
     const operations = [
       new Operation("+", 1, (a: number, b: number) => a + b),
       new Operation("-", 1, (a: number, b: number) => a - b),
       new Operation("*", 2, (a: number, b: number) => a * b),
       new Operation("/", 2, (a: number, b: number) => a / b),
       new Operation("^", 3, (a: number, b: number) => a ** b),
-      new Operation("lg", 3, (a: number) => Math.log10(a)),
-      new Operation("ln", 3, (a: number) => Math.log(a)),
-      new Operation("exp", 3, (a: number) => Math.exp(a)),
-      new Operation("tan", 3, (a: number) => Math.tan(a)),
       new Operation("(", 0, () => 0),
       new Operation(")", 0, () => 0),
     ];
@@ -42,14 +39,18 @@ class Calculator implements ICalculator {
 
   /**
    * @description adds new operation to the class
-   * @param {Operation} operation  add
+   * @param {Operation} operation operation being added
    */
-  addNewOperation(operation: Operation) {
+  addNewOperation(operation: Operation): void {
     if (this.operations.has(operation.symbol)) throw new Error(`Operation "${operation.symbol} already exists`);
 
     this.operations.set(operation.symbol, operation);
   }
 
+  /**
+   * @description takes last operation from operation stack and performs it
+   * @returns symbol of operation performed
+   */
   #performLastOperation(): string {
     const lastOperationSymbol = this.operatorStack.pop() as string;
     const lastOperation = this.#getOperation(lastOperationSymbol) as Operation;
@@ -61,6 +62,12 @@ class Calculator implements ICalculator {
     return lastOperationSymbol;
   }
 
+  /**
+   * @description takes quantity of numbers needed to perform operation from 
+   * number stack and performs the operation via operation.operation method
+   * @param {Operation} operation operation to perform
+   * @returns result of operation
+   */
   #performOperation(operation: Operation): number {
     const operands = [];
 
@@ -72,7 +79,7 @@ class Calculator implements ICalculator {
       operands.push(number);
     }
 
-    // reverse beacuse operands come in reverse order
+    // reverse because operands come in reverse order
     return operation.operation(...(operands.reverse() as number[]));
   }
 
@@ -83,14 +90,16 @@ class Calculator implements ICalculator {
     }
 
     // perform all operations available in stack unitl opening parenthesis
-
     do {
       this.#performLastOperation();
+      // take remaining operation and check if its parenthesis
       symbol = this.operatorStack[this.operatorStack.length - 1];
     } while (symbol !== "(");
 
     this.operatorStack.pop();
   }
+
+  
   #evaluateExpression(operation: Operation) {
     if (this.operatorStack.length === 0) {
       return this.operatorStack.push(operation.symbol);
@@ -121,12 +130,12 @@ class Calculator implements ICalculator {
     const operationSymbols = Array.from(this.operations.keys()).filter((operation) => operation.length === 1);
     const tokens = parseExpression(expression, operationSymbols);
 
-    tokens.forEach((ch: any, index: number) => {
-      if (!isNaN(+ch)) return this.numberStack.push(Number(ch));
+    tokens.forEach((ch, index) => {
+      if (!isNaN(ch as number)) return this.numberStack.push(Number(ch));
 
       if (ch === "(" || ch === ")") return this.#handleParentesis(ch);
 
-      const operation = this.#getOperation(ch);
+      const operation = this.#getOperation(ch as string);
       if (operation) return this.#evaluateExpression(operation);
 
       throw new Error(`Invalid character ${ch} at position ${index}`);

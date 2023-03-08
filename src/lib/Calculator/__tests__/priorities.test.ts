@@ -1,7 +1,5 @@
-// import { initializeClass } from "./utils";
 import { evaluator } from "./utils";
 
-// const evaluator = initializeClass();
 describe("Respecting priorities", () => {
   test("2 + 2 * 2 = 6", () => {
     expect(evaluator.evaluate("2 + 2 * 2")).toBe(6);

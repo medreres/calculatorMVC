@@ -1,5 +1,5 @@
 
-export default interface ICalculator {
+export interface ICalculator {
   addNewOperation(operation: IOperation): void;
   evaluate(expression: string): number;
 }

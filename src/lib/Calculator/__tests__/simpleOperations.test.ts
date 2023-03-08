@@ -1,7 +1,5 @@
-// import { initializeClass } from "./utils";
 import { evaluator } from "./utils";
 
-// const evaluator = initializeClass();
 describe("Simple operations.", () => {
   test("1 + 2 = 3", () => {
     expect(evaluator.evaluate("1 + 2")).toBe(3);

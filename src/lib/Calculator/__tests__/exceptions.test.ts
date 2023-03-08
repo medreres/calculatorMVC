@@ -1,7 +1,5 @@
 import { evaluator } from "./utils";
 
-// const evaluator = initializeClass();
-
 describe("testing evaluating algorithm", () => {
   describe("Throw exception upon unknown operator", () => {
     test("log 2", () => {

@@ -1,4 +1,4 @@
-export function parseExpression(expression: string, operationsSymbols: string[]) {
+export function parseExpression(expression: string, operationsSymbols: string[]): (string | number)[] {
   const tokens = [];
   let currentToken = "";
   const regexRaw = `[${operationsSymbols.map((operation) => `\\${operation}`)}]`;
