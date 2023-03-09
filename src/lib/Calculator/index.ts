@@ -1,2 +1,2 @@
-export { default } from "./Calc";
-export { default as Operation } from "./Operation";
+export { default } from "./Calculator/Calculator";
+export { default as Operation } from "./Operation/Operation";

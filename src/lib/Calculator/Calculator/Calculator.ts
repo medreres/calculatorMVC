@@ -1,8 +1,10 @@
-import Operation from "./Operation";
+import Operation from "../Operation/Operation";
 import { ICalculator } from "./interface";
 import { parseExpression } from "./utils";
+import operations from "./operations.config";
+
 /**
- * @description  Shunting Yard Algorithm, parses expression, splits it into operands
+ * @description Shunting Yard Algorithm, parses expression, splits it into operands
  * and operators and returns result of evaluation, support extending with new operations
  *  via method add addNewOperation
  * @returns {number} result of evaluation
@@ -14,16 +16,6 @@ class Calculator implements ICalculator {
 
   constructor() {
     // initialize with some basics operaions
-    const operations = [
-      new Operation("+", 1, (a: number, b: number) => a + b),
-      new Operation("-", 1, (a: number, b: number) => a - b),
-      new Operation("*", 2, (a: number, b: number) => a * b),
-      new Operation("/", 2, (a: number, b: number) => a / b),
-      new Operation("^", 3, (a: number, b: number) => a ** b),
-      new Operation("(", 0, () => 0),
-      new Operation(")", 0, () => 0),
-    ];
-
     this.operations = new Map();
     operations.forEach((operation) => this.operations.set(operation.symbol, operation));
   }
@@ -38,20 +30,24 @@ class Calculator implements ICalculator {
     this.operations.set(operation.symbol, operation);
   }
 
+  // getAllOperations() {
+  //   return { ...this.operations.entries() };
+  // }
+
   evaluate(expression: string): number {
     // get all the operation symbols, except function names
     const operationSymbols = Array.from(this.operations.keys()).filter((operation) => operation.length === 1);
     const tokens = parseExpression(expression, operationSymbols);
 
-    tokens.forEach((ch, index) => {
-      if (!isNaN(ch as number)) return this.numberStack.push(Number(ch));
+    tokens.forEach((token, index) => {
+      if (!isNaN(token as number)) return this.numberStack.push(Number(token));
 
-      if (ch === "(" || ch === ")") return this.#handleParentesis(ch);
+      if (token === "(" || token === ")") return this.#handleParenthesis(token);
 
-      const operation = this.#getOperation(ch as string);
+      const operation = this.#getOperation(token as string);
       if (operation) return this.#evaluateExpression(operation);
 
-      throw new Error(`Invalid character ${ch} at position ${index}`);
+      throw new Error(`Invalid character ${token} at position ${index}`);
     });
 
     this.#performResidualOperations();
@@ -76,7 +72,7 @@ class Calculator implements ICalculator {
     const lastOperationSymbol = this.operatorStack.pop() as string;
     const lastOperation = this.#getOperation(lastOperationSymbol) as Operation;
 
-    if (lastOperationSymbol === "(") throw new Error("Invald expression");
+    if (lastOperationSymbol === "(") throw new Error("Invalid expression");
 
     const result = this.#performOperation(lastOperation);
     this.numberStack.push(result);
@@ -104,13 +100,13 @@ class Calculator implements ICalculator {
     return operation.operation(...(operands.reverse() as number[]));
   }
 
-  #handleParentesis(symbol: string) {
+  #handleParenthesis(symbol: string) {
     if (symbol === "(") {
-      // just push to the operators stack and wait unitl closing parenthesis occurs
+      // just push to the operators stack and wait until closing parenthesis occurs
       return this.operatorStack.push(symbol);
     }
 
-    // perform all operations available in stack unitl opening parenthesis
+    // perform all operations available in stack until opening parenthesis
     do {
       this.#performLastOperation();
       // take remaining operation and check if its parenthesis
@@ -124,7 +120,7 @@ class Calculator implements ICalculator {
     if (this.operatorStack.length === 0) {
       return this.operatorStack.push(operation.symbol);
     }
-    // const currentOperation = this.#getOperation(operation) as Operation;
+
     const prevOperation = this.#getOperation(this.operatorStack[this.operatorStack.length - 1]) as Operation;
 
     if (operation.precedence <= prevOperation.precedence) {

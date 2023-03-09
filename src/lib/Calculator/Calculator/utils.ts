@@ -2,7 +2,8 @@ export function parseExpression(expression: string, operationsSymbols: string[])
   const tokens = [];
   let currentToken = "";
   const regexRaw = `[${operationsSymbols.map((operation) => `\\${operation}`)}]`;
-  const regex = new RegExp(regexRaw);
+  const operationRegex = new RegExp(regexRaw);
+  const functionRegex = /[a-zA-Z]/;
 
   for (let i = 0; i < expression.length; i++) {
     const char = expression.charAt(i);
@@ -13,19 +14,19 @@ export function parseExpression(expression: string, operationsSymbols: string[])
     } else if (!isNaN(+char) || char === "." || (char === "-" && currentToken.length === 0)) {
       // append digits and decimal points to current token
       currentToken += char;
-    } else if (regex.test(char)) {
+    } else if (operationRegex.test(char)) {
       // push current token and operator to tokens array
       if (currentToken !== "") {
         tokens.push(currentToken);
         currentToken = "";
       }
       tokens.push(char);
-    } else if (/[a-zA-Z]/.test(char)) {
+    } else if (functionRegex.test(char)) {
       // parse function name and push to tokens array
       let functionName = char;
       i++;
 
-      while (i < expression.length && /[a-zA-Z]/.test(expression.charAt(i))) {
+      while (i < expression.length && functionRegex.test(expression.charAt(i))) {
         functionName += expression.charAt(i);
         i++;
       }

@@ -1,5 +1,5 @@
-import Calculator from "../Calc";
-import Operation from "../Operation";
+import Calculator from "../Calculator/Calculator";
+import Operation from "../Operation/Operation";
 
 export const evaluator = (function () {
   const evaluator = new Calculator();
@@ -19,6 +19,7 @@ export const evaluator = (function () {
       return fact(a);
     }),
   ];
+
   // adding new operations
   operations.forEach((operation) => evaluator.addNewOperation(operation));
 

@@ -19,7 +19,7 @@ body {
 .calculator {
   border: 1px solid #ccc;
   border-radius: 5px;
-  width: 400px;
+  width: 700px;
 }
 
 .calculator-screen {
@@ -75,4 +75,23 @@ button {
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
   padding: 20px;
+  width: 100%;
+  /* flex-basis: 200vw; */
+}
+
+.calculator-keys-container {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  /* grid-gap: 20px; */
+  /* padding: 20px; */
+}
+
+.operations-keys {
+  /* flex-basis: 10%; */
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+  padding: 20px;
+  width: 100%;
 }

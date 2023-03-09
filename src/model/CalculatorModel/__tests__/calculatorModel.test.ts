@@ -1,4 +1,4 @@
-import Observer from "../../../lib/Observer";
+import observer from "../../../lib/Observer";
 import CalculatorModel from "../CalculatorModel";
 
 describe("Calculator Model", () => {
@@ -12,8 +12,6 @@ describe("Calculator Model", () => {
 
   test("Listens to events", () => {
     const calcModel = new CalculatorModel();
-    const observer = new Observer();
-    calcModel.setObservers(observer);
 
     const expression = "1 + 2 * 3 - 10 + ( 1 * 2 / (5 -4 ))";
     const answer = -1;

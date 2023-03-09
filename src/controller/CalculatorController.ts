@@ -1,18 +1,23 @@
-import Observer from "../lib/Observer";
+import { events } from "../events.config";
+import { Operation } from "../lib/Calculator";
+import observer from "../lib/Observer";
 import ICalculatorModel from "../model/interface";
 import ICalculatorView from "../view/interface";
 import ICalculatorController from "./interface";
+
 class CalculatorController implements ICalculatorController {
   model: ICalculatorModel;
   view: ICalculatorView;
-  observer: Observer;
+  // observer: IObserver;
 
   constructor(model: ICalculatorModel, view: ICalculatorView) {
-    this.observer = new Observer();
+    // this.observer = Observer;
     this.model = model;
-    this.model.setObservers(this.observer);
     this.view = view;
-    this.view.setObservers(this.observer);
+  }
+
+  addNewOperation(operation: Operation) {
+    observer.notify(events.NEW_OPERATION, operation);
   }
 }
 
