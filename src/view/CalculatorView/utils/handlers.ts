@@ -1,9 +1,10 @@
 import { events } from "../../../events.config";
-import observer, { IObserver } from "../../../lib/Observer";
+import Observer from "../../../lib/Observer";
 import ICalculatorView from "../../interface";
 import { operations } from "../buttons.config";
 
 export const btnClickHandler = (btnValue: string, viewInstance: ICalculatorView) => {
+  const observer = (new Observer).getInstance();
   // console.log(btnValue)
   if (btnValue === operations.CALCULATE) {
     return () => {

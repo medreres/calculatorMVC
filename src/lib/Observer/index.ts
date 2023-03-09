@@ -1,7 +1,2 @@
-import Observer from "./Observer";
-import IObserver from "./interface";
-
-const observerInstance = new Observer();
-
-export { observerInstance as default };
-export { IObserver };
+export { default } from "./Observer";
+export { default as IObserver } from "./interface";

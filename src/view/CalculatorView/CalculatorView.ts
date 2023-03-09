@@ -1,16 +1,16 @@
 import { events } from "./../../events.config";
-import observer from "../../lib/Observer";
 import ICalculatorView from "../interface";
 import {
   createAdditionalOperationsContainer,
   createButton,
-  createButtonContainer,
+  createButtonsContainer,
   createExpressionInput,
   createResultInput,
 } from "./utils/elements";
 import "./styles.css";
 import { Operation } from "../../lib/Calculator";
 import { btnClickHandler } from "./utils/handlers";
+import Observer from "../../lib/Observer";
 
 class CalculatorView implements ICalculatorView {
   container: HTMLDivElement;
@@ -19,6 +19,8 @@ class CalculatorView implements ICalculatorView {
   buttons: HTMLButtonElement[];
   additionalOperationsButtons: HTMLButtonElement[];
   additionalOperationsButtonsConatiner: HTMLDivElement;
+
+  private observer: Observer = new Observer().getInstance();
   constructor() {
     // main wrapper
     this.container = document.createElement("div");
@@ -32,22 +34,22 @@ class CalculatorView implements ICalculatorView {
     this.resultInput = createResultInput();
     this.container.appendChild(this.resultInput);
 
-    const { buttons, buttonContainer } = createButtonContainer(this);
+    const { buttons, buttonsContainer } = createButtonsContainer(this);
     this.buttons = buttons;
 
-    const { buttons: operationButtons, buttonContainer: operationButtonContainer } =
+    const { buttons: operationButtons, buttonsContainer: operationButtonsContainer } =
       createAdditionalOperationsContainer(this);
     this.additionalOperationsButtons = operationButtons;
-    this.additionalOperationsButtonsConatiner = operationButtonContainer;
+    this.additionalOperationsButtonsConatiner = operationButtonsContainer;
 
     const keysContainer = document.createElement("div");
     keysContainer.classList.add("calculator-keys-container");
-    keysContainer.appendChild(operationButtonContainer);
-    keysContainer.appendChild(buttonContainer);
+    keysContainer.appendChild(operationButtonsContainer);
+    keysContainer.appendChild(buttonsContainer);
     this.container.appendChild(keysContainer);
 
     // set rest of the observers
-    this.#setObservers();
+    this.setObservers();
   }
 
   setExpression(expression: string) {
@@ -62,24 +64,24 @@ class CalculatorView implements ICalculatorView {
     this.resultInput.value = result;
   }
 
-  #setObservers() {
+  private setObservers() {
     // set event broadcasting for input
     this.expressionInput.addEventListener("input", (e) => {
-      observer.notify(events.INPUT_CHANGE, (e?.target as HTMLInputElement).value);
+      this.observer.notify(events.INPUT_CHANGE, (e?.target as HTMLInputElement).value);
     });
 
     // if the user presses the "Enter" key on the keyboard fire calcualte event
     this.expressionInput.addEventListener("keypress", (event) => {
       if (event.key === "Enter") {
-        observer.notify(events.CALCULATE);
+        this.observer.notify(events.CALCULATE);
       }
     });
 
-    observer.on(events.CALCULATED, (data: string) => {
+    this.observer.on(events.CALCULATED, (data: string) => {
       this.setResult(data);
     });
 
-    observer.on(events.NEW_OPERATION, (operation: Operation) => {
+    this.observer.on(events.NEW_OPERATION, (operation: Operation) => {
       const button = createButton(operation.symbol);
       let clickHandler = btnClickHandler(button.value, this);
       button.onclick = clickHandler;

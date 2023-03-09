@@ -2,6 +2,7 @@ import IObserver from "./interface";
 
 class Observer implements IObserver {
   observers: Map<string, Function[]>;
+  private static instance: Observer | null = null;
   constructor() {
     this.observers = new Map<string, Function[]>();
   }
@@ -22,6 +23,14 @@ class Observer implements IObserver {
 
   notify(evt: string, data?: any) {
     this.observers.get(evt)?.forEach((subscription) => subscription(data));
+  }
+
+  getInstance(): Observer {
+    if (Observer.instance == null) {
+      Observer.instance = new Observer();
+    }
+
+    return Observer.instance;
   }
 }
 

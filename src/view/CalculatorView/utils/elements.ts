@@ -15,49 +15,47 @@ export function createResultInput(): HTMLInputElement {
   return resultInput;
 }
 
-export const createButtonContainer = (viewInstance: ICalculatorView) => {
+export const createButtonsContainer = (
+  viewInstance: ICalculatorView
+): {
+  buttons: HTMLButtonElement[];
+  buttonsContainer: HTMLDivElement;
+} => {
   const buttons: HTMLButtonElement[] = [];
   const buttonsContainer = document.createElement("div");
   buttonsContainer.classList.add("calculator-keys");
 
-  const buttonContainer = document.createElement("div");
-  buttonContainer.classList.add("calculator-keys");
   buttonValues.forEach((row) =>
     row.forEach((value) => {
       const button = createButton(value);
       let clickHandler = btnClickHandler(button.value, viewInstance);
       buttons.push(button);
       button.onclick = clickHandler;
-      buttonContainer.appendChild(button);
+      buttonsContainer.appendChild(button);
     })
   );
 
-  return { buttons, buttonContainer };
+  return { buttons, buttonsContainer };
 };
 
-// TODO vert similar functions
 export function createAdditionalOperationsContainer(viewInstance: ICalculatorView): {
   buttons: HTMLButtonElement[];
-  buttonContainer: HTMLDivElement;
+  buttonsContainer: HTMLDivElement;
 } {
-  const additionalOperations: string[] = [];
+  const additionalOperations: string[] = ["(", ")"];
   const buttons: HTMLButtonElement[] = [];
-  // const buttonsContainer = document.createElement("div");
-  // buttonsContainer.classList.add("operations-keys");
 
-  const buttonContainer = document.createElement("div");
-  buttonContainer.classList.add("operations-keys");
-  // buttonValues.forEach((row) =>
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.classList.add("operations-keys");
   additionalOperations.forEach((value) => {
     const button = createButton(value);
     let clickHandler = btnClickHandler(button.value, viewInstance);
     buttons.push(button);
     button.onclick = clickHandler;
-    buttonContainer.appendChild(button);
+    buttonsContainer.appendChild(button);
   });
-  // );
 
-  return { buttons, buttonContainer };
+  return { buttons, buttonsContainer };
 }
 
 export const createButton = (btnValue: string) => {

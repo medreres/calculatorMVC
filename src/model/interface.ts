@@ -6,6 +6,4 @@ export default interface ICalculatorModel {
   setResult(result: string): void;
   getResult(): string;
   calculate(): number | string;
-  // TODO
-  // setObservers(observer: Observer): void;
 }
