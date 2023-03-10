@@ -20,26 +20,25 @@ class CalculatorController implements ICalculatorController {
   private setObserver() {
     // listen for input changes from view
     this.observer.on(events.VIEW_INPUT_CHANGED, (inputValue: string) => {
-      // some validation could be done here
       this.observer.notify(events.MODEL_CHANGE_INPUT, inputValue);
     });
 
     // listen for calculate request
     this.observer.on(events.VIEW_CALCULATE, () => {
-      // some validation could be done here
       this.observer.notify(events.MODEL_CALCULATE);
     });
 
-    this.observer.on(events.VIEW_INPUT_CLEARED, (inputValue: string) => {
-      // some validation could be done here
-      this.observer.notify(events.MODEL_CLEAR_INPUT, inputValue);
+    // clear input in model
+    this.observer.on(events.VIEW_INPUT_CLEARED, () => {
+      this.observer.notify(events.MODEL_CLEAR_INPUT);
     });
 
+    // provide view with calculated values
     this.observer.on(events.MODEL_CALCULATED, (value: string) => {
-      // some validation could be done here
       this.observer.notify(events.VIEW_SET_RESULT, value);
     });
 
+    // add new operation
     this.observer.on(events.VIEW_ADD_NEW_OPERATION, (operation: Operation) => {
       if (isValidOperation(operation)) {
         this.observer.notify(events.MODEL_ADD_NEW_OPERATION, operation);
