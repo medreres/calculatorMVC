@@ -42,7 +42,6 @@ class Calculator implements ICalculator {
     const numberStack: number[] = [];
     const operatorStack: string[] = [];
 
-
     const params: IParams = {
       operatorStack,
       numberStack,
