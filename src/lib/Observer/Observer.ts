@@ -3,6 +3,7 @@ import IObserver from "./interface";
 class Observer implements IObserver {
   observers: Map<string, Function[]>;
   private static instance: Observer | null = null;
+
   constructor() {
     this.observers = new Map<string, Function[]>();
   }
