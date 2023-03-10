@@ -1,17 +1,19 @@
-import { events } from "./../../events.config";
+import { events } from "../../shared/events.config";
 import ICalculatorView from "../interface";
 import {
   createAdditionalOperationsContainer,
   createButton,
   createButtonsContainer,
   createExpressionInput,
+  createOperation,
   createResultInput,
 } from "./utils/elements";
-import "./styles.css";
-import { Operation } from "../../lib/Calculator";
 import { btnClickHandler } from "./utils/handlers";
 import Observer from "../../lib/Observer";
+import "./styles.css";
+import { clearModalInput } from "./utils/helper";
 
+// TODO tests
 class CalculatorView implements ICalculatorView {
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
@@ -19,8 +21,8 @@ class CalculatorView implements ICalculatorView {
   buttons: HTMLButtonElement[];
   additionalOperationsButtons: HTMLButtonElement[];
   additionalOperationsButtonsConatiner: HTMLDivElement;
-
   private observer: Observer = new Observer().getInstance();
+
   constructor() {
     // main wrapper
     this.container = document.createElement("div");
@@ -48,6 +50,10 @@ class CalculatorView implements ICalculatorView {
     keysContainer.appendChild(buttonsContainer);
     this.container.appendChild(keysContainer);
 
+    const addNewOperationContainer = createOperation();
+
+    this.container.appendChild(addNewOperationContainer);
+
     // set rest of the observers
     this.setObservers();
   }
@@ -65,28 +71,25 @@ class CalculatorView implements ICalculatorView {
   }
 
   private setObservers() {
-    // set event broadcasting for input
-    this.expressionInput.addEventListener("input", (e) => {
-      this.observer.notify(events.INPUT_CHANGE, (e?.target as HTMLInputElement).value);
+    this.observer.on(events.VIEW_SET_RESULT, (value: string) => {
+      this.setResult(value);
     });
 
-    // if the user presses the "Enter" key on the keyboard fire calcualte event
-    this.expressionInput.addEventListener("keypress", (event) => {
-      if (event.key === "Enter") {
-        this.observer.notify(events.CALCULATE);
-      }
-    });
-
-    this.observer.on(events.CALCULATED, (data: string) => {
-      this.setResult(data);
-    });
-
-    this.observer.on(events.NEW_OPERATION, (operation: Operation) => {
-      const button = createButton(operation.symbol);
+    this.observer.on(events.VIEW_ADD_BUTTON, (symbol: string) => {
+      const button = createButton(symbol);
       let clickHandler = btnClickHandler(button.value, this);
       button.onclick = clickHandler;
-      // buttons.push(button);
       this.additionalOperationsButtonsConatiner.appendChild(button);
+
+      // close open modal for adding operation
+      (document.querySelector("#closeModal") as HTMLButtonElement).click();
+
+      // clear inputs
+      clearModalInput();
+    });
+
+    this.observer.on(events.VIEW_ADDING_INVALID_OPERATION, () => {
+      alert("Function is invalid");
     });
   }
 }

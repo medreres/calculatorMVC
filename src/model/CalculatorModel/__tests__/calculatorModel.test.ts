@@ -1,4 +1,5 @@
 import Observer from "../../../lib/Observer";
+import { events } from "../../../shared/events.config";
 import CalculatorModel from "../CalculatorModel";
 
 describe("Calculator Model", () => {
@@ -17,8 +18,8 @@ describe("Calculator Model", () => {
     const expression = "1 + 2 * 3 - 10 + ( 1 * 2 / (5 -4 ))";
     const answer = -1;
 
-    observer.notify("expressionInputChange", expression);
-    observer.notify("calculate");
+    observer.notify(events.MODEL_CHANGE_INPUT, expression);
+    observer.notify(events.MODEL_CALCULATE);
 
     expect(calcModel.getResult()).toBe(answer);
   });

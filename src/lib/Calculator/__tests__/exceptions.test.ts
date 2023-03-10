@@ -26,10 +26,8 @@ describe("testing evaluating algorithm", () => {
     });
 
     test("(1)", () => {
-      const foo = () => {
-        evaluator.evaluate("(1)");
-      };
-      expect(foo).toThrow(Error);
+      const result = evaluator.evaluate("(1)");
+      expect(result).toEqual(1);
     });
 
     test("() - ", () => {
@@ -45,15 +43,13 @@ describe("testing evaluating algorithm", () => {
         evaluator.evaluate("(1+2)-");
       };
 
-      foo();
       expect(foo).toThrow(Error);
     });
 
     test("()", () => {
-      const foo = () => {
-        evaluator.evaluate("()");
-      };
-      expect(foo).toThrow(Error);
+      const result = evaluator.evaluate("()");
+
+      expect(result).toEqual(0);
     });
 
     test("lg ( 1 + 2", () => {

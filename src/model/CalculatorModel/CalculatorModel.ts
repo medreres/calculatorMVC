@@ -1,7 +1,8 @@
-import { events } from './../../events.config';
+import { events } from "../../shared/events.config";
 import Calc, { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
+
 class CalculatorModel implements ICalculatorModel {
   private calculator = new Calc();
   expression: string;
@@ -40,23 +41,23 @@ class CalculatorModel implements ICalculatorModel {
 
   // initialize all event listeners
   private setObservers() {
-    this.observer.on(events.CALCULATE, () => {
+    this.observer.on(events.MODEL_CALCULATE, () => {
       const result = this.calculate();
-      this.observer.notify("calculated", result);
+      this.observer.notify(events.MODEL_CALCULATED, result);
     });
 
-    this.observer.on(events.INPUT_CHANGE, (data: string) => {
+    this.observer.on(events.MODEL_CHANGE_INPUT, (data: string) => {
       this.setExpression(data);
     });
 
-    this.observer.on(events.CLEAR_INPUT, () => {
+    this.observer.on(events.MODEL_CLEAR_INPUT, () => {
       this.setExpression("");
       this.setResult("");
     });
 
-    this.observer.on(events.NEW_OPERATION, (operation: Operation) => {
+    this.observer.on(events.MODEL_ADD_NEW_OPERATION, (operation: Operation) => {
       this.calculator.addNewOperation(operation);
-    })
+    });
   }
 }
 

@@ -11,6 +11,11 @@ export function parseExpression(expression: string, operationsSymbols: string[])
     if (char === " ") {
       // ignore whitespace
       continue;
+    } else if (char === ",") {
+      if (currentToken !== "") {
+        tokens.push(currentToken);
+      }
+      currentToken = "";
     } else if (!isNaN(+char) || char === "." || (char === "-" && currentToken.length === 0)) {
       // append digits and decimal points to current token
       currentToken += char;

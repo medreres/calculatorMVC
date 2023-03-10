@@ -1,10 +1,10 @@
 html {
-  font-size: 62.5%;
   box-sizing: border-box;
 }
 
 body {
   display: flex;
+  /* font-size: 62.5%; */
   justify-content: center;
 }
 
@@ -60,9 +60,13 @@ body {
   font-size: 4rem;
 }
 
-button {
+.calc-btn {
   height: 60px;
   font-size: 2rem !important;
+  text-overflow: ellipsis;
+  overflow: auto;
+
+  white-space: normal;
 }
 
 .equal-sign {
@@ -76,6 +80,7 @@ button {
   grid-gap: 20px;
   padding: 20px;
   width: 100%;
+
   /* flex-basis: 200vw; */
 }
 
@@ -94,4 +99,9 @@ button {
   grid-gap: 10px;
   padding: 20px;
   width: 100%;
+}
+
+.modal-btn {
+  grid-column: 1 / span 4;
+  grid-row: -1;
 }
