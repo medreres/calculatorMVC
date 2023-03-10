@@ -3,9 +3,9 @@ import Observer from "../../../lib/Observer";
 import ICalculatorView from "../../interface";
 import { operations } from "../buttons.config";
 import { Operation } from "../../../lib/Calculator";
-import { clearModalInput } from "./helper";
+import CalculatorView from "../CalculatorView";
 
-export const btnClickHandler = (btnValue: string, viewInstance: ICalculatorView) => {
+export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView) => {
   const observer = new Observer().getInstance();
   if (btnValue === operations.CALCULATE) {
     return () => {

@@ -1,7 +1,7 @@
 import Observer from "../../../lib/Observer";
 import { events } from "../../../shared/events.config";
-import ICalculatorView from "../../interface";
 import { buttonValues, operations } from "../buttons.config";
+import CalculatorView from "../CalculatorView";
 import { addFunctionHandler, btnClickHandler } from "./handlers";
 
 export function createExpressionInput(): HTMLInputElement {
@@ -31,7 +31,7 @@ export function createResultInput(): HTMLInputElement {
 }
 
 export const createButtonsContainer = (
-  viewInstance: ICalculatorView
+  viewInstance: CalculatorView
 ): {
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
@@ -42,11 +42,8 @@ export const createButtonsContainer = (
 
   buttonValues.forEach((row) =>
     row.forEach((value) => {
-      const button = createButton(value);
-      // TODO refactor
-      let clickHandler = btnClickHandler(button.value, viewInstance);
+      const button = createButton(viewInstance, value);
       buttons.push(button);
-      button.onclick = clickHandler;
       buttonsContainer.appendChild(button);
     })
   );
@@ -54,17 +51,9 @@ export const createButtonsContainer = (
   return { buttons, buttonsContainer };
 };
 
-export function createOperation() {
+export function createNewOperation(viewInstance: CalculatorView) {
   const addNewOperationContainer = document.createElement("div");
-  const modalBtn = document.createElement("button");
-  modalBtn.type = "button";
-  modalBtn.classList.add("btn", "btn-primary", "m-2", "modal-btn");
-  modalBtn.dataset["bsToggle"] = "modal";
-  modalBtn.dataset["bsTarget"] = "#exampleModal";
-  modalBtn.innerHTML = "Add new operation";
-  document.querySelector("#operations-keys")?.appendChild(modalBtn);
-  console.log(document.querySelector(".operations-keys"));
-
+  addNewOperationContainer.onsubmit = addFunctionHandler;
   addNewOperationContainer.innerHTML = `
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -82,7 +71,6 @@ export function createOperation() {
                 <div class="form-group py-1">
                   <input required type="number" class="form-control" id="functionPrecedence" aria-describedby="function precedence" placeholder="Function precedence">
                 </div>
-            
                 <div class="form-group py-1">
                   <input type="text" class="form-control" id="functionArguments" aria-describedby="function arguments" placeholder="Function arguments">
                   <small id="emailHelp" class="form-text text-muted">For example: a,b. Could be empty</small>
@@ -99,18 +87,21 @@ export function createOperation() {
             </form>
         </div>
       </div>
-      
     </div>
-
-    
   `;
 
-  addNewOperationContainer.onsubmit = addFunctionHandler;
+  const modalBtn = document.createElement("button");
+  modalBtn.type = "button";
+  modalBtn.classList.add("btn", "btn-primary", "m-2", "modal-btn");
+  modalBtn.dataset["bsToggle"] = "modal";
+  modalBtn.dataset["bsTarget"] = "#exampleModal";
+  modalBtn.innerHTML = "Add new operation";
+  viewInstance.additionalOperationsButtonsConatiner.appendChild(modalBtn);
 
   return addNewOperationContainer;
 }
 
-export function createAdditionalOperationsContainer(viewInstance: ICalculatorView): {
+export function createAdditionalOperationsContainer(viewInstance: CalculatorView): {
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
 } {
@@ -121,31 +112,20 @@ export function createAdditionalOperationsContainer(viewInstance: ICalculatorVie
   buttonsContainer.classList.add("operations-keys");
   buttonsContainer.id = "operations-keys";
   additionalOperations.forEach((value) => {
-    const button = createButton(value);
-    let clickHandler = btnClickHandler(button.value, viewInstance);
+    const button = createButton(viewInstance, value);
     buttons.push(button);
-    button.onclick = clickHandler;
     buttonsContainer.appendChild(button);
   });
-
-  const modalBtn = document.createElement("button");
-  modalBtn.type = "button";
-  modalBtn.classList.add("btn", "btn-primary", "m-2", "modal-btn");
-  modalBtn.dataset["bsToggle"] = "modal";
-  modalBtn.dataset["bsTarget"] = "#exampleModal";
-  modalBtn.innerHTML = "Add new operation";
-
-  buttonsContainer.appendChild(modalBtn);
 
   return { buttons, buttonsContainer };
 }
 
-export const createButton = (btnValue: string) => {
+export const createButton = (viewInstance: CalculatorView, btnValue: string) => {
   const button = document.createElement("button");
-  if (!isNaN(+btnValue)) button.classList.add("btn", "btn-light", "waves-effect");
+  const classList = [];
   let innerHtml = null;
   let value = null;
-  const classList = [];
+
   switch (btnValue) {
     case operations.DOT:
       classList.push("calc-btn", "decimal", "function", "btn", "btn-secondary");
@@ -173,9 +153,25 @@ export const createButton = (btnValue: string) => {
 
   // if inner html and value haven't been set, set to default
   if (classList.length === 0) classList.push("calc-btn", "operator", "btn", "btn-info");
+
+  if (!isNaN(+btnValue)) button.classList.add("btn", "btn-light", "waves-effect");
+
+  button.onclick = btnClickHandler(btnValue, viewInstance);
   button.innerHTML = innerHtml ?? btnValue;
   button.value = value ?? btnValue;
   button.classList.add(...classList);
 
   return button;
+};
+
+export const createaCalculatorButtonsContainer = (
+  buttonsContainer: HTMLDivElement,
+  additionalOperationsContainer: HTMLDivElement
+): HTMLDivElement => {
+  const calculatorButtonsContainer = document.createElement("div");
+  calculatorButtonsContainer.classList.add("calculator-keys-container");
+  calculatorButtonsContainer.appendChild(additionalOperationsContainer);
+  calculatorButtonsContainer.appendChild(buttonsContainer);
+
+  return calculatorButtonsContainer;
 };

@@ -1,19 +1,19 @@
 import { events } from "../../shared/events.config";
 import ICalculatorView from "../interface";
 import {
+  createaCalculatorButtonsContainer,
   createAdditionalOperationsContainer,
   createButton,
   createButtonsContainer,
   createExpressionInput,
-  createOperation,
+  createNewOperation,
   createResultInput,
 } from "./utils/elements";
 import { btnClickHandler } from "./utils/handlers";
 import Observer from "../../lib/Observer";
-import "./styles.css";
 import { clearModalInput } from "./utils/helper";
+import "./styles.css";
 
-// TODO tests
 class CalculatorView implements ICalculatorView {
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
@@ -36,22 +36,25 @@ class CalculatorView implements ICalculatorView {
     this.resultInput = createResultInput();
     this.container.appendChild(this.resultInput);
 
+    // main buttons
     const { buttons, buttonsContainer } = createButtonsContainer(this);
     this.buttons = buttons;
 
-    const { buttons: operationButtons, buttonsContainer: operationButtonsContainer } =
+    // additional operations
+    const { buttons: operationButtons, buttonsContainer: additionalOperationsContainer } =
       createAdditionalOperationsContainer(this);
     this.additionalOperationsButtons = operationButtons;
-    this.additionalOperationsButtonsConatiner = operationButtonsContainer;
+    this.additionalOperationsButtonsConatiner = additionalOperationsContainer;
 
-    const keysContainer = document.createElement("div");
-    keysContainer.classList.add("calculator-keys-container");
-    keysContainer.appendChild(operationButtonsContainer);
-    keysContainer.appendChild(buttonsContainer);
-    this.container.appendChild(keysContainer);
+    // wrapper for all buttons
+    const calculatorButtonsContainer = createaCalculatorButtonsContainer(
+      buttonsContainer,
+      additionalOperationsContainer
+    );
+    this.container.appendChild(calculatorButtonsContainer);
 
-    const addNewOperationContainer = createOperation();
-
+    // create new operation
+    const addNewOperationContainer = createNewOperation(this);
     this.container.appendChild(addNewOperationContainer);
 
     // set rest of the observers
@@ -76,7 +79,7 @@ class CalculatorView implements ICalculatorView {
     });
 
     this.observer.on(events.VIEW_ADD_BUTTON, (symbol: string) => {
-      const button = createButton(symbol);
+      const button = createButton(this, symbol);
       let clickHandler = btnClickHandler(button.value, this);
       button.onclick = clickHandler;
       this.additionalOperationsButtonsConatiner.appendChild(button);
