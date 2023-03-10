@@ -4,9 +4,9 @@ import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
 
 class CalculatorModel implements ICalculatorModel {
-  private calculator = new Calc();
   expression: string;
   result: number | string;
+  private calculator = new Calc();
   private observer: Observer = new Observer().getInstance();
 
   constructor() {
