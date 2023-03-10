@@ -4,9 +4,11 @@ describe("Simple operations.", () => {
   test("1 + 2 = 3", () => {
     expect(evaluator.evaluate("1 + 2")).toBe(3);
   });
+
   test("-2=-2", () => {
     expect(evaluator.evaluate("-2")).toBe(-2);
   });
+
   test("-2 - 3 - 5 = -10", () => {
     expect(evaluator.evaluate("-2 - 3 - 5")).toBe(-10);
   });

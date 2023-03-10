@@ -1,8 +1,7 @@
 import Operation from "../Operation/Operation";
 import { ICalculator } from "./interface";
-import { parseExpression } from "./utils";
 import operations from "./operations.config";
-import { evaluateExpression, handleParenthesis, IParams, performResidualOperations } from "./services";
+import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
@@ -28,16 +27,10 @@ class Calculator implements ICalculator {
     this.operations.set(operation.symbol, operation);
   }
 
-  // getAllOperations() {
-  //   return { ...this.operations.entries() };
-  // }
-
   evaluate(expression: string): number {
     // get all the operation symbols, except function names
     const operationSymbols = Array.from(this.operations.keys()).filter((operation) => operation.length === 1);
     const tokens = parseExpression(expression, operationSymbols);
-
-    // console.log(tokens)
 
     const numberStack: number[] = [];
     const operatorStack: string[] = [];
@@ -80,10 +73,3 @@ class Calculator implements ICalculator {
 }
 
 export default Calculator;
-
-// const expression = "max( max (10,3),  15)";
-// const expression = "( 2 + 2 * 2 ) * 3";
-// const operation = new Operation("max", 3, (a: number, b: number) => Math.max(a, b));
-// const calc = new Calculator();
-// calc.addNewOperation(operation);
-// calc.evaluate(expression);

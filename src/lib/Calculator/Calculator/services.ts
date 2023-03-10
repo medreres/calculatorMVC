@@ -10,14 +10,13 @@ export interface IParams {
 
 /**
  * @description takes last operation from operation stack and performs it
- * @returns symbol of operation performed
+ * @returns {string} symbol of operation performed
  */
 export function performLastOperation(params: IParams): string {
   const { operatorStack, numberStack, getOperation } = params;
+
   const lastOperationSymbol = operatorStack.pop() as string;
   const lastOperation = getOperation(lastOperationSymbol) as Operation;
-
-  // if (lastOperationSymbol === "(") throw new Error("Invalid expression");
 
   const result = performOperation({ ...params, operation: lastOperation });
   numberStack.push(result);
@@ -28,7 +27,7 @@ export function performLastOperation(params: IParams): string {
  * @description takes quantity of numbers needed to perform operation from
  * number stack and performs the operation via operation.operation method
  * @param {Operation} operation operation to perform
- * @returns result of operation
+ * @returns {number} result of operation
  */
 export function performOperation({ numberStack, operation }: IParams): number {
   const operands = [];
@@ -48,22 +47,18 @@ export function performOperation({ numberStack, operation }: IParams): number {
 export function handleParenthesis(params: IParams) {
   let { symbol, operatorStack } = params;
 
+  // just push to the operators stack and wait until closing parenthesis occurs
   if (symbol === "(") {
-    // just push to the operators stack and wait until closing parenthesis occurs
     return operatorStack.push(symbol);
   }
 
   // perform all operations available in stack until opening parenthesis
   symbol = operatorStack[operatorStack.length - 1];
-  // if (symbol === '(') throw new Error(`Invalid expression`)
+
   while (symbol !== "(") {
     performLastOperation(params);
     symbol = operatorStack[operatorStack.length - 1];
-
-    // take remaining operation and check if its parenthesis
-    // symbol = this.operatorStack[this.operatorStack.length - 1];
   }
-  // while (symbol !== "(");
 
   operatorStack.pop();
 
@@ -71,12 +66,11 @@ export function handleParenthesis(params: IParams) {
   if (operatorStack.length > 0 && operatorStack[operatorStack.length - 1].length > 1) {
     performLastOperation(params);
   }
-
-  
 }
 
 export function evaluateExpression(params: IParams) {
   const { operation, operatorStack, getOperation } = params;
+
   if (operatorStack.length === 0) {
     return operatorStack.push(operation!.symbol);
   }
@@ -91,13 +85,73 @@ export function evaluateExpression(params: IParams) {
 }
 
 export function performResidualOperations(params: IParams) {
-  const { operatorStack, numberStack, getOperation } = params;
-  while (operatorStack.length > 0) {
-    const symbol = operatorStack.pop();
-    if (symbol === "(") throw new Error("Invalid expression");
+  const { operatorStack } = params;
 
-    const operation = getOperation(symbol as string) as Operation;
-    const result = performOperation({ ...params, operation });
-    numberStack.push(result);
+  while (operatorStack.length > 0) {
+    const symbol = performLastOperation(params);
+
+    if (symbol === "(") throw new Error("Extra parentheses");
   }
+}
+
+export function parseExpression(expression: string, operationsSymbols: string[]): (string | number)[] {
+  const tokens = [];
+  const regexRaw = `[${operationsSymbols.map((operation) => `\\${operation}`)}]`;
+  const operationRegex = new RegExp(regexRaw);
+  const functionRegex = /[a-zA-Z]/;
+  let currentToken = "";
+
+  for (let i = 0; i < expression.length; i++) {
+    const char = expression.charAt(i);
+
+    if (char === " ") {
+      continue;
+    } else if (char === ",") {
+      // should function with multiple arguments occur
+      // just ignore commas and add values to number stack
+      if (currentToken !== "") {
+        tokens.push(currentToken);
+      }
+
+      currentToken = "";
+    } else if (!isNaN(+char) || char === "." || (char === "-" && currentToken.length === 0)) {
+      // append digits and decimal points to current token
+      currentToken += char;
+    } else if (operationRegex.test(char)) {
+      // push current token and operator to tokens array
+      if (currentToken !== "") {
+        tokens.push(currentToken);
+        currentToken = "";
+      }
+
+      tokens.push(char);
+    } else if (functionRegex.test(char)) {
+      // parse function name and push to tokens array
+      let functionName = char;
+      i++;
+
+      while (i < expression.length && functionRegex.test(expression.charAt(i))) {
+        functionName += expression.charAt(i);
+        i++;
+      }
+
+      tokens.push(functionName);
+      i--;
+    } else {
+      throw new Error(`Invalid character '${char}' at position ${i}`);
+    }
+  }
+
+  // push last token to array (if it exists)
+  if (currentToken !== "") {
+    tokens.push(currentToken);
+  }
+
+  // if first number is negative, combine minus operation and number
+  if (tokens[0] === "-") {
+    tokens.shift();
+    tokens[0] = -tokens[0];
+  }
+
+  return tokens;
 }
