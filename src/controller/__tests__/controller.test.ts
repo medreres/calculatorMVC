@@ -1,6 +1,6 @@
 import { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
-import { events } from "../../shared/events.config";
+import { events } from "../../shared/сonfig";
 import CalculatorController from "../CalculatorController";
 
 const observer = new Observer().getInstance();

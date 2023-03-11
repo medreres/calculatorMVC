@@ -1,8 +1,9 @@
 import Observer from "../../../lib/Observer";
-import { events } from "../../../shared/events.config";
-import { buttonValues, operations } from "../buttons.config";
+import { events } from "../../../shared/сonfig";
+import { buttonValues, Actions } from "../config";
 import CalculatorView from "../CalculatorView";
 import { addFunctionHandler, btnClickHandler } from "./handlers";
+import { Operations } from "../../../lib/Calculator";
 
 export function createExpressionInput(): HTMLInputElement {
   const observer = new Observer().getInstance();
@@ -54,6 +55,7 @@ export const createButtonsContainer = (
 export function createNewOperation(viewInstance: CalculatorView) {
   const addNewOperationContainer = document.createElement("div");
   addNewOperationContainer.onsubmit = addFunctionHandler;
+  // TODO refactor
   addNewOperationContainer.innerHTML = `
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -75,6 +77,7 @@ export function createNewOperation(viewInstance: CalculatorView) {
                   <input type="text" class="form-control" id="functionArguments" aria-describedby="function arguments" placeholder="Function arguments">
                   <small id="emailHelp" class="form-text text-muted">For example: a,b. Could be empty</small>
                 </div>
+                // TODO custom functions return with new arguments (flag)
                 <div class="form-group py-1">
                   <input required type="text" class="form-control" id="functionBody" aria-describedby="function body" placeholder="Function body">
                   <small id="emailHelp" class="form-text text-muted">What function returns. JS Math library is supported</small>
@@ -105,7 +108,11 @@ export function createAdditionalOperationsContainer(viewInstance: CalculatorView
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
 } {
-  const additionalOperations: string[] = ["(", ")", "^"];
+  const additionalOperations: string[] = [
+    Operations.LEFT_PARENTHESIS,
+    Operations.RIGHT_PARENTHESIS,
+    Operations.EXPONENTIATION,
+  ];
   const buttons: HTMLButtonElement[] = [];
 
   const buttonsContainer = document.createElement("div");
@@ -127,27 +134,27 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
   let value = null;
 
   switch (btnValue) {
-    case operations.DOT:
+    case Operations.DOT:
       classList.push("calc-btn", "decimal", "function", "btn", "btn-secondary");
       break;
 
-    case operations.CLEAR_INPUT:
+    case Actions.CLEAR_INPUT:
       classList.push("calc-btn", "all-clear", "function", "btn", "btn-danger", "btn-sm");
       value = btnValue;
       break;
 
-    case operations.CALCULATE:
+    case Actions.CALCULATE:
       classList.push("calc-btn", "equal-sign", "operator", "btn", "btn-light");
       break;
 
-    case operations.MULTIPLICATION:
+    case Operations.MULTIPLICATION:
       innerHtml = "&times;";
-      value = operations.MULTIPLICATION;
+      value = Operations.MULTIPLICATION;
       break;
 
-    case operations.DIVISION:
+    case Operations.DIVISION:
       innerHtml = "&divide";
-      value = operations.DIVISION;
+      value = Operations.DIVISION;
       break;
   }
 

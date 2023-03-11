@@ -1,4 +1,5 @@
 import Operation from "../Operation/Operation";
+import { Operations } from "./config";
 
 export interface IParams {
   operatorStack: string[];
@@ -48,14 +49,14 @@ export function handleParenthesis(params: IParams) {
   let { symbol, operatorStack } = params;
 
   // just push to the operators stack and wait until closing parenthesis occurs
-  if (symbol === "(") {
+  if (symbol === Operations.LEFT_PARENTHESIS) {
     return operatorStack.push(symbol);
   }
 
   // perform all operations available in stack until opening parenthesis
   symbol = operatorStack[operatorStack.length - 1];
 
-  while (symbol !== "(") {
+  while (symbol !== Operations.RIGHT_PARENTHESIS) {
     performLastOperation(params);
     symbol = operatorStack[operatorStack.length - 1];
   }
@@ -90,7 +91,7 @@ export function performResidualOperations(params: IParams) {
   while (operatorStack.length > 0) {
     const symbol = performLastOperation(params);
 
-    if (symbol === "(") throw new Error("Extra parentheses");
+    if (symbol === Operations.LEFT_PARENTHESIS) throw new Error("Extra parentheses");
   }
 }
 
@@ -106,7 +107,7 @@ export function parseExpression(expression: string, operationsSymbols: string[])
 
     if (char === " ") {
       continue;
-    } else if (char === ",") {
+    } else if (char === Operations.COMMA) {
       // should function with multiple arguments occur
       // just ignore commas and add values to number stack
       if (currentToken !== "") {
@@ -114,7 +115,11 @@ export function parseExpression(expression: string, operationsSymbols: string[])
       }
 
       currentToken = "";
-    } else if (!isNaN(+char) || char === "." || (char === "-" && currentToken.length === 0)) {
+    } else if (
+      !isNaN(+char) ||
+      char === Operations.DOT ||
+      (char === Operations.SUBSTRACTION && currentToken.length === 0)
+    ) {
       // append digits and decimal points to current token
       currentToken += char;
     } else if (operationRegex.test(char)) {
@@ -148,7 +153,7 @@ export function parseExpression(expression: string, operationsSymbols: string[])
   }
 
   // if first number is negative, combine minus operation and number
-  if (tokens[0] === "-") {
+  if (tokens[0] === Operations.SUBSTRACTION) {
     tokens.shift();
     tokens[0] = -tokens[0];
   }

@@ -4,7 +4,6 @@ html {
 
 body {
   display: flex;
-  /* font-size: 62.5%; */
   justify-content: center;
 }
 
@@ -44,8 +43,6 @@ body {
   text-align: right;
   padding-right: 20px;
   padding-left: 10px;
-  /* padding-bottom: 20px;; */
-  /* font-size: 4rem; */
 }
 
 .calculator-screen {
@@ -65,7 +62,6 @@ body {
   font-size: 2rem !important;
   text-overflow: ellipsis;
   overflow: auto;
-
   white-space: normal;
 }
 
@@ -80,19 +76,14 @@ body {
   grid-gap: 20px;
   padding: 20px;
   width: 100%;
-
-  /* flex-basis: 200vw; */
 }
 
 .calculator-keys-container {
   display: grid;
   grid-template-columns: 40% 60%;
-  /* grid-gap: 20px; */
-  /* padding: 20px; */
 }
 
 .operations-keys {
-  /* flex-basis: 10%; */
   display: grid;
   grid-template-rows: repeat(5, 1fr);
   grid-template-columns: repeat(4, 1fr);

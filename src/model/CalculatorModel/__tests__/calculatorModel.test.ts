@@ -1,5 +1,5 @@
 import Observer from "../../../lib/Observer";
-import { events } from "../../../shared/events.config";
+import { events } from "../../../shared/сonfig";
 import CalculatorModel from "../CalculatorModel";
 
 describe("Calculator Model", () => {

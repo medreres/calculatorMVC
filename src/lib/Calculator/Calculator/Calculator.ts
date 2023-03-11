@@ -1,6 +1,6 @@
 import Operation from "../Operation/Operation";
 import { ICalculator } from "./interface";
-import operations from "./operations.config";
+import operations, { Operations } from "./config";
 import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
 
 /**
@@ -47,7 +47,8 @@ class Calculator implements ICalculator {
       if (!isNaN(token as number)) return numberStack.push(Number(token));
 
       params.symbol = token as string;
-      if (token === "(" || token === ")") return handleParenthesis(params);
+      if (token === Operations.LEFT_PARENTHESIS || token === Operations.RIGHT_PARENTHESIS)
+        return handleParenthesis(params);
 
       params.operation = this.getOperation(token as string);
       if (params.operation) return evaluateExpression(params);

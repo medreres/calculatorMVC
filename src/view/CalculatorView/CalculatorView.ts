@@ -1,4 +1,4 @@
-import { events } from "../../shared/events.config";
+import { events } from "../../shared/сonfig";
 import ICalculatorView from "../interface";
 import {
   createaCalculatorButtonsContainer,
@@ -14,6 +14,8 @@ import Observer from "../../lib/Observer";
 import { clearModalInput } from "./utils/helper";
 import "./styles.css";
 
+// TODO add example
+// TODO handle function creation better
 class CalculatorView implements ICalculatorView {
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
@@ -80,8 +82,7 @@ class CalculatorView implements ICalculatorView {
 
     this.observer.on(events.VIEW_ADD_BUTTON, (symbol: string) => {
       const button = createButton(this, symbol);
-      let clickHandler = btnClickHandler(button.value, this);
-      button.onclick = clickHandler;
+      button.onclick = btnClickHandler(button.value, this);
       this.additionalOperationsButtonsConatiner.appendChild(button);
 
       // close open modal for adding operation
