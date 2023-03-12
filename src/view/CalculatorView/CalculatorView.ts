@@ -1,4 +1,4 @@
-import { events } from "../../shared/сonfig";
+import { events } from "../../shared/config";
 import ICalculatorView from "../interface";
 import {
   createaCalculatorButtonsContainer,
@@ -12,8 +12,8 @@ import {
 import { btnClickHandler } from "./utils/handlers";
 import Observer from "../../lib/Observer";
 import { clearModalInput } from "./utils/helper";
-import "./styles.css";
 import { IObserver } from "../../shared/interface";
+import "./styles.css";
 
 class CalculatorView implements ICalculatorView, IObserver {
   container: HTMLDivElement;
@@ -30,7 +30,7 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.classList.add("calculator", "card");
 
     // expression input
-    this.expressionInput = createExpressionInput();
+    this.expressionInput = createExpressionInput(this);
     this.container.appendChild(this.expressionInput);
 
     // result input
@@ -78,8 +78,12 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.observer.on(event, callback);
   }
 
-  notify(event: string, data: any): void {
+  notify(event: string, data?: any): void {
     this.observer.notify(event, data);
+  }
+
+  getView(): HTMLElement {
+    return this.container;
   }
 
   private initializeObservers() {

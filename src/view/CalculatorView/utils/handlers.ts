@@ -1,30 +1,33 @@
-import { events } from "../../../shared/сonfig";
+import { events } from "../../../shared/config";
 import Observer from "../../../lib/Observer";
 import { Actions } from "../config";
 import { Operation, Operations } from "../../../lib/Calculator";
 import CalculatorView from "../CalculatorView";
 
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView) => {
-  const observer = new Observer().getInstance();
+  let handler;
+
   if (btnValue === Actions.CALCULATE) {
-    return () => {
-      observer.notify(events.VIEW_CALCULATE, btnValue);
+    handler = () => {
+      viewInstance.notify(events.VIEW_CALCULATE, btnValue);
     };
   } else if (btnValue == Actions.CLEAR_INPUT) {
-    return () => {
+    handler = () => {
       viewInstance.setExpression("");
       viewInstance.setResult("");
-      observer.notify(events.VIEW_INPUT_CLEARED);
+      viewInstance.notify(events.VIEW_INPUT_CLEARED);
     };
   } else {
-    return (e: Event) => {
+    handler = (e: Event) => {
       // if it's a number or a dot, then don't add any spaces, in other case add spaces on both sides
       const isNumber = !isNaN(+btnValue) || btnValue === Operations.DOT;
       const expression = `${viewInstance.getExpression()}${isNumber ? "" : " "}${btnValue}${isNumber ? "" : " "}`;
       viewInstance.setExpression(expression);
-      observer.notify(events.VIEW_INPUT_CHANGED, expression);
+      viewInstance.notify(events.VIEW_INPUT_CHANGED, expression);
     };
   }
+
+  return handler;
 };
 
 export const addFunctionHandler = (viewInstance: CalculatorView) => {

@@ -1,6 +1,6 @@
 import Operation from "../Operation/Operation";
 import { ICalculator } from "./interface";
-import operations, { Operations } from "./config";
+import { Operations, defaultOperations } from "./config";
 import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
 
 /**
@@ -11,10 +11,10 @@ import { evaluateExpression, handleParenthesis, IParams, parseExpression, perfor
  */
 class Calculator implements ICalculator {
   private operations: Map<string, Operation> = new Map();
-
+  
   constructor() {
     // initialize with some basics operaions
-    operations.forEach((operation) => this.operations.set(operation.symbol, operation));
+    defaultOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
   }
 
   /**

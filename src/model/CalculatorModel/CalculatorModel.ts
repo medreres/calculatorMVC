@@ -1,4 +1,4 @@
-import { events } from "../../shared/сonfig";
+import { events } from "../../shared/config";
 import Calc, { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";

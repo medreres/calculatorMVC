@@ -1,24 +1,24 @@
 import Observer from "../../../lib/Observer";
-import { events } from "../../../shared/сonfig";
+import { events } from "../../../shared/config";
 import { buttonValues, Actions } from "../config";
 import CalculatorView from "../CalculatorView";
 import { addFunctionHandler, btnClickHandler } from "./handlers";
 import { Operations } from "../../../lib/Calculator";
 
-export function createExpressionInput(): HTMLInputElement {
+export function createExpressionInput(viewInstance: CalculatorView): HTMLInputElement {
   const observer = new Observer().getInstance();
   const expressionInput = document.createElement("input");
   expressionInput.classList.add("calculator-screen", "z-depth-1");
 
   // set event broadcasting for input
   expressionInput.oninput = (e) => {
-    observer.notify(events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
+    viewInstance.notify(events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
   };
 
   // if the user presses the "Enter" key on the keyboard fire calcualte event
   expressionInput.onkeydown = (event) => {
     if (event.key === "Enter") {
-      observer.notify(events.VIEW_CALCULATE);
+      viewInstance.notify(events.VIEW_CALCULATE);
     }
   };
   return expressionInput;
@@ -57,6 +57,7 @@ export function createNewOperation(viewInstance: CalculatorView) {
   addNewOperationContainer.onsubmit = addFunctionHandler(viewInstance);
   // TODO add js syntax highlight for better user experience
   // TODO save added operations in local storage
+  // TODO removable and editable operations
   addNewOperationContainer.innerHTML = `
     <!-- Modal -->
     <div class="modal fade" id="addOperationModal" tabindex="-1" aria-labelledby="add operation modal" aria-hidden="true">

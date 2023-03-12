@@ -1,7 +1,7 @@
-import { Operation } from "../../lib/Calculator";
-import Observer from "../../lib/Observer";
-import { events } from "../../shared/сonfig";
-import CalculatorController from "../CalculatorController";
+import { Operation } from "../../../lib/Calculator";
+import Observer from "../../../lib/Observer";
+import { events } from "../../../shared/config";
+import { initializeController } from "./utils";
 
 const observer = new Observer().getInstance();
 
@@ -104,11 +104,3 @@ describe("Calculator Controller", () => {
     expect(isOperationAdded).toBe(false);
   });
 });
-
-const initializeController = () => {
-  const mockView = {} as any;
-  const mockModel = {} as any;
-  const controller = new CalculatorController(mockModel, mockView);
-
-  return controller;
-};

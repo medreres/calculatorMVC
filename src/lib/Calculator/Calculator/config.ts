@@ -12,7 +12,7 @@ export enum Operations {
   DOT = ".",
 }
 
-export default [
+export const defaultOperations =  [
   new Operation(Operations.ADDITION, 1, (a: number, b: number) => a + b),
   new Operation(Operations.SUBSTRACTION, 1, (a: number, b: number) => a - b),
   new Operation(Operations.MULTIPLICATION, 2, (a: number, b: number) => a * b),
