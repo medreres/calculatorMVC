@@ -35,9 +35,11 @@ export const addFunctionHandler = (viewInstance: CalculatorView) => {
     const functionPrecedence = document.querySelector("#functionPrecedence") as HTMLInputElement;
     const functionSymbol = document.querySelector("#functionSymbol") as HTMLInputElement;
 
+    if (!isNaN(+functionSymbol.value)) return alert("Function symbol must not be a number");
+
     const argumentsArr = functionArguments.value.split(",");
 
-    const newOperationFunction = new Function(...argumentsArr, `return ${functionBody.value}`);
+    const newOperationFunction = new Function(...argumentsArr, `${functionBody.value}`);
 
     const newOperation = new Operation(functionSymbol.value, +functionPrecedence.value, newOperationFunction);
 

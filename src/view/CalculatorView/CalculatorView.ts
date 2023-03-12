@@ -15,8 +15,6 @@ import { clearModalInput } from "./utils/helper";
 import "./styles.css";
 import { IObserver } from "../../shared/interface";
 
-// TODO add example
-// TODO handle function creation better
 class CalculatorView implements ICalculatorView, IObserver {
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
