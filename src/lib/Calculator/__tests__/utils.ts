@@ -20,7 +20,6 @@ export const evaluator = (function () {
     }),
   ];
 
-  // adding new operations
   operations.forEach((operation) => evaluator.addNewOperation(operation));
 
   return evaluator;

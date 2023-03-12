@@ -1,6 +1,6 @@
 import { evaluator } from "./utils";
 
-describe("testing evaluating algorithm", () => {
+describe("testing evaluating algorithm for exceptions", () => {
   describe("Throw exception upon unknown operator", () => {
     test("log 2", () => {
       const foo = () => {
