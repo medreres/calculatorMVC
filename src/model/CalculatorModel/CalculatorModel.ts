@@ -2,8 +2,9 @@ import { events } from "../../shared/сonfig";
 import Calc, { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
+import { IObserver } from "../../shared/interface";
 
-class CalculatorModel implements ICalculatorModel {
+class CalculatorModel implements ICalculatorModel, IObserver {
   expression: string;
   result: number | string;
   private calculator = new Calc();
@@ -26,6 +27,14 @@ class CalculatorModel implements ICalculatorModel {
     return this.result as string;
   }
 
+  on(event: string, callback: Function): void {
+    this.observer.on(event, callback);
+  }
+
+  notify(event: string, data?: any): void {
+    this.observer.notify(event, data);
+  }
+
   calculate(): number | string {
     try {
       const result = this.calculator.evaluate(this.expression);
@@ -41,21 +50,21 @@ class CalculatorModel implements ICalculatorModel {
 
   // initialize all event listeners
   private setObservers() {
-    this.observer.on(events.MODEL_CALCULATE, () => {
+    this.on(events.MODEL_CALCULATE, () => {
       const result = this.calculate();
-      this.observer.notify(events.MODEL_CALCULATED, result);
+      this.notify(events.MODEL_CALCULATED, result);
     });
 
-    this.observer.on(events.MODEL_CHANGE_INPUT, (data: string) => {
+    this.on(events.MODEL_CHANGE_INPUT, (data: string) => {
       this.setExpression(data);
     });
 
-    this.observer.on(events.MODEL_CLEAR_INPUT, () => {
+    this.on(events.MODEL_CLEAR_INPUT, () => {
       this.setExpression("");
       this.setResult("");
     });
 
-    this.observer.on(events.MODEL_ADD_NEW_OPERATION, (operation: Operation) => {
+    this.on(events.MODEL_ADD_NEW_OPERATION, (operation: Operation) => {
       this.calculator.addNewOperation(operation);
     });
   }

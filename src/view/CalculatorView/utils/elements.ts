@@ -54,15 +54,16 @@ export const createButtonsContainer = (
 
 export function createNewOperation(viewInstance: CalculatorView) {
   const addNewOperationContainer = document.createElement("div");
-  addNewOperationContainer.onsubmit = addFunctionHandler;
-  // TODO refactor
+  addNewOperationContainer.onsubmit = addFunctionHandler(viewInstance);
+  // TODO add js syntax highlight for better user experience
+  // TODO save added operations in local storage
   addNewOperationContainer.innerHTML = `
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addOperationModal" tabindex="-1" aria-labelledby="add operation modal" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+            <h1 class="modal-title fs-5" id="addOperationModalLabel">Add Operation</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <form>
@@ -77,10 +78,9 @@ export function createNewOperation(viewInstance: CalculatorView) {
                   <input type="text" class="form-control" id="functionArguments" aria-describedby="function arguments" placeholder="Function arguments">
                   <small id="emailHelp" class="form-text text-muted">For example: a,b. Could be empty</small>
                 </div>
-                // TODO custom functions return with new arguments (flag)
-                <div class="form-group py-1">
-                  <input required type="text" class="form-control" id="functionBody" aria-describedby="function body" placeholder="Function body">
-                  <small id="emailHelp" class="form-text text-muted">What function returns. JS Math library is supported</small>
+                <div class="form-outline py-1">
+                  <textarea required type="text" class="form-control" id="functionBody" aria-describedby="function body" placeholder="Function body"></textarea>
+                  <small id="emailHelp" class="form-text text-muted">Declaration of function body using JavaScript. Must include return statement and make use of arguments declared above</small>
                 </div>
                 </div>
                 <div class="modal-footer">
@@ -97,7 +97,7 @@ export function createNewOperation(viewInstance: CalculatorView) {
   modalBtn.type = "button";
   modalBtn.classList.add("btn", "btn-primary", "m-2", "modal-btn");
   modalBtn.dataset["bsToggle"] = "modal";
-  modalBtn.dataset["bsTarget"] = "#exampleModal";
+  modalBtn.dataset["bsTarget"] = "#addOperationModal";
   modalBtn.innerHTML = "Add new operation";
   viewInstance.additionalOperationsButtonsConatiner.appendChild(modalBtn);
 

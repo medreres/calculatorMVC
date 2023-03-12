@@ -1,6 +1,5 @@
 import { events } from "../../../shared/сonfig";
 import Observer from "../../../lib/Observer";
-import ICalculatorView from "../../interface";
 import { Actions } from "../config";
 import { Operation, Operations } from "../../../lib/Calculator";
 import CalculatorView from "../CalculatorView";
@@ -28,22 +27,20 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView) 
   }
 };
 
-export const addFunctionHandler = (e: Event) => {
-  e.preventDefault();
+export const addFunctionHandler = (viewInstance: CalculatorView) => {
+  return (e: Event) => {
+    e.preventDefault();
+    const functionBody = document.querySelector("#functionBody") as HTMLInputElement;
+    const functionArguments = document.querySelector("#functionArguments") as HTMLInputElement;
+    const functionPrecedence = document.querySelector("#functionPrecedence") as HTMLInputElement;
+    const functionSymbol = document.querySelector("#functionSymbol") as HTMLInputElement;
 
-  const functionBody = document.querySelector("#functionBody") as HTMLInputElement;
-  const functionArguments = document.querySelector("#functionArguments") as HTMLInputElement;
-  const functionPrecedence = document.querySelector("#functionPrecedence") as HTMLInputElement;
-  const functionSymbol = document.querySelector("#functionSymbol") as HTMLInputElement;
+    const argumentsArr = functionArguments.value.split(",");
 
-  const argumentsArr = functionArguments.value.split(",");
+    const newOperationFunction = new Function(...argumentsArr, `return ${functionBody.value}`);
 
-  const newOperationFunction = new Function(...argumentsArr, `return ${functionBody.value}`);
+    const newOperation = new Operation(functionSymbol.value, +functionPrecedence.value, newOperationFunction);
 
-  const newOperation = new Operation(functionSymbol.value, +functionPrecedence.value, newOperationFunction);
-
-  // TODO take from class instead
-  const observer = new Observer().getInstance();
-
-  observer.notify(events.VIEW_ADD_NEW_OPERATION, newOperation);
+    viewInstance.notify(events.VIEW_ADD_NEW_OPERATION, newOperation);
+  };
 };

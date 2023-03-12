@@ -13,10 +13,11 @@ import { btnClickHandler } from "./utils/handlers";
 import Observer from "../../lib/Observer";
 import { clearModalInput } from "./utils/helper";
 import "./styles.css";
+import { IObserver } from "../../shared/interface";
 
 // TODO add example
 // TODO handle function creation better
-class CalculatorView implements ICalculatorView {
+class CalculatorView implements ICalculatorView, IObserver {
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
   resultInput: HTMLInputElement;
@@ -60,7 +61,7 @@ class CalculatorView implements ICalculatorView {
     this.container.appendChild(addNewOperationContainer);
 
     // set rest of the observers
-    this.setObservers();
+    this.initializeObservers();
   }
 
   setExpression(expression: string) {
@@ -75,12 +76,20 @@ class CalculatorView implements ICalculatorView {
     this.resultInput.value = result;
   }
 
-  private setObservers() {
-    this.observer.on(events.VIEW_SET_RESULT, (value: string) => {
+  on(event: string, callback: Function): void {
+    this.observer.on(event, callback);
+  }
+
+  notify(event: string, data: any): void {
+    this.observer.notify(event, data);
+  }
+
+  private initializeObservers() {
+    this.on(events.VIEW_SET_RESULT, (value: string) => {
       this.setResult(value);
     });
 
-    this.observer.on(events.VIEW_ADD_BUTTON, (symbol: string) => {
+    this.on(events.VIEW_ADD_BUTTON, (symbol: string) => {
       const button = createButton(this, symbol);
       button.onclick = btnClickHandler(button.value, this);
       this.additionalOperationsButtonsConatiner.appendChild(button);
@@ -92,7 +101,7 @@ class CalculatorView implements ICalculatorView {
       clearModalInput();
     });
 
-    this.observer.on(events.VIEW_ADDING_INVALID_OPERATION, () => {
+    this.on(events.VIEW_ADDING_INVALID_OPERATION, () => {
       alert("Function is invalid");
     });
   }
