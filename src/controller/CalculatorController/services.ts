@@ -38,7 +38,7 @@ const isValidOperation = (operation: Operation) => {
   try {
     const operationBody = operation.operation;
     const args = [];
-    
+
     for (let i = 0; i < operationBody.length; i++) {
       args.push(Math.random() * 100);
     }
@@ -46,11 +46,8 @@ const isValidOperation = (operation: Operation) => {
     // check for validity
     const res = operationBody(...args);
 
-    if (!isNaN(res)) {
-      return true;
-    } else {
-      return false;
-    }
+    // if return type is number, then operation is valid
+    return !isNaN(res);
   } catch (error) {
     return false;
   }

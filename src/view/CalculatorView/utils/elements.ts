@@ -66,18 +66,19 @@ export function createNewOperationContainer(viewInstance: CalculatorView) {
           <form>
             <div class="modal-body">
                 <div class="form-group py-1">
-                  <input required type="text" class="form-control" id="functionSymbol" aria-describedby="Function symbol" placeholder="Function symbol">
+                  <input required type="text" class="form-control" id="functionSymbol" aria-describedby="Function symbol" placeholder="*Function symbol">
+                  <small id="functionSymbol" class="form-text text-muted">May not be a number</small>
                 </div>
                 <div class="form-group py-1">
-                  <input required type="number" class="form-control" id="functionPrecedence" aria-describedby="function precedence" placeholder="Function precedence">
+                  <input required type="number" class="form-control" id="functionPrecedence" aria-describedby="function precedence" placeholder="*Function precedence">
                 </div>
                 <div class="form-group py-1">
                   <input type="text" class="form-control" id="functionArguments" aria-describedby="function arguments" placeholder="Function arguments">
-                  <small id="emailHelp" class="form-text text-muted">For example: a,b. Could be empty</small>
+                  <small id="functionArguments" class="form-text text-muted">For example: a,b. Could be empty</small>
                 </div>
                 <div class="form-outline py-1">
-                  <textarea required type="text" class="form-control" id="functionBody" aria-describedby="function body" placeholder="Function body"></textarea>
-                  <small id="emailHelp" class="form-text text-muted">Declaration of function body using JavaScript. Must include return statement and make use of arguments declared above</small>
+                  <textarea required type="text" class="form-control" id="functionBody" aria-describedby="function body" placeholder="*Function body"></textarea>
+                  <small id="functionBody" class="form-text text-muted">Declaration of function body using JavaScript. Must include return statement of number type and make use of arguments declared above</small>
                 </div>
                 </div>
                 <div class="modal-footer">

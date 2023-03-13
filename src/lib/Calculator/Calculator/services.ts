@@ -108,7 +108,7 @@ export function parseExpression(expression: string, operationsSymbols: string[])
     if (char === " ") {
       continue;
     } else if (char === Operations.COMMA) {
-      // should function with multiple arguments occur
+      // support of function with multiple arguments like max(1,3)
       // just ignore commas and add values to number stack
       if (currentToken !== "") {
         tokens.push(currentToken);
