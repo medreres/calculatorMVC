@@ -1,4 +1,3 @@
-import Observer from "../../../lib/Observer";
 import { events } from "../../../shared/config";
 import { buttonValues, Actions } from "../config";
 import CalculatorView from "../CalculatorView";
@@ -6,16 +5,13 @@ import { addFunctionHandler, btnClickHandler } from "./handlers";
 import { Operations } from "../../../lib/Calculator";
 
 export function createExpressionInput(viewInstance: CalculatorView): HTMLInputElement {
-  const observer = new Observer().getInstance();
   const expressionInput = document.createElement("input");
   expressionInput.classList.add("calculator-screen", "z-depth-1");
 
-  // set event broadcasting for input
   expressionInput.oninput = (e) => {
     viewInstance.notify(events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
   };
 
-  // if the user presses the "Enter" key on the keyboard fire calcualte event
   expressionInput.onkeydown = (event) => {
     if (event.key === "Enter") {
       viewInstance.notify(events.VIEW_CALCULATE);
@@ -52,12 +48,12 @@ export const createButtonsContainer = (
   return { buttons, buttonsContainer };
 };
 
-export function createNewOperation(viewInstance: CalculatorView) {
+//? add js syntax highlight for better user experience
+//? save added operations in local storage
+//? removable and editable operations
+export function createNewOperationContainer(viewInstance: CalculatorView) {
   const addNewOperationContainer = document.createElement("div");
   addNewOperationContainer.onsubmit = addFunctionHandler(viewInstance);
-  // TODO add js syntax highlight for better user experience
-  // TODO save added operations in local storage
-  // TODO removable and editable operations
   addNewOperationContainer.innerHTML = `
     <!-- Modal -->
     <div class="modal fade" id="addOperationModal" tabindex="-1" aria-labelledby="add operation modal" aria-hidden="true">

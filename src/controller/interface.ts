@@ -4,5 +4,6 @@ import ICalculatorView from "../view/interface";
 export default interface ICalculatorController {
   model: ICalculatorModel;
   view: ICalculatorView;
+
   getView(): HTMLElement;
 }

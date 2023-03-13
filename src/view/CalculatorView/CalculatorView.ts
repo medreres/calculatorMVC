@@ -1,18 +1,15 @@
-import { events } from "../../shared/config";
 import ICalculatorView from "../interface";
 import {
   createaCalculatorButtonsContainer,
   createAdditionalOperationsContainer,
-  createButton,
   createButtonsContainer,
   createExpressionInput,
-  createNewOperation,
+  createNewOperationContainer,
   createResultInput,
 } from "./utils/elements";
-import { btnClickHandler } from "./utils/handlers";
 import Observer from "../../lib/Observer";
-import { clearModalInput } from "./utils/helper";
 import { IObserver } from "../../shared/interface";
+import { initializeObservers } from "./services";
 import "./styles.css";
 
 class CalculatorView implements ICalculatorView, IObserver {
@@ -55,11 +52,11 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.appendChild(calculatorButtonsContainer);
 
     // create new operation
-    const addNewOperationContainer = createNewOperation(this);
+    const addNewOperationContainer = createNewOperationContainer(this);
     this.container.appendChild(addNewOperationContainer);
 
     // set rest of the observers
-    this.initializeObservers();
+    initializeObservers(this);
   }
 
   setExpression(expression: string) {
@@ -84,28 +81,6 @@ class CalculatorView implements ICalculatorView, IObserver {
 
   getView(): HTMLElement {
     return this.container;
-  }
-
-  private initializeObservers() {
-    this.on(events.VIEW_SET_RESULT, (value: string) => {
-      this.setResult(value);
-    });
-
-    this.on(events.VIEW_ADD_BUTTON, (symbol: string) => {
-      const button = createButton(this, symbol);
-      button.onclick = btnClickHandler(button.value, this);
-      this.additionalOperationsButtonsConatiner.appendChild(button);
-
-      // close open modal for adding operation
-      (document.querySelector("#closeModal") as HTMLButtonElement).click();
-
-      // clear inputs
-      clearModalInput();
-    });
-
-    this.on(events.VIEW_ADDING_INVALID_OPERATION, () => {
-      alert("Function is invalid");
-    });
   }
 }
 

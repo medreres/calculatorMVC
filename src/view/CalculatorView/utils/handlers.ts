@@ -1,10 +1,9 @@
 import { events } from "../../../shared/config";
-import Observer from "../../../lib/Observer";
 import { Actions } from "../config";
 import { Operation, Operations } from "../../../lib/Calculator";
 import CalculatorView from "../CalculatorView";
 
-export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView) => {
+export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;
 
   if (btnValue === Actions.CALCULATE) {
@@ -18,7 +17,7 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView) 
       viewInstance.notify(events.VIEW_INPUT_CLEARED);
     };
   } else {
-    handler = (e: Event) => {
+    handler = () => {
       // if it's a number or a dot, then don't add any spaces, in other case add spaces on both sides
       const isNumber = !isNaN(+btnValue) || btnValue === Operations.DOT;
       const expression = `${viewInstance.getExpression()}${isNumber ? "" : " "}${btnValue}${isNumber ? "" : " "}`;
@@ -33,6 +32,7 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView) 
 export const addFunctionHandler = (viewInstance: CalculatorView) => {
   return (e: Event) => {
     e.preventDefault();
+
     const functionBody = document.querySelector("#functionBody") as HTMLInputElement;
     const functionArguments = document.querySelector("#functionArguments") as HTMLInputElement;
     const functionPrecedence = document.querySelector("#functionPrecedence") as HTMLInputElement;
@@ -40,10 +40,7 @@ export const addFunctionHandler = (viewInstance: CalculatorView) => {
 
     if (!isNaN(+functionSymbol.value)) return alert("Function symbol must not be a number");
 
-    const argumentsArr = functionArguments.value.split(",");
-
-    const newOperationFunction = new Function(...argumentsArr, `${functionBody.value}`);
-
+    const newOperationFunction = new Function(...functionArguments.value.split(","), `${functionBody.value}`);
     const newOperation = new Operation(functionSymbol.value, +functionPrecedence.value, newOperationFunction);
 
     viewInstance.notify(events.VIEW_ADD_NEW_OPERATION, newOperation);

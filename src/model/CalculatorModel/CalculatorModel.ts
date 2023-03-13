@@ -1,4 +1,3 @@
-import { events } from "../../shared/config";
 import Calc, { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
@@ -28,16 +27,16 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return this.result as string;
   }
 
+  addNewOperation(operation: Operation): void {
+    this.calculator.addNewOperation(operation);
+  }
+
   on(event: string, callback: Function): void {
     this.observer.on(event, callback);
   }
 
   notify(event: string, data?: any): void {
     this.observer.notify(event, data);
-  }
-
-  addNewOperation(operation: Operation): void {
-    this.calculator.addNewOperation(operation);
   }
 
   calculate(): number | string {
