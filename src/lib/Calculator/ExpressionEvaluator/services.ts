@@ -33,7 +33,7 @@ export function performLastOperation(params: IParams): string {
 export function performOperation({ numberStack, operation }: IParams): number {
   const operands = [];
 
-  for (let i = 0; i < operation!.operate.length; i++) {
+  for (let i = 0; i < operation!.evaluate.length; i++) {
     const number = numberStack.pop();
 
     if (isNaN(number as number)) throw new Error("Invalid expression");
@@ -42,7 +42,7 @@ export function performOperation({ numberStack, operation }: IParams): number {
   }
 
   // reverse because operands come in reverse order
-  return operation!.operate(...(operands.reverse() as number[]));
+  return operation!.evaluate(...(operands.reverse() as number[]));
 }
 
 export function handleParenthesis(params: IParams) {

@@ -3,12 +3,12 @@ import { IOperation } from "./interface";
 class Operation implements IOperation {
   symbol: string;
   precedence: number;
-  operate: Function;
+  evaluate: Function;
 
-  constructor(symbol: string, precedence: number, operation: Function) {
+  constructor(symbol: string, precedence: number, evaluate: Function) {
     this.symbol = symbol;
     this.precedence = precedence;
-    this.operate = operation;
+    this.evaluate = evaluate;
   }
 }
 

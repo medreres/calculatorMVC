@@ -34,22 +34,22 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
   //   }
   // });
 };
+// TODO to be removed
+// const isValidOperation = (operation: Operation) => {
+//   try {
+//     const operationBody = operation.operate;
+//     const args = [];
 
-const isValidOperation = (operation: Operation) => {
-  try {
-    const operationBody = operation.operate;
-    const args = [];
+//     for (let i = 0; i < operationBody.length; i++) {
+//       args.push(Math.random() * 100);
+//     }
 
-    for (let i = 0; i < operationBody.length; i++) {
-      args.push(Math.random() * 100);
-    }
+//     // check for validity
+//     const res = operationBody(...args);
 
-    // check for validity
-    const res = operationBody(...args);
-
-    // if return type is number, then operation is valid
-    return !isNaN(res);
-  } catch (error) {
-    return false;
-  }
-};
+//     // if return type is number, then operation is valid
+//     return !isNaN(res);
+//   } catch (error) {
+//     return false;
+//   }
+// };
