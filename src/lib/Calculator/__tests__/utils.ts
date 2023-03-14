@@ -1,4 +1,4 @@
-import Calculator from "../Calculator/Calculator";
+import Calculator from "../ExpressionEvaluator/Evaluator";
 import Operation from "../Operation/Operation";
 
 export const evaluator = (function () {
