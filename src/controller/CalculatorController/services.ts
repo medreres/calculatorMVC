@@ -36,7 +36,7 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
 
 const isValidOperation = (operation: Operation) => {
   try {
-    const operationBody = operation.operation;
+    const operationBody = operation.operate;
     const args = [];
 
     for (let i = 0; i < operationBody.length; i++) {

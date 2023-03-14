@@ -6,7 +6,7 @@ export enum Actions {
 }
 
 export const buttonValues = [
-  [Operations.ADDITION, Operations.SUBSTRACTION, Operations.MULTIPLICATION, Operations.DIVISION],
+  [Operations.ADDITION, Operations.SUBTRACTION, Operations.MULTIPLICATION, Operations.DIVISION],
   ["7", "8", "9"],
   ["4", "5", "6"],
   ["1", "2", "3"],

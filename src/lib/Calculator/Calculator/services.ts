@@ -33,7 +33,7 @@ export function performLastOperation(params: IParams): string {
 export function performOperation({ numberStack, operation }: IParams): number {
   const operands = [];
 
-  for (let i = 0; i < operation!.operation.length; i++) {
+  for (let i = 0; i < operation!.operate.length; i++) {
     const number = numberStack.pop();
 
     if (isNaN(number as number)) throw new Error("Invalid expression");
@@ -42,7 +42,7 @@ export function performOperation({ numberStack, operation }: IParams): number {
   }
 
   // reverse because operands come in reverse order
-  return operation!.operation(...(operands.reverse() as number[]));
+  return operation!.operate(...(operands.reverse() as number[]));
 }
 
 export function handleParenthesis(params: IParams) {
@@ -118,7 +118,7 @@ export function parseExpression(expression: string, operationsSymbols: string[])
     } else if (
       !isNaN(+char) ||
       char === Operations.DOT ||
-      (char === Operations.SUBSTRACTION && currentToken.length === 0)
+      (char === Operations.SUBTRACTION && currentToken.length === 0)
     ) {
       // append digits and decimal points to current token
       currentToken += char;
@@ -153,7 +153,7 @@ export function parseExpression(expression: string, operationsSymbols: string[])
   }
 
   // if first number is negative, combine minus operation and number
-  if (tokens[0] === Operations.SUBSTRACTION) {
+  if (tokens[0] === Operations.SUBTRACTION) {
     tokens.shift();
     tokens[0] = -tokens[0];
   }

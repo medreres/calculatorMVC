@@ -1,6 +1,6 @@
 import ICalculatorView from "../interface";
 import {
-  createaCalculatorButtonsContainer,
+  createCalculatorButtonsContainer,
   createAdditionalOperationsContainer,
   createButtonsContainer,
   createExpressionInput,
@@ -18,7 +18,7 @@ class CalculatorView implements ICalculatorView, IObserver {
   resultInput: HTMLInputElement;
   buttons: HTMLButtonElement[];
   additionalOperationsButtons: HTMLButtonElement[];
-  additionalOperationsButtonsConatiner: HTMLDivElement;
+  additionalOperationsButtonsContainer: HTMLDivElement;
   private observer: Observer = new Observer().getInstance();
 
   constructor() {
@@ -42,10 +42,10 @@ class CalculatorView implements ICalculatorView, IObserver {
     const { buttons: operationButtons, buttonsContainer: additionalOperationsContainer } =
       createAdditionalOperationsContainer(this);
     this.additionalOperationsButtons = operationButtons;
-    this.additionalOperationsButtonsConatiner = additionalOperationsContainer;
+    this.additionalOperationsButtonsContainer = additionalOperationsContainer;
 
     // wrapper for all buttons
-    const calculatorButtonsContainer = createaCalculatorButtonsContainer(
+    const calculatorButtonsContainer = createCalculatorButtonsContainer(
       buttonsContainer,
       additionalOperationsContainer
     );

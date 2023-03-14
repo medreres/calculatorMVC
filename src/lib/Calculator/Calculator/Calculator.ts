@@ -13,7 +13,7 @@ class Calculator implements ICalculator {
   private operations: Map<string, Operation> = new Map();
   
   constructor() {
-    // initialize with some basics operaions
+    // initialize with some basics operations
     defaultOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
   }
 

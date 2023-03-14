@@ -97,7 +97,7 @@ export function createNewOperationContainer(viewInstance: CalculatorView) {
   modalBtn.dataset["bsToggle"] = "modal";
   modalBtn.dataset["bsTarget"] = "#addOperationModal";
   modalBtn.innerHTML = "Add new operation";
-  viewInstance.additionalOperationsButtonsConatiner.appendChild(modalBtn);
+  viewInstance.additionalOperationsButtonsContainer.appendChild(modalBtn);
 
   return addNewOperationContainer;
 }
@@ -169,7 +169,7 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
   return button;
 };
 
-export const createaCalculatorButtonsContainer = (
+export const createCalculatorButtonsContainer = (
   buttonsContainer: HTMLDivElement,
   additionalOperationsContainer: HTMLDivElement
 ): HTMLDivElement => {

@@ -12,7 +12,7 @@ export const initializeObservers = (viewInstance: CalculatorView) => {
   viewInstance.on(events.VIEW_ADD_BUTTON, (symbol: string) => {
     const button = createButton(viewInstance, symbol);
     button.onclick = btnClickHandler(button.value, viewInstance);
-    viewInstance.additionalOperationsButtonsConatiner.appendChild(button);
+    viewInstance.additionalOperationsButtonsContainer.appendChild(button);
 
     // close open modal for adding operation
     (document.querySelector("#closeModal") as HTMLButtonElement).click();

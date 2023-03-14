@@ -1,4 +1,4 @@
-import Calc, { Operation } from "../../lib/Calculator";
+import Calculator, { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
 import { IObserver } from "../../shared/interface";
@@ -7,7 +7,7 @@ import { initializeObservers } from "./services";
 class CalculatorModel implements ICalculatorModel, IObserver {
   expression: string;
   result: number | string;
-  private calculator = new Calc();
+  private calculator = new Calculator();
   private observer: Observer = new Observer().getInstance();
 
   constructor() {

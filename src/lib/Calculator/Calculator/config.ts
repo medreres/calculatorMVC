@@ -2,7 +2,7 @@ import Operation from "../Operation/Operation";
 
 export enum Operations {
   ADDITION = "+",
-  SUBSTRACTION = "-",
+  SUBTRACTION = "-",
   MULTIPLICATION = "*",
   DIVISION = "/",
   EXPONENTIATION = "^",
@@ -14,7 +14,7 @@ export enum Operations {
 
 export const defaultOperations =  [
   new Operation(Operations.ADDITION, 1, (a: number, b: number) => a + b),
-  new Operation(Operations.SUBSTRACTION, 1, (a: number, b: number) => a - b),
+  new Operation(Operations.SUBTRACTION, 1, (a: number, b: number) => a - b),
   new Operation(Operations.MULTIPLICATION, 2, (a: number, b: number) => a * b),
   new Operation(Operations.DIVISION, 2, (a: number, b: number) => a / b),
   new Operation(Operations.EXPONENTIATION, 3, (a: number, b: number) => a ** b),
