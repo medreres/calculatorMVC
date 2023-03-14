@@ -14,6 +14,8 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     this.expression = "";
     this.result = "";
     initializeObservers(this);
+
+    console.log(this.calculator.getAvailableOperations())
   }
 
   setExpression(expression: string) {

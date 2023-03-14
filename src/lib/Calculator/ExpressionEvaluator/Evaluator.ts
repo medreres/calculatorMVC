@@ -63,6 +63,10 @@ class Calculator implements ICalculator {
     return (numberStack.pop() as number) ?? 0;
   }
 
+  getAvailableOperations(): Operation[] {
+    return Array.from(this.operations.values())
+  }
+
   /**
    *
    * @param {string} operationSymbol symbol that represents the operation
