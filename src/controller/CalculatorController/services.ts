@@ -24,14 +24,15 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
   });
 
   // add new operation
-  controllerInstance.on(events.VIEW_ADD_NEW_OPERATION, (operation: Operation) => {
-    if (isValidOperation(operation)) {
-      controllerInstance.notify(events.MODEL_ADD_NEW_OPERATION, operation);
-      controllerInstance.notify(events.VIEW_ADD_BUTTON, operation.symbol);
-    } else {
-      controllerInstance.notify(events.VIEW_ADDING_INVALID_OPERATION);
-    }
-  });
+  // TODO could be removed
+  // controllerInstance.on(events.VIEW_ADD_NEW_OPERATION, (operation: Operation) => {
+  //   if (isValidOperation(operation)) {
+  //     controllerInstance.notify(events.MODEL_ADD_NEW_OPERATION, operation);
+  //     controllerInstance.notify(events.VIEW_ADD_BUTTON, operation.symbol);
+  //   } else {
+  //     controllerInstance.notify(events.VIEW_ADDING_INVALID_OPERATION);
+  //   }
+  // });
 };
 
 const isValidOperation = (operation: Operation) => {

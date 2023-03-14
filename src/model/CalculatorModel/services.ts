@@ -17,7 +17,7 @@ export const initializeObservers = (modelInstance: CalculatorModel) => {
     modelInstance.setResult("");
   });
 
-  modelInstance.on(events.MODEL_ADD_NEW_OPERATION, (operation: Operation) => {
+  modelInstance.on(events.ADD_NEW_OPERATION, (operation: Operation) => {
     modelInstance.addNewOperation(operation);
   });
 };

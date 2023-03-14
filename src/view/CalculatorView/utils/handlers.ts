@@ -29,20 +29,21 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
   return handler;
 };
 
-export const addFunctionHandler = (viewInstance: CalculatorView) => {
-  return (e: Event) => {
-    e.preventDefault();
+// TODO could be removed
+// export const addFunctionHandler = (viewInstance: CalculatorView) => {
+//   return (e: Event) => {
+//     e.preventDefault();
 
-    const functionBody = document.querySelector("#functionBody") as HTMLInputElement;
-    const functionArguments = document.querySelector("#functionArguments") as HTMLInputElement;
-    const functionPrecedence = document.querySelector("#functionPrecedence") as HTMLInputElement;
-    const functionSymbol = document.querySelector("#functionSymbol") as HTMLInputElement;
+//     const functionBody = document.querySelector("#functionBody") as HTMLInputElement;
+//     const functionArguments = document.querySelector("#functionArguments") as HTMLInputElement;
+//     const functionPrecedence = document.querySelector("#functionPrecedence") as HTMLInputElement;
+//     const functionSymbol = document.querySelector("#functionSymbol") as HTMLInputElement;
 
-    if (!isNaN(+functionSymbol.value)) return alert("Function symbol must not be a number");
+//     if (!isNaN(+functionSymbol.value)) return alert("Function symbol must not be a number");
 
-    const newOperationFunction = new Function(...functionArguments.value.split(","), `${functionBody.value}`);
-    const newOperation = new Operation(functionSymbol.value, +functionPrecedence.value, newOperationFunction);
+//     const newOperationFunction = new Function(...functionArguments.value.split(","), `${functionBody.value}`);
+//     const newOperation = new Operation(functionSymbol.value, +functionPrecedence.value, newOperationFunction);
 
-    viewInstance.notify(events.VIEW_ADD_NEW_OPERATION, newOperation);
-  };
-};
+//     viewInstance.notify(events.VIEW_ADD_NEW_OPERATION, newOperation);
+//   };
+// };

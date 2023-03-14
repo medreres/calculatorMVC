@@ -5,8 +5,8 @@ export const events = {
   VIEW_CALCULATE: "viewCalculate",
   VIEW_SET_RESULT: "viewSetResult",
   VIEW_CHANGE_INPUT: "viewChangeInput",
-  VIEW_ADD_NEW_OPERATION: "viewADdNewOperation",
   VIEW_ADD_BUTTON: "viewAddButton",
+  // TODO could be removed
   VIEW_ADDING_INVALID_OPERATION: "viewAddInvalidOperation",
 
   // Model events
@@ -14,5 +14,7 @@ export const events = {
   MODEL_CALCULATE: "modelCalculate",
   MODEL_CALCULATED: "modelCalculated",
   MODEL_CLEAR_INPUT: "modelClearInput",
-  MODEL_ADD_NEW_OPERATION: "modelAddNewOperation",
+
+  // global events
+  ADD_NEW_OPERATION: "addNewOperation",
 };

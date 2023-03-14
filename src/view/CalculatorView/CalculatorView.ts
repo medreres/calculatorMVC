@@ -4,7 +4,6 @@ import {
   createAdditionalOperationsContainer,
   createButtonsContainer,
   createExpressionInput,
-  createNewOperationContainer,
   createResultInput,
 } from "./utils/elements";
 import Observer from "../../lib/Observer";
@@ -52,8 +51,6 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.appendChild(calculatorButtonsContainer);
 
     // create new operation
-    const addNewOperationContainer = createNewOperationContainer(this);
-    this.container.appendChild(addNewOperationContainer);
 
     // set rest of the observers
     initializeObservers(this);

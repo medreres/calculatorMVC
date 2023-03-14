@@ -56,9 +56,13 @@ export function handleParenthesis(params: IParams) {
   // perform all operations available in stack until opening parenthesis
   symbol = operatorStack[operatorStack.length - 1];
 
-  while (symbol !== Operations.LEFT_PARENTHESIS) {
-    performLastOperation(params);
-    symbol = operatorStack[operatorStack.length - 1];
+  try {
+    while (symbol !== Operations.LEFT_PARENTHESIS) {
+      performLastOperation(params);
+      symbol = operatorStack[operatorStack.length - 1];
+    }
+  } catch (error) {
+    throw new SyntaxError("Missing parenthesis");
   }
 
   operatorStack.pop();
