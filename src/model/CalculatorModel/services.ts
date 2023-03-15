@@ -4,8 +4,12 @@ import CalculatorModel from "./CalculatorModel";
 
 export const initializeObservers = (modelInstance: CalculatorModel) => {
   modelInstance.on(events.MODEL_CALCULATE, () => {
-    const result = modelInstance.calculate();
-    modelInstance.notify(events.MODEL_CALCULATED, result);
+    if (isValidExpression(modelInstance)) {
+      const result = modelInstance.calculate();
+      modelInstance.notify(events.MODEL_CALCULATED, result);
+    } else {
+      modelInstance.notify(events.MODEL_INVALID_EXPRESSION);
+    }
   });
 
   modelInstance.on(events.MODEL_CHANGE_INPUT, (data: string) => {
@@ -21,3 +25,18 @@ export const initializeObservers = (modelInstance: CalculatorModel) => {
     modelInstance.addNewOperation(operation);
   });
 };
+
+function isValidExpression(modelInstance: CalculatorModel): boolean {
+  // ([+-]?\\d\\.?\\d?) - regex for numbers with floating point
+
+  // ${modelInstance
+  // .getAvailableOperations()
+  // .map((operation) => `(\\${operation.symbol})?`)
+  // .join("")})*$ retrieves all the available operators and turn into regex
+  const regexRaw = `^(([+-]?\\d\\.?\\d?)*\\s?${modelInstance
+    .getAvailableOperations()
+    .map((operation) => `(\\${operation.symbol})?`)
+    .join("")})*$`;
+  const regex = new RegExp(regexRaw);
+  return regex.test(modelInstance.getExpression());
+}

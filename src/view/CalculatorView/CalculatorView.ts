@@ -50,8 +50,6 @@ class CalculatorView implements ICalculatorView, IObserver {
     );
     this.container.appendChild(calculatorButtonsContainer);
 
-    // create new operation
-
     // set rest of the observers
     initializeObservers(this);
   }

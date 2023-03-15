@@ -1,4 +1,3 @@
-import { Operation } from "../../lib/Calculator";
 import { events } from "../../shared/config";
 import CalculatorController from "./CalculatorController";
 
@@ -23,33 +22,7 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
     controllerInstance.notify(events.VIEW_SET_RESULT, value);
   });
 
-  // add new operation
-  // TODO could be removed
-  // controllerInstance.on(events.VIEW_ADD_NEW_OPERATION, (operation: Operation) => {
-  //   if (isValidOperation(operation)) {
-  //     controllerInstance.notify(events.MODEL_ADD_NEW_OPERATION, operation);
-  //     controllerInstance.notify(events.VIEW_ADD_BUTTON, operation.symbol);
-  //   } else {
-  //     controllerInstance.notify(events.VIEW_ADDING_INVALID_OPERATION);
-  //   }
-  // });
+  controllerInstance.on(events.MODEL_INVALID_EXPRESSION, () => {
+    controllerInstance.notify(events.VIEW_INVALID_EXPRESSION)
+  })
 };
-// TODO to be removed
-// const isValidOperation = (operation: Operation) => {
-//   try {
-//     const operationBody = operation.operate;
-//     const args = [];
-
-//     for (let i = 0; i < operationBody.length; i++) {
-//       args.push(Math.random() * 100);
-//     }
-
-//     // check for validity
-//     const res = operationBody(...args);
-
-//     // if return type is number, then operation is valid
-//     return !isNaN(res);
-//   } catch (error) {
-//     return false;
-//   }
-// };

@@ -3,7 +3,6 @@ import { events } from "../../shared/config";
 import CalculatorView from "./CalculatorView";
 import { createButton } from "./utils/elements";
 import { btnClickHandler } from "./utils/handlers";
-import { clearModalInput } from "./utils/helper";
 
 export const initializeObservers = (viewInstance: CalculatorView) => {
   viewInstance.on(events.VIEW_SET_RESULT, (value: string) => {
@@ -16,8 +15,7 @@ export const initializeObservers = (viewInstance: CalculatorView) => {
     viewInstance.additionalOperationsButtonsContainer.appendChild(button);
   });
 
-  // TODO could be removed
-  // viewInstance.on(events.VIEW_ADDING_INVALID_OPERATION, () => {
-  //   alert("Function is invalid");
-  // });
+  viewInstance.on(events.VIEW_INVALID_EXPRESSION, () => {
+    alert("Expression is invalid. Terminating calculation");
+  });
 };

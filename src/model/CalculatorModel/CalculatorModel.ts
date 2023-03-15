@@ -5,8 +5,8 @@ import { IObserver } from "../../shared/interface";
 import { initializeObservers } from "./services";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
-  expression: string;
-  result: number | string;
+  private expression: string;
+  private result: number | string;
   private calculator = new Calculator();
   private observer: Observer = new Observer().getInstance();
 
@@ -14,8 +14,6 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     this.expression = "";
     this.result = "";
     initializeObservers(this);
-
-    console.log(this.calculator.getAvailableOperations())
   }
 
   setExpression(expression: string) {
@@ -25,12 +23,21 @@ class CalculatorModel implements ICalculatorModel, IObserver {
   setResult(result: number | string) {
     this.result = result;
   }
+
   getResult(): string {
     return this.result as string;
   }
 
+  getExpression(): string {
+    return this.expression
+  }
+
   addNewOperation(operation: Operation): void {
     this.calculator.addNewOperation(operation);
+  }
+
+  getAvailableOperations(): Operation[] {
+    return this.calculator.getAvailableOperations()
   }
 
   on(event: string, callback: Function): void {

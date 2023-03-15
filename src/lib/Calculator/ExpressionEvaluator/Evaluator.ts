@@ -11,7 +11,7 @@ import { evaluateExpression, handleParenthesis, IParams, parseExpression, perfor
  */
 class Calculator implements ICalculator {
   private operations: Map<string, Operation> = new Map();
-  
+
   constructor() {
     // initialize with some basics operations
     defaultOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
@@ -64,7 +64,7 @@ class Calculator implements ICalculator {
   }
 
   getAvailableOperations(): Operation[] {
-    return Array.from(this.operations.values())
+    return Array.from(this.operations.values());
   }
 
   /**
