@@ -8,8 +8,12 @@ export function createExpressionInput(viewInstance: CalculatorView): HTMLInputEl
   const expressionInput = document.createElement("input");
   expressionInput.classList.add("calculator-screen", "z-depth-1");
 
-  expressionInput.oninput = (e) => {
-    viewInstance.notify(events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
+  expressionInput.oninput = function (e) {
+    console.log((this as HTMLInputElement).value);
+    if ((this as HTMLInputElement).value.length === 0) {
+      viewInstance.notify(events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
+      viewInstance.resultInput.value = "";
+    } else viewInstance.notify(events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
   };
 
   expressionInput.onkeydown = (event) => {
