@@ -1,6 +1,6 @@
 import { events } from "../../../shared/config";
 import { Actions } from "../config";
-import { Operation, Operations } from "../../../lib/Calculator";
+import { Operations } from "../../../lib/Calculator";
 import CalculatorView from "../CalculatorView";
 
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
@@ -28,22 +28,3 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
 
   return handler;
 };
-
-// TODO could be removed
-// export const addFunctionHandler = (viewInstance: CalculatorView) => {
-//   return (e: Event) => {
-//     e.preventDefault();
-
-//     const functionBody = document.querySelector("#functionBody") as HTMLInputElement;
-//     const functionArguments = document.querySelector("#functionArguments") as HTMLInputElement;
-//     const functionPrecedence = document.querySelector("#functionPrecedence") as HTMLInputElement;
-//     const functionSymbol = document.querySelector("#functionSymbol") as HTMLInputElement;
-
-//     if (!isNaN(+functionSymbol.value)) return alert("Function symbol must not be a number");
-
-//     const newOperationFunction = new Function(...functionArguments.value.split(","), `${functionBody.value}`);
-//     const newOperation = new Operation(functionSymbol.value, +functionPrecedence.value, newOperationFunction);
-
-//     viewInstance.notify(events.VIEW_ADD_NEW_OPERATION, newOperation);
-//   };
-// };

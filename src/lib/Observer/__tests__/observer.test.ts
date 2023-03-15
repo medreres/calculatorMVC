@@ -22,7 +22,7 @@ describe("Observer", () => {
     expect(foo).toBe(2);
   });
 
-  test("Observer subscribes events and unsubcribe them", () => {
+  test("Observer subscribes events and unsubscribe them", () => {
     const observer = new Observer();
     let foo = 1;
     const fn = () => {

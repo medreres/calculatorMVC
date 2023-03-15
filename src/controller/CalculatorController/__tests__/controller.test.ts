@@ -92,15 +92,4 @@ describe("Calculator Controller", () => {
 
     expect(isOperationAdded).toBe(true);
   });
-
-  // test("Does not add invalid operation", () => {
-  //   let isOperationAdded;
-  //   const operation = new Operation("exp", 3, () => "a");
-
-  //   observer.on(events.VIEW_ADDING_INVALID_OPERATION, () => (isOperationAdded = false));
-
-  //   observer.notify(events.ADD_NEW_OPERATION, operation);
-
-  //   expect(isOperationAdded).toBe(false);
-  // });
 });

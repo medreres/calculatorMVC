@@ -1,6 +1,5 @@
 import Operation from "../Operation/Operation";
 import { Operations } from "./config";
-import Calculator from "./Evaluator";
 
 export interface IParams {
   operatorStack: string[];
