@@ -49,9 +49,9 @@ export function evaluate(this: ExpressionParser, expression: string): string {
   let operators = parseOperations.call(this, expression);
   while (operators.length > 0) {
     const operation = getMostPrecedentOperator.call(this, operators);
-
     const regex = makeRegex(operation);
     const replacement = performOperation.call(this, expression, operation) as string;
+
     expression = expression.replace(regex, replacement);
   }
 

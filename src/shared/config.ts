@@ -18,5 +18,3 @@ export const events = {
   // global events
   ADD_NEW_OPERATION: "addNewOperation",
 };
-
-

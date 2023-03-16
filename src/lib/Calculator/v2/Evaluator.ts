@@ -15,7 +15,7 @@ export default class Evaluator implements ICalculator {
   }
 
   evaluate(expression: string): number {
-    return +this.parser.parseExpression(expression);
+    return this.parser.parseExpression(expression);
   }
 
   //------ Operations

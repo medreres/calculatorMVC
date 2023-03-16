@@ -11,6 +11,9 @@ and invoke addOperation() on controller.
 Validity of operation being added resets fully on developer's shoulders
 ![Add new operation button](./assets/addingOperation.png)
 
+Or you could do it in a more programmer way :)
+![Add new operation button](./assets/addingOperationConfig.png)
+
 # Technologies
 
 - TypeScript
