@@ -1,5 +1,4 @@
-import { defaultConstants } from "./../../config";
-import Operation from "../../Operation/Operation";
+import Operation from "../../Operation";
 import { Operations, defaultOperations } from "../../config";
 import {
   evaluateExpression,
@@ -23,7 +22,6 @@ import ExpressionParser from "../../ExpressionParser";
  * @returns {number} result of evaluation
  */
 export default class Evaluator implements ICalculator {
-  // TODO
   protected operations: Map<string, Operation> = new Map();
   protected parser: ExpressionParser = new ExpressionParser();
 
@@ -34,9 +32,11 @@ export default class Evaluator implements ICalculator {
       new Operation(Operations.RIGHT_PARENTHESIS, 0, Notation.PREFIX, () => 0),
     ];
 
-    //TODO Add operations to parser
+    defaultOperations.forEach((operation) => {
+      this.parser.addOperation(operation);
+      this.addNewOperation(operation);
+    });
 
-    defaultOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
     classOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
   }
 

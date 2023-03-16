@@ -1,6 +1,6 @@
 import Calculator from "../ExpressionEvaluator/Evaluator";
 import { Notation } from "../../Operation/interfaces";
-import Operation from "../../Operation/Operation";
+import Operation from "../../Operation";
 
 export const evaluator = (function () {
   const evaluator = new Calculator();

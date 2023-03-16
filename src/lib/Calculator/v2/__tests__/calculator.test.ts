@@ -1,17 +1,6 @@
-import { Notation } from "../../Operation/interfaces";
-import Operation from "../../Operation/Operation";
-import Evaluator from "../Evaluator";
+import { initializeCalculator } from "./utils";
 
-// TODO
-const calc = new Evaluator();
-const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
-  let acc = 1;
-  for (let i = 1; i <= a; i++) {
-    acc *= i;
-  }
-  return acc;
-});
-calc.addNewOperation(factorial);
+const calc = initializeCalculator();
 
 describe("Calculating algorithm", () => {
   describe("Simple operations", () => {

@@ -1,4 +1,4 @@
-import Operation from "../../Operation/Operation";
+import Operation from "../../Operation";
 import { Operations } from "../../config";
 import Evaluator from "./Evaluator";
 

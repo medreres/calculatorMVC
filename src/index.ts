@@ -10,19 +10,19 @@ const model = new CalculatorModel();
 const view = new CalculatorView();
 const controller = new CalculatorController(model, view);
 
-const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
-  let acc = 1;
-  for (let i = 1; i <= a; i++) {
-    acc *= i;
-  }
-  return acc;
-});
+// const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
+//   let acc = 1;
+//   for (let i = 1; i <= a; i++) {
+//     acc *= i;
+//   }
+//   return acc;
+// });
 
-controller.addOperation(factorial);
-// add new operation
-const tan = new Operation("tan", 3, Notation.PREFIX, (a: number) => {
-  return Math.tan(a);
-});
-controller.addOperation(tan);
+// controller.addOperation(factorial);
+// // add new operation
+// const tan = new Operation("tan", 3, Notation.PREFIX, (a: number) => {
+//   return Math.tan(a);
+// });
+// controller.addOperation(tan);
 
 document.body.appendChild(controller.getView());

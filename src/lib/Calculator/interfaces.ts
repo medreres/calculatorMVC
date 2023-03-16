@@ -1,4 +1,4 @@
-import Operation from "./Operation/Operation";
+import Operation from "./Operation";
 
 export interface ICalculator {
   // main functionality

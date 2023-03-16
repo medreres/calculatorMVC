@@ -1,7 +1,7 @@
 import Parser from ".";
 import { Constants } from "../interfaces";
 import { Notation } from "../Operation/interfaces";
-import Operation from "../Operation/Operation";
+import Operation from "../Operation";
 
 export function getMostPrecedentOperator(this: Parser, operators: string[]): Operation {
   const mostPrecedentOperation = operators.reduce(
@@ -52,22 +52,22 @@ export function updateRegex(this: Parser) {
 export const numberRegex = `([\\+\\-]*\\d*\\.*\\d+[eE]?[\\+\\-]?\\d?\\.?\\d?)`;
 export function makeRegex(op: Operation, option?: string) {
   let regexRaw;
+  const escapeSymbol = /\w/.test(op!.symbol) ? "" : `\\`;
   switch (op.notation) {
     case Notation.INFIX:
-      regexRaw = `${numberRegex}\\s*${/\w/.test(op!.symbol) ? "" : `\\`}${op.symbol}\\s*${numberRegex}`;
+      regexRaw = `${numberRegex}\\s*${escapeSymbol}${op.symbol}\\s*${numberRegex}`;
       break;
 
     case Notation.PREFIX:
-      // TODO len of symbol
-      regexRaw = `${/\w/.test(op!.symbol) ? "" : `\\`}${op.symbol}\\s*${numberRegex}`;
+      regexRaw = `${escapeSymbol}${op.symbol}\\s*${numberRegex}`;
       break;
 
     case Notation.POSTFIX:
-      regexRaw = `${numberRegex}\\s*${/\w/.test(op!.symbol) ? "" : `\\`}${op.symbol}\\s*`;
+      regexRaw = `${numberRegex}\\s*${escapeSymbol}${op.symbol}\\s*`;
       break;
 
     default:
-      regexRaw = `${numberRegex}\\s*${/\w/.test(op!.symbol) ? "" : `\\`}${op.symbol}\\s*${numberRegex}`;
+      regexRaw = `${numberRegex}\\s*${escapeSymbol}${op.symbol}\\s*${numberRegex}`;
       break;
   }
 

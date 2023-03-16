@@ -1,5 +1,5 @@
 import { Notation } from "./Operation/interfaces";
-import Operation from "./Operation/Operation";
+import Operation from "./Operation";
 
 export enum Operations {
   ADDITION = "+",

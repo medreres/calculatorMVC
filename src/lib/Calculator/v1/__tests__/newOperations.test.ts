@@ -1,33 +1,28 @@
 import { Notation } from "../../Operation/interfaces";
-import Operation from "../../Operation/Operation";
+import Operation from "../../Operation";
 import { evaluator } from "./utils";
 
 describe("New operations", () => {
-  // TODO constants
-  // test("Adds new operation", () => {
-  //   const operation = new Operation("e", 3, () => Math.E);
+  test("Adds new operation", () => {
+    const addOperation = () => evaluator.addNewConstant("e", Math.E);
 
-  //   const addOperation = () => evaluator.addNewOperation(operation);
+    expect(addOperation).not.toThrow(Error);
+  });
 
-  //   expect(addOperation).not.toThrow(Error);
-  // });
+  test("Adds new operation and performs it", () => {
+    // Arrange
+    const expression = "e * 3";
+    const answer = Math.E * 3;
 
-  // TODO constants
-  // test("Adds new operation and performs it", () => {
-  //   // Arrange
-  //   const expression = "e * 3";
-  //   const answer = Math.E * 3;
+    // Act
+    const result = evaluator.evaluate(expression);
 
-  //   // Act
-  //   const result = evaluator.evaluate(expression);
-
-  //   // Assert
-  //   expect(result).toEqual(answer);
-  // });
+    // Assert
+    expect(result).toEqual(answer);
+  });
 
   test("Adds new operation and performs it 2", () => {
     // Arrange
-    // TODO fix
     const operation = new Operation("max", 2, Notation.PREFIX, (a: number, b: number) => Math.max(a, b));
     const expression = "max(max(-100,10), max(20,20))";
     const answer = 20;
@@ -40,7 +35,6 @@ describe("New operations", () => {
     expect(result).toEqual(answer);
   });
 
-  // TODO fix
   test("Adds new operation and performs it 3", () => {
     // Arrange
     const operation = new Operation("sqrt", 2, Notation.PREFIX, (a: number) => Math.sqrt(a));

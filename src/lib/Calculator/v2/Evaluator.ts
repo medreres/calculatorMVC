@@ -1,7 +1,7 @@
 import { defaultOperations } from "../config";
-import { IOperation, Notation } from "../Operation/interfaces";
+import { IOperation } from "../Operation/interfaces";
 import { Constants, ICalculator } from "../interfaces";
-import Operation from "../Operation/Operation";
+import Operation from "../Operation";
 import Parser from "../ExpressionParser";
 
 export default class Evaluator implements ICalculator {
@@ -13,7 +13,6 @@ export default class Evaluator implements ICalculator {
     this.parser.addOperation(...defaultOperations);
   }
 
-  // TODO validation
   evaluate(expression: string): number {
     if (!this.parser.isValidExpression(expression)) throw new SyntaxError("Expression is invalid");
 
@@ -46,14 +45,3 @@ export default class Evaluator implements ICalculator {
     return this;
   }
 }
-
-// const calc = new Evaluator();
-// const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
-//   let acc = 1;
-//   for (let i = 1; i <= a; i++) {
-//     acc *= i;
-//   }
-//   return acc;
-// });
-// calc.addNewOperation(factorial);
-// calc.evaluate("-5 - 10");

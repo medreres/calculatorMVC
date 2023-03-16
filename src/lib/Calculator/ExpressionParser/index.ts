@@ -1,9 +1,7 @@
 import { defaultConstants, Operations } from "../config";
-import Operation from "../Operation/Operation";
+import Operation from "../Operation";
 import { evaluate, getAvailableConstants, getMostPrecedentOperator, makeRegex, parseOperations } from "./services";
 
-// lazy initialization
-// TODO refactor
 export default class ExpressionParser {
   protected isRegexUpdated: boolean = false;
   protected operationsRaw: Map<string, Operation> = new Map();
@@ -25,7 +23,6 @@ export default class ExpressionParser {
 
     // if parenthesis is found, start inner loop
     while ((innerMostParenthesis = expression.lastIndexOf(Operations.LEFT_PARENTHESIS)) !== -1) {
-      // TODO error handling
       const closingParenthesis = (innerMostParenthesis +
         expression.slice(innerMostParenthesis).indexOf(Operations.RIGHT_PARENTHESIS)) as number;
 
@@ -89,6 +86,7 @@ export default class ExpressionParser {
   }
 
   isValidExpression(expression: string): boolean {
+    // regex for all operators and operands
     const regexRaw = `^(([+-]?\\d\\.?\\d?)*\\s?\\(?\\)?\\w*${this.getAvailableOperations()
       .map((operation) => {
         // if one symbol - better to escape it with //

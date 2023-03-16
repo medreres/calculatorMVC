@@ -6,10 +6,8 @@ import CalculatorView from "../CalculatorView";
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;
 
-  // TODO validation
   if (btnValue === Actions.CALCULATE) {
     handler = () => {
-      const validationRegex = //
       viewInstance.notify(events.VIEW_CALCULATE, btnValue);
     };
   } else if (btnValue == Actions.CLEAR_INPUT) {
