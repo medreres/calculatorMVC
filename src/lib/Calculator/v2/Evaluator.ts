@@ -3,6 +3,7 @@ import { IOperation } from "../Operation/interfaces";
 import { Constants, ICalculator } from "../interfaces";
 import Operation from "../Operation";
 import Parser from "../ExpressionParser";
+import { initializeCalculator } from "./__tests__/utils";
 
 // ? 1 / -1 ^ 1.2 javascript produces Nan from -1 ^ 1.2 ??
 export default class Evaluator implements ICalculator {
@@ -15,7 +16,11 @@ export default class Evaluator implements ICalculator {
   }
 
   evaluate(expression: string): number {
-    return this.parser.parseExpression(expression);
+    const result = this.parser.parseExpression(expression);
+
+    if (isNaN(result)) throw new Error(`Invalid expression`);
+
+    return result;
   }
 
   //------ Operations
@@ -44,3 +49,5 @@ export default class Evaluator implements ICalculator {
     return this;
   }
 }
+
+// initializeCalculator().evaluate("1 + 3 * (2");

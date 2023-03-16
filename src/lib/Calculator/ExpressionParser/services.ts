@@ -34,15 +34,21 @@ export function evaluate(this: ExpressionParser, expression: string): string {
 
   // if parenthesis is found, start inner loop
   while ((innerMostParenthesis = expression.lastIndexOf(Operations.LEFT_PARENTHESIS)) !== -1) {
-    const closingParenthesis = (innerMostParenthesis +
-      expression.slice(innerMostParenthesis).indexOf(Operations.RIGHT_PARENTHESIS)) as number;
+    let closingParenthesis = expression.slice(innerMostParenthesis).indexOf(Operations.RIGHT_PARENTHESIS);
+
+    if (closingParenthesis === -1) {
+      throw new Error("Missing closing parenthesis");
+    }
+
+    // because finding was performed on sliced string
+    closingParenthesis += innerMostParenthesis;
 
     // get left and right part and replace the part between
     const leftPart = expression.slice(0, innerMostParenthesis);
     const rightPart = expression.slice(closingParenthesis + 1, expression.length);
-    const evaluatedPart = this.parseExpression(expression.slice(innerMostParenthesis + 1, closingParenthesis));
+    const evaluatedPart = evaluate.call(this, expression.slice(innerMostParenthesis + 1, closingParenthesis));
 
-    expression = `${leftPart}${evaluatedPart} ${rightPart}`;
+    expression = `${leftPart}${evaluatedPart}${rightPart}`;
   }
 
   // parse all operations and perform them one by one, following their precedence
@@ -55,16 +61,21 @@ export function evaluate(this: ExpressionParser, expression: string): string {
     expression = expression.replace(regex, replacement);
   }
 
-  return expression;
+  return expression.trim();
 }
 
 export function performOperation(this: ExpressionParser, exp: string, op: Operation) {
   const regex = makeRegex(op, "g");
-  const operands = regex
-    .exec(exp)!
-    .slice(1)
-    .map((number) => +number);
-  return op.evaluate(...operands);
+
+  try {
+    const operands = regex
+      .exec(exp)!
+      .slice(1)
+      .map((number) => +number);
+    return op.evaluate(...operands);
+  } catch (error) {
+    throw new SyntaxError("Invalid expression");
+  }
 }
 
 export function updateRegex(this: ExpressionParser) {

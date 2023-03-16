@@ -1,4 +1,3 @@
-import Operation from "../../Operation";
 import { Operations, defaultOperations } from "../../config";
 import {
   evaluateExpression,
@@ -11,7 +10,7 @@ import {
 import { Notation } from "../../Operation/interfaces";
 import { ICalculator } from "../../interfaces";
 import ExpressionParser from "../../ExpressionParser";
-
+import Operation from "../../Operation";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
