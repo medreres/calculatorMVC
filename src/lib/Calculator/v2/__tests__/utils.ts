@@ -11,6 +11,7 @@ export function initializeCalculator() {
     }
     return acc;
   });
+
   calc.addNewOperation(factorial);
 
   return calc;

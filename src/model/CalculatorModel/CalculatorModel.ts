@@ -1,4 +1,4 @@
-import Calculator, { CalculatorV2, Operation } from "../../lib/Calculator";
+import { CalculatorV2, Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
 import { IObserver } from "../../shared/interface";

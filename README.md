@@ -6,14 +6,10 @@ Simple implementation of calculator written on typescript using MVC pattern. Cal
 
 ## Adding new operations
 
-To add a new operation click the button "Add new operation"
-![Add new operation button](./readme/addOperationButton.png)
-Then type operation symbol, it's precedence, arguments (optionally) and the function body itself.
-
-![Add new operation modal](./readme/addOperationModal.png)
-
-<sup>Bear in mind that function body is converted to JavaScript, consequently you can use all the JavaScript features you need
-</sup>
+To add a new operation, define it via Operation class
+and invoke addOperation() on controller.
+Validity of operation being added resets fully on developer's shoulders
+![Add new operation button](./assets/addingOperation.png)
 
 # Technologies
 

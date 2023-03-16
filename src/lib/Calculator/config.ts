@@ -15,6 +15,7 @@ export enum Operations {
 
 export const defaultConstants = {
   PI: Math.PI,
+  E: Math.E,
 };
 
 export const defaultOperations = [

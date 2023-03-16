@@ -6,6 +6,7 @@ describe("testing evaluating algorithm for exceptions", () => {
       const foo = () => {
         evaluator.evaluate("log 2");
       };
+
       expect(foo).toThrow(Error);
     });
 
@@ -13,6 +14,7 @@ describe("testing evaluating algorithm for exceptions", () => {
       const foo = () => {
         evaluator.evaluate("abs");
       };
+
       expect(foo).toThrow(Error);
     });
   });
@@ -22,6 +24,7 @@ describe("testing evaluating algorithm for exceptions", () => {
       const foo = () => {
         evaluator.evaluate("(");
       };
+
       expect(foo).toThrow(Error);
     });
 

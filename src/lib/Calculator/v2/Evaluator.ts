@@ -4,8 +4,7 @@ import { Constants, ICalculator } from "../interfaces";
 import Operation from "../Operation";
 import Parser from "../ExpressionParser";
 
-// TODO -(( 5 + 1 ) * 3)
-// TODO 1 / -1 ^ 1.2 Js produces Nan from -1 ^ 1.2 ??
+// ? 1 / -1 ^ 1.2 javascript produces Nan from -1 ^ 1.2 ??
 export default class Evaluator implements ICalculator {
   private constants: Map<string, number> = new Map();
   protected parser: Parser = new Parser();

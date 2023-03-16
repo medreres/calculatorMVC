@@ -2,7 +2,7 @@ import { events } from "../../../shared/config";
 import { buttonValues, Actions } from "../config";
 import CalculatorView from "../CalculatorView";
 import { btnClickHandler } from "./handlers";
-import { Operations } from "../../../lib/Calculator";
+import { defaultConstants, Operations } from "../../../lib/Calculator";
 
 export function createExpressionInput(viewInstance: CalculatorView): HTMLInputElement {
   const expressionInput = document.createElement("input");
@@ -56,6 +56,7 @@ export function createAdditionalOperationsContainer(viewInstance: CalculatorView
   buttonsContainer: HTMLDivElement;
 } {
   const additionalOperations: string[] = [
+    ...Object.keys(defaultConstants),
     Operations.LEFT_PARENTHESIS,
     Operations.RIGHT_PARENTHESIS,
     Operations.EXPONENTIATION,

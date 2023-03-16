@@ -1,7 +1,7 @@
-import { Constants } from "../interfaces";
-import { Notation } from "../Operation/interfaces";
 import Operation from "../Operation";
 import ExpressionParser from ".";
+import { Constants } from "../interfaces";
+import { Notation } from "../Operation/interfaces";
 import { Operations } from "../config";
 
 export function getMostPrecedentOperator(this: ExpressionParser, operators: string[]): Operation {
@@ -30,7 +30,6 @@ export function getMostPrecedentOperator(this: ExpressionParser, operators: stri
 
 export function evaluate(this: ExpressionParser, expression: string): string {
   // replace all constants first
-
   let innerMostParenthesis;
 
   // if parenthesis is found, start inner loop
