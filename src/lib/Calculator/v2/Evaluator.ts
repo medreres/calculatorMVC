@@ -4,8 +4,6 @@ import { Constants, ICalculator } from "../interfaces";
 import Operation from "../Operation/Operation";
 import Parser from "../ExpressionParser";
 
-// TODO 2 * 3-
-// TODO Nan
 export default class Evaluator implements ICalculator {
   private constants: Map<string, number> = new Map();
   protected parser: Parser = new Parser();
@@ -49,13 +47,13 @@ export default class Evaluator implements ICalculator {
   }
 }
 
-const calc = new Evaluator();
-const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
-  let acc = 1;
-  for (let i = 1; i <= a; i++) {
-    acc *= i;
-  }
-  return acc;
-});
-calc.addNewOperation(factorial);
-calc.evaluate("-5 - 10");
+// const calc = new Evaluator();
+// const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
+//   let acc = 1;
+//   for (let i = 1; i <= a; i++) {
+//     acc *= i;
+//   }
+//   return acc;
+// });
+// calc.addNewOperation(factorial);
+// calc.evaluate("-5 - 10");

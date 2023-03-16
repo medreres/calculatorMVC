@@ -5,7 +5,6 @@ import { evaluate, getAvailableConstants, getMostPrecedentOperator, makeRegex, p
 // lazy initialization
 // TODO refactor
 export default class ExpressionParser {
-  // if we add new operation, set isRegexUpdated to false
   protected isRegexUpdated: boolean = false;
   protected operationsRaw: Map<string, Operation> = new Map();
   protected operationsRegex: RegExp | null = null;
@@ -68,6 +67,7 @@ export default class ExpressionParser {
       this.operationsRaw.set(operation.symbol, operation);
     });
 
+    // if we add new operation, set isRegexUpdated to false
     // regex needs to be updated
     this.isRegexUpdated = false;
   }
@@ -89,24 +89,15 @@ export default class ExpressionParser {
   }
 
   isValidExpression(expression: string): boolean {
-    // ([+-]?\\d\\.?\\d?) - regex for numbers with floating point
-
-    // ${modelInstance
-    // .getAvailableOperations()
-    // .map((operation) => `(\\${operation.symbol})?`)
-    // .join("")})*$ retrieves all the available operators and turn into regex
-    // TODO
-
     const regexRaw = `^(([+-]?\\d\\.?\\d?)*\\s?\\(?\\)?\\w*${this.getAvailableOperations()
       .map((operation) => {
+        // if one symbol - better to escape it with //
         const isOneSymbolOperator = operation.symbol.length === 1 ? "\\" : "";
         return `(${isOneSymbolOperator}${operation.symbol})?`;
       })
       .join("")})*$`;
 
-    // console.log(regexRaw);
-
-    const regex = new RegExp(regexRaw, "i");
+    const regex = new RegExp(regexRaw, "gi");
     return regex.test(expression);
   }
 }
