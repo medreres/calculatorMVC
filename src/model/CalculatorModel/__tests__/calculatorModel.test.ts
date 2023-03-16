@@ -5,7 +5,7 @@ import CalculatorModel from "../CalculatorModel";
 describe("Calculator Model", () => {
   test("Evaluates expression", () => {
     const calcModel = new CalculatorModel();
-    const expression = "1 + 2 * 3 - 10 + ( 1 * 2 / (5 -4 ))";
+    const expression = "1 + 2 * 3 - 10 + ( 1 * 2 / ( 5 - 4 ))";
     const answer = -1;
     calcModel.setExpression(expression);
     expect(calcModel.calculate()).toBe(answer);
@@ -15,7 +15,7 @@ describe("Calculator Model", () => {
     const calcModel = new CalculatorModel();
     const observer = new Observer().getInstance();
 
-    const expression = "1 + 2 * 3 - 10 + ( 1 * 2 / (5 -4 ))";
+    const expression = "1 + 2 * 3 - 10 + ( 1 * 2 / ( 5 - 4 ))";
     const answer = -1;
 
     observer.notify(events.MODEL_CHANGE_INPUT, expression);

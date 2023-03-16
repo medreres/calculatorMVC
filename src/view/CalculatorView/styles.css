@@ -60,7 +60,7 @@ body {
 .calc-btn {
   height: 60px;
   font-size: 2rem !important;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   overflow: hidden;
   max-width: 2.5em;
   white-space: normal;

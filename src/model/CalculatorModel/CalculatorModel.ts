@@ -1,4 +1,4 @@
-import Calculator, { Operation } from "../../lib/Calculator";
+import Calculator, { CalculatorV2, Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
 import { IObserver } from "../../shared/interface";
@@ -7,12 +7,12 @@ import { initializeObservers } from "./services";
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
   private result: number | string;
-  private calculator = new Calculator();
+  private calculator = new CalculatorV2();
   private observer: Observer = new Observer().getInstance();
 
   constructor() {
     this.expression = "";
-    this.result = "";
+    this.result = 0;
     initializeObservers(this);
   }
 
@@ -24,12 +24,12 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     this.result = result;
   }
 
-  getResult(): string {
-    return this.result as string;
+  getResult(): number | string {
+    return this.result;
   }
 
   getExpression(): string {
-    return this.expression
+    return this.expression;
   }
 
   addNewOperation(operation: Operation): void {
@@ -37,7 +37,7 @@ class CalculatorModel implements ICalculatorModel, IObserver {
   }
 
   getAvailableOperations(): Operation[] {
-    return this.calculator.getAvailableOperations()
+    return this.calculator.getAvailableOperations();
   }
 
   on(event: string, callback: Function): void {
@@ -48,17 +48,10 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     this.observer.notify(event, data);
   }
 
-  calculate(): number | string {
-    try {
-      const result = this.calculator.evaluate(this.expression);
-      this.setResult(result);
-      return result;
-    } catch (error) {
-      // if calculation throws an error, just return it
-      const errorMsg: string = (error as any).message;
-      this.setResult(errorMsg);
-      return errorMsg;
-    }
+  calculate(): number {
+    const result = this.calculator.evaluate(this.expression);
+    this.setResult(result);
+    return result;
   }
 }
 

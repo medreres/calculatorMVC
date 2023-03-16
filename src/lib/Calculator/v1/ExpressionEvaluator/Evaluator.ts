@@ -1,33 +1,68 @@
-import Operation from "../Operation/Operation";
-import { ICalculator } from "./interface";
-import { Operations, defaultOperations } from "./config";
-import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
+import { defaultConstants } from "./../../config";
+import Operation from "../../Operation/Operation";
+import { Operations, defaultOperations } from "../../config";
+import {
+  evaluateExpression,
+  getOperation,
+  handleParenthesis,
+  IParams,
+  parseExpression,
+  performResidualOperations,
+} from "./services";
+import { Notation } from "../../Operation/interfaces";
+import { ICalculator } from "../../interfaces";
+import ExpressionParser from "../../ExpressionParser";
 
+// TODO -(5+1)*3
+// TODO 1/-1^(12/10)
+// TODO -(( 5 + 1 ) * 3)
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
  * and operators and returns result of evaluation, support extending with new operations
  *  via method add addNewOperation
  * @returns {number} result of evaluation
  */
-class Calculator implements ICalculator {
-  private operations: Map<string, Operation> = new Map();
+export default class Evaluator implements ICalculator {
+  // TODO
+  protected operations: Map<string, Operation> = new Map();
+  protected parser: ExpressionParser = new ExpressionParser();
 
   constructor() {
     // initialize with some basics operations
+    const classOperations = [
+      new Operation(Operations.LEFT_PARENTHESIS, 0, Notation.POSTFIX, () => 0),
+      new Operation(Operations.RIGHT_PARENTHESIS, 0, Notation.PREFIX, () => 0),
+    ];
+
+    //TODO Add operations to parser
+
     defaultOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
+    classOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
+  }
+
+  addNewConstant(key: string, value: number): Evaluator {
+    this.parser.addNewConstant(key, value);
+
+    // chaining
+    return this;
   }
 
   /**
    * @description adds new operation to the class
    * @param {Operation} operation operation being added
    */
-  addNewOperation(operation: Operation): void {
+  addNewOperation(operation: Operation): Evaluator {
     if (this.operations.has(operation.symbol)) throw new Error(`Operation "${operation.symbol} already exists`);
 
     this.operations.set(operation.symbol, operation);
+
+    return this;
   }
 
   evaluate(expression: string): number {
+    // replace all constants
+    expression = this.parser.replaceConstants(expression);
+
     // get all the operation symbols, except function names
     const operationSymbols = Array.from(this.operations.keys()).filter((operation) => operation.length === 1);
     const tokens = parseExpression(expression, operationSymbols);
@@ -38,7 +73,7 @@ class Calculator implements ICalculator {
     const params: IParams = {
       operatorStack,
       numberStack,
-      getOperation: this.getOperation.bind(this),
+      getOperation: getOperation.bind(this),
       symbol: "",
       operation: undefined,
     };
@@ -50,7 +85,7 @@ class Calculator implements ICalculator {
       if (token === Operations.LEFT_PARENTHESIS || token === Operations.RIGHT_PARENTHESIS)
         return handleParenthesis(params);
 
-      params.operation = this.getOperation(token as string);
+      params.operation = getOperation.call(this, token as string);
       if (params.operation) return evaluateExpression(params);
 
       throw new Error(`Invalid character ${token} at position ${index}`);
@@ -66,15 +101,4 @@ class Calculator implements ICalculator {
   getAvailableOperations(): Operation[] {
     return Array.from(this.operations.values());
   }
-
-  /**
-   *
-   * @param {string} operationSymbol symbol that represents the operation
-   * @returns operation if defined, otherwise undefined
-   */
-  private getOperation(operationSymbol: string): Operation | undefined {
-    return this.operations.get(operationSymbol);
-  }
 }
-
-export default Calculator;

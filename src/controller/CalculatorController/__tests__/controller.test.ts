@@ -1,4 +1,5 @@
 import { Operation } from "../../../lib/Calculator";
+import { Notation } from "../../../lib/Calculator/Operation/interfaces";
 import Observer from "../../../lib/Observer";
 import { events } from "../../../shared/config";
 import { initializeController } from "./utils";
@@ -84,7 +85,7 @@ describe("Calculator Controller", () => {
 
   test("Adds new operation successfully", () => {
     let isOperationAdded = false;
-    const operation = new Operation("exp", 3, (value: number) => Math.exp(value));
+    const operation = new Operation("exp", 3, Notation.PREFIX, (value: number) => Math.exp(value));
 
     observer.on(events.ADD_NEW_OPERATION, () => (isOperationAdded = true));
 

@@ -1,5 +1,6 @@
-import Operation from "../Operation/Operation";
-import { Operations } from "./config";
+import Operation from "../../Operation/Operation";
+import { Operations } from "../../config";
+import Evaluator from "./Evaluator";
 
 export interface IParams {
   operatorStack: string[];
@@ -163,4 +164,13 @@ export function parseExpression(expression: string, operationsSymbols: string[])
   }
 
   return tokens;
+}
+
+/**
+ *
+ * @param {string} operationSymbol symbol that represents the operation
+ * @returns operation if defined, otherwise undefined
+ */
+export function getOperation(this: Evaluator, operationSymbol: string): Operation | undefined {
+  return this.operations.get(operationSymbol);
 }
