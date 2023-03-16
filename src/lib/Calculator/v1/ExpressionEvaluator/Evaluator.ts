@@ -12,9 +12,7 @@ import { Notation } from "../../Operation/interfaces";
 import { ICalculator } from "../../interfaces";
 import ExpressionParser from "../../ExpressionParser";
 
-// TODO -(5+1)*3
-// TODO 1/-1^(12/10)
-// TODO -(( 5 + 1 ) * 3)
+
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
  * and operators and returns result of evaluation, support extending with new operations

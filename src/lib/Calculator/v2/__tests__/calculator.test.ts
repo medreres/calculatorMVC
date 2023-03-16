@@ -10,6 +10,12 @@ describe("Calculating algorithm", () => {
       expect(calc.evaluate(expression)).toBe(result);
     });
 
+    test("-(5 + 1) * 3", () => {
+      let result = -18;
+      let expression = "-(5 + 1) * 3";
+      expect(calc.evaluate(expression)).toBe(result);
+    });
+
     test("PI * 3", () => {
       let result = 9.42477796076938;
       let expression = "PI * 3";
@@ -84,6 +90,10 @@ describe("Calculating algorithm", () => {
 
     test("2 * 2 + 2", () => {
       expect(calc.evaluate("2 * 2 + 2")).toBe(6);
+    });
+
+    test("-(( 5 + 1 ) * 3)", () => {
+      expect(calc.evaluate("-(( 5 + 1 ) * 3)")).toBe(-18);
     });
 
     test("2 * 2 + 2 * 2", () => {

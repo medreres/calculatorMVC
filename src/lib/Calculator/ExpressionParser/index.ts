@@ -15,36 +15,12 @@ export default class ExpressionParser {
     });
   }
 
-  parseExpression(expression: string): string {
-    // replace all constants first
+  parseExpression(expression: string): number {
+    if (!this.isValidExpression(expression)) throw new SyntaxError("Expression is invalid");
+
     expression = this.replaceConstants(expression);
 
-    let innerMostParenthesis;
-
-    // if parenthesis is found, start inner loop
-    while ((innerMostParenthesis = expression.lastIndexOf(Operations.LEFT_PARENTHESIS)) !== -1) {
-      const closingParenthesis = (innerMostParenthesis +
-        expression.slice(innerMostParenthesis).indexOf(Operations.RIGHT_PARENTHESIS)) as number;
-
-      // get left and right part and replace the part between
-      const leftPart = expression.slice(0, innerMostParenthesis);
-      const rightPart = expression.slice(closingParenthesis + 1, expression.length);
-      const evaluatedPart = this.parseExpression(expression.slice(innerMostParenthesis + 1, closingParenthesis));
-
-      expression = `${leftPart} ${evaluatedPart} ${rightPart}`;
-    }
-
-    // parse all operations and perform them one by one, following their precedence
-    let operators = parseOperations.call(this, expression);
-    while (operators.length > 0) {
-      const operation = getMostPrecedentOperator.call(this, operators);
-
-      const regex = makeRegex(operation);
-      const replacement = evaluate.call(this, expression, operation) as string;
-      expression = expression.replace(regex, replacement);
-    }
-
-    return expression;
+    return +evaluate.call(this, expression);
   }
 
   getOperation(symbol: string): Operation | undefined {

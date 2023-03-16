@@ -1,9 +1,10 @@
-import Parser from ".";
 import { Constants } from "../interfaces";
 import { Notation } from "../Operation/interfaces";
 import Operation from "../Operation";
+import ExpressionParser from ".";
+import { Operations } from "../config";
 
-export function getMostPrecedentOperator(this: Parser, operators: string[]): Operation {
+export function getMostPrecedentOperator(this: ExpressionParser, operators: string[]): Operation {
   const mostPrecedentOperation = operators.reduce(
     (acc, symbol, index): any => {
       const currentOperation = this.getOperation(symbol.trim());
@@ -27,7 +28,38 @@ export function getMostPrecedentOperator(this: Parser, operators: string[]): Ope
   return mostPrecedentOperation.operation as Operation;
 }
 
-export function evaluate(this: Parser, exp: string, op: Operation) {
+export function evaluate(this: ExpressionParser, expression: string): string {
+  // replace all constants first
+
+  let innerMostParenthesis;
+
+  // if parenthesis is found, start inner loop
+  while ((innerMostParenthesis = expression.lastIndexOf(Operations.LEFT_PARENTHESIS)) !== -1) {
+    const closingParenthesis = (innerMostParenthesis +
+      expression.slice(innerMostParenthesis).indexOf(Operations.RIGHT_PARENTHESIS)) as number;
+
+    // get left and right part and replace the part between
+    const leftPart = expression.slice(0, innerMostParenthesis);
+    const rightPart = expression.slice(closingParenthesis + 1, expression.length);
+    const evaluatedPart = this.parseExpression(expression.slice(innerMostParenthesis + 1, closingParenthesis));
+
+    expression = `${leftPart}${evaluatedPart} ${rightPart}`;
+  }
+
+  // parse all operations and perform them one by one, following their precedence
+  let operators = parseOperations.call(this, expression);
+  while (operators.length > 0) {
+    const operation = getMostPrecedentOperator.call(this, operators);
+
+    const regex = makeRegex(operation);
+    const replacement = performOperation.call(this, expression, operation) as string;
+    expression = expression.replace(regex, replacement);
+  }
+
+  return expression;
+}
+
+export function performOperation(this: ExpressionParser, exp: string, op: Operation) {
   const regex = makeRegex(op, "g");
   const operands = regex
     .exec(exp)!
@@ -36,7 +68,7 @@ export function evaluate(this: Parser, exp: string, op: Operation) {
   return op.evaluate(...operands);
 }
 
-export function updateRegex(this: Parser) {
+export function updateRegex(this: ExpressionParser) {
   const operations = Array.from(this.operationsRaw.values());
 
   const regexRaw = `[${operations
@@ -74,7 +106,7 @@ export function makeRegex(op: Operation, option?: string) {
   return new RegExp(regexRaw, option);
 }
 
-export function getAvailableConstants(this: Parser): Constants {
+export function getAvailableConstants(this: ExpressionParser): Constants {
   const constants: Constants = {};
 
   Array.from(this.constants).forEach(([key, value]) => {
@@ -84,7 +116,7 @@ export function getAvailableConstants(this: Parser): Constants {
   return constants;
 }
 
-export function parseOperations(this: Parser, exp: string): string[] {
+export function parseOperations(this: ExpressionParser, exp: string): string[] {
   let res: string[] = [];
 
   const functionRegexRaw = `${this.getAvailableOperations()
@@ -106,7 +138,7 @@ export function parseOperations(this: Parser, exp: string): string[] {
   return res;
 }
 
-export function getRegex(this: Parser): RegExp {
+export function getRegex(this: ExpressionParser): RegExp {
   // initialize regex lazily
   if (!this.isRegexUpdated) updateRegex.call(this);
 
