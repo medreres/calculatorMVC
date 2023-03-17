@@ -16,7 +16,8 @@ export default class ExpressionParser {
   }
 
   parseExpression(expression: string): number {
-    if (!this.isValidExpression(expression)) throw new SyntaxError("Expression is invalid");
+    if (!this.isValidExpression(expression))
+      throw new SyntaxError("Expression is invalid. Please check for correctness");
 
     expression = this.replaceConstants(expression);
 

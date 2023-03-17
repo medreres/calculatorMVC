@@ -8,7 +8,7 @@ export const initializeObservers = (modelInstance: CalculatorModel) => {
       const result = modelInstance.calculate();
       modelInstance.notify(events.MODEL_CALCULATED, result);
     } catch (error) {
-      modelInstance.notify(events.MODEL_INVALID_EXPRESSION);
+      modelInstance.notify(events.MODEL_INVALID_EXPRESSION, (error as any).message);
     }
   });
 

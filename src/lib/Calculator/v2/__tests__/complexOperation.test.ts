@@ -4,7 +4,6 @@ const calc = initializeCalculator();
 
 describe("Complex operations", () => {
   test("1 + 3 * 2 / 3 + (4 - 5 * 5! ^ 2 - 5)  / 100", () => {
-    // TODO infinite loop
     expect(calc.evaluate("1 + 3 * 2 / 3 + (4 - 5 * 5! ^ 2 - 5)  / 100")).toBe(-717.01);
   });
 

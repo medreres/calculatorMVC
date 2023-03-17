@@ -20,7 +20,7 @@ import Operation from "../../Operation";
  */
 export default class Evaluator implements ICalculator {
   protected operations: Map<string, Operation> = new Map();
-  protected parser: ExpressionParser = new ExpressionParser();
+  protected parser = new ExpressionParser();
 
   constructor() {
     // initialize with some basics operations

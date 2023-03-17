@@ -22,7 +22,7 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
     controllerInstance.notify(events.VIEW_SET_RESULT, value);
   });
 
-  controllerInstance.on(events.MODEL_INVALID_EXPRESSION, () => {
-    controllerInstance.notify(events.VIEW_INVALID_EXPRESSION)
-  })
+  controllerInstance.on(events.MODEL_INVALID_EXPRESSION, (msg: string) => {
+    controllerInstance.notify(events.VIEW_INVALID_EXPRESSION, msg);
+  });
 };

@@ -15,7 +15,7 @@ export const initializeObservers = (viewInstance: CalculatorView) => {
     viewInstance.additionalOperationsButtonsContainer.appendChild(button);
   });
 
-  viewInstance.on(events.VIEW_INVALID_EXPRESSION, () => {
-    alert("Expression is invalid. Terminating calculation");
+  viewInstance.on(events.VIEW_INVALID_EXPRESSION, (msg: string) => {
+    alert(msg);
   });
 };
