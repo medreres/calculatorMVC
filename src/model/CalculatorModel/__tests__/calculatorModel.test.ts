@@ -1,5 +1,5 @@
 import Observer from "../../../lib/Observer";
-import { events } from "../../../shared/config";
+import { Events } from "../../../shared/events";
 import CalculatorModel from "../CalculatorModel";
 
 describe("Calculator Model", () => {
@@ -11,15 +11,15 @@ describe("Calculator Model", () => {
     expect(calcModel.calculate()).toBe(answer);
   });
 
-  test("Listens to events", () => {
+  test("Listens to Events", () => {
     const calcModel = new CalculatorModel();
     const observer = new Observer().getInstance();
 
     const expression = "1 + 2 * 3 - 10 + ( 1 * 2 / ( 5 - 4 ))";
     const answer = -1;
 
-    observer.notify(events.MODEL_CHANGE_INPUT, expression);
-    observer.notify(events.MODEL_CALCULATE);
+    observer.notify(Events.MODEL_CHANGE_INPUT, expression);
+    observer.notify(Events.MODEL_CALCULATE);
 
     expect(calcModel.getResult()).toBe(answer);
   });

@@ -1,4 +1,4 @@
-import { Operations, defaultOperations } from "../../config";
+import { Operations, defaultOperations } from "../config";
 import {
   evaluateExpression,
   getOperation,
@@ -7,15 +7,17 @@ import {
   parseExpression,
   performResidualOperations,
 } from "./services";
-import { Notation } from "../../Operation/interfaces";
-import { ICalculator } from "../../interfaces";
-import ExpressionParser from "../../ExpressionParser";
-import Operation from "../../Operation";
+import { Notation } from "../Operation/interfaces";
+import { ICalculator } from "../interfaces";
+import ExpressionParser from "../ExpressionParser";
+import Operation from "../Operation";
 
+// TODO -(3+1)
+// TODO process negation
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
  * and operators and returns result of evaluation, support extending with new operations
- *  via method add addNewOperation
+ * via method add addNewOperation
  * @returns {number} result of evaluation
  */
 export default class Evaluator implements ICalculator {

@@ -1,4 +1,4 @@
-import { events } from "../../../shared/config";
+import { Events } from "../../../shared/events";
 import { Actions } from "../config";
 import { Operations } from "../../../lib/Calculator";
 import CalculatorView from "../CalculatorView";
@@ -8,13 +8,13 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
 
   if (btnValue === Actions.CALCULATE) {
     handler = () => {
-      viewInstance.notify(events.VIEW_CALCULATE, btnValue);
+      viewInstance.notify(Events.VIEW_CALCULATE, btnValue);
     };
   } else if (btnValue == Actions.CLEAR_INPUT) {
     handler = () => {
       viewInstance.setExpression("");
       viewInstance.setResult("");
-      viewInstance.notify(events.VIEW_INPUT_CLEARED);
+      viewInstance.notify(Events.VIEW_INPUT_CLEARED);
     };
   } else {
     handler = () => {
@@ -22,9 +22,33 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
       const isNumber = !isNaN(+btnValue) || btnValue === Operations.DOT;
       const expression = `${viewInstance.getExpression()}${isNumber ? "" : " "}${btnValue}${isNumber ? "" : " "}`;
       viewInstance.setExpression(expression);
-      viewInstance.notify(events.VIEW_INPUT_CHANGED, expression);
+      viewInstance.notify(Events.VIEW_INPUT_CHANGED, expression);
     };
   }
 
   return handler;
 };
+
+export function expressionInputChangeHandler(viewInstance: CalculatorView) {
+  let handler = (e: Event) => {
+    if ((e.target as HTMLInputElement).value.length === 0) {
+      // handler = (e: Event) => {
+      viewInstance.notify(Events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
+      viewInstance.resultInput.value = "";
+      // };
+    } else {
+      // handler = (e: Event) => {
+      viewInstance.notify(Events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
+      // };
+    }
+  };
+  return handler;
+}
+
+export function expressionInputSubmitHandler(viewInstance: CalculatorView) {
+  return (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      viewInstance.notify(Events.VIEW_CALCULATE);
+    }
+  };
+}

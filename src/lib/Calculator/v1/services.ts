@@ -1,6 +1,6 @@
-import Operation from "../../Operation";
-import { Operations } from "../../config";
-import Evaluator from "./Evaluator";
+import Operation from "../Operation";
+import { Operations } from "../config";
+import Evaluator from ".";
 
 export interface IParams {
   operatorStack: string[];

@@ -1,4 +1,4 @@
-import Calculator from "../ExpressionEvaluator/Evaluator";
+import Calculator from "..";
 import { Notation } from "../../Operation/interfaces";
 import Operation from "../../Operation";
 

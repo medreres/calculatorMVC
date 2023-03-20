@@ -1,4 +1,6 @@
+import { Events } from "./events";
+
 export interface IObserver {
-  on(event: string, callback: Function): void;
-  notify(event: string, data?: any): void;
+  on(event: Events, callback: Function): void;
+  notify(events: Events, data?: any): void;
 }

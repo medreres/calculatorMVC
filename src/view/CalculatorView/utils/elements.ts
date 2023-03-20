@@ -1,25 +1,25 @@
-import { events } from "../../../shared/config";
 import { buttonValues, Actions } from "../config";
 import CalculatorView from "../CalculatorView";
 import { btnClickHandler } from "./handlers";
 import { defaultConstants, Operations } from "../../../lib/Calculator";
 
-export function createExpressionInput(viewInstance: CalculatorView): HTMLInputElement {
+interface ICreateExpressionInput {
+  onSubmit?: (e: KeyboardEvent) => void;
+  onChange?: (e: Event) => void;
+}
+
+export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionInput): HTMLInputElement {
   const expressionInput = document.createElement("input");
   expressionInput.classList.add("calculator-screen", "z-depth-1");
 
-  expressionInput.oninput = function (e) {
-    if ((this as HTMLInputElement).value.length === 0) {
-      viewInstance.notify(events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
-      viewInstance.resultInput.value = "";
-    } else viewInstance.notify(events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
-  };
+  if (onChange) {
+    expressionInput.oninput = onChange;
+  }
 
-  expressionInput.onkeydown = (event) => {
-    if (event.key === "Enter") {
-      viewInstance.notify(events.VIEW_CALCULATE);
-    }
-  };
+  if (onSubmit) {
+    expressionInput.onkeydown = onSubmit;
+  }
+
   return expressionInput;
 }
 

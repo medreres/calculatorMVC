@@ -9,8 +9,11 @@ import {
 import Observer from "../../lib/Observer";
 import { IObserver } from "../../shared/interface";
 import { initializeObservers } from "./services";
+import { Events } from "../../shared/events";
+import { expressionInputChangeHandler, expressionInputSubmitHandler } from "./utils/handlers";
 import "./styles.css";
 
+// TODO change view to more beautiful
 class CalculatorView implements ICalculatorView, IObserver {
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
@@ -26,7 +29,12 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.classList.add("calculator", "card");
 
     // expression input
-    this.expressionInput = createExpressionInput(this);
+    const submitHandler = expressionInputSubmitHandler(this);
+    const changeHandler = expressionInputChangeHandler(this);
+    this.expressionInput = createExpressionInput({
+      onSubmit: submitHandler,
+      onChange: changeHandler,
+    });
     this.container.appendChild(this.expressionInput);
 
     // result input
@@ -66,11 +74,11 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.resultInput.value = result;
   }
 
-  on(event: string, callback: Function): void {
+  on(event: Events, callback: Function): void {
     this.observer.on(event, callback);
   }
 
-  notify(event: string, data?: any): void {
+  notify(event: Events, data?: any): void {
     this.observer.notify(event, data);
   }
 

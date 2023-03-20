@@ -5,7 +5,7 @@ import ICalculatorController from "../interface";
 import { IObserver } from "../../shared/interface";
 import { initializeObservers } from "./services";
 import { Operation } from "../../lib/Calculator";
-import { events } from "../../shared/config";
+import { Events } from "../../shared/events";
 
 class CalculatorController implements ICalculatorController, IObserver {
   model: ICalculatorModel;
@@ -31,7 +31,7 @@ class CalculatorController implements ICalculatorController, IObserver {
   }
 
   addOperation(operation: Operation): void {
-    this.notify(events.ADD_NEW_OPERATION, operation);
+    this.notify(Events.ADD_NEW_OPERATION, operation);
   }
 }
 

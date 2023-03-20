@@ -53,6 +53,7 @@ export function evaluate(this: ExpressionParser, expression: string): string {
 
   // parse all operations and perform them one by one, following their precedence
   let operators = parseOperations.call(this, expression);
+  
   while (operators.length > 0) {
     const operation = getMostPrecedentOperator.call(this, operators);
     const regex = makeRegex(operation);

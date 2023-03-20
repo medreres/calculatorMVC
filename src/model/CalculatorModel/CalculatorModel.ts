@@ -1,13 +1,15 @@
-import { CalculatorV2, Operation } from "../../lib/Calculator";
+import { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
 import { IObserver } from "../../shared/interface";
 import { initializeObservers } from "./services";
+import { Events } from "../../shared/events";
+import config from "../../config";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
   private result: number | string;
-  private calculator = new CalculatorV2();
+  private calculator = new config.calculatingAlgorithm();
   private observer: Observer = new Observer().getInstance();
 
   constructor() {
@@ -40,11 +42,11 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return this.calculator.getAvailableOperations();
   }
 
-  on(event: string, callback: Function): void {
+  on(event: Events, callback: Function): void {
     this.observer.on(event, callback);
   }
 
-  notify(event: string, data?: any): void {
+  notify(event: Events, data?: any): void {
     this.observer.notify(event, data);
   }
 
