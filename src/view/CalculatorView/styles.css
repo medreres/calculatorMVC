@@ -87,13 +87,8 @@ body {
 .operations-keys {
   display: grid;
   grid-template-rows: repeat(5, 1fr);
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 10px;
   padding: 20px;
   width: 100%;
-}
-
-.modal-btn {
-  grid-column: 1 / span 4;
-  grid-row: -1;
 }

@@ -56,10 +56,10 @@ export function createAdditionalOperationsContainer(viewInstance: CalculatorView
   buttonsContainer: HTMLDivElement;
 } {
   const additionalOperations: string[] = [
-    ...Object.keys(defaultConstants),
     Operations.LEFT_PARENTHESIS,
     Operations.RIGHT_PARENTHESIS,
     Operations.EXPONENTIATION,
+    ...Object.keys(defaultConstants),
   ];
   const buttons: HTMLButtonElement[] = [];
 
