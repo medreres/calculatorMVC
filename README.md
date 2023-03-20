@@ -1,6 +1,6 @@
 # Description
 
-Simple implementation of calculator written on typescript using MVC pattern. Calculating occurs using Shunting Yard Algorithm.
+Simple implementation of calculator written on typescript using MVC pattern. Calculating occurs using either Shunting Yard Algorithm or Regular Expressions
 
 # Usage
 
@@ -9,10 +9,25 @@ Simple implementation of calculator written on typescript using MVC pattern. Cal
 To add a new operation, define it via Operation class
 and invoke addOperation() on controller.
 Validity of operation being added resets fully on developer's shoulders
-![Add new operation button](./assets/addingOperation.png)
 
-Or you could do it in a more programmer way :)
-![Add new operation button](./assets/addingOperationConfig.png)
+Example
+
+```
+import { Notation } from "./lib/Calculator/Operation/interfaces";
+import CalculatorController from "./controller/CalculatorController/CalculatorController";
+import CalculatorModel from "./model/CalculatorModel/CalculatorModel";
+import CalculatorView from "./view/CalculatorView";
+import { Operation } from "./lib/Calculator";
+
+const model = new CalculatorModel();
+const view = new CalculatorView();
+const controller = new CalculatorController(model, view);
+
+const modula = new Operation("%", 3, Notation.INFIX, (a: number, b: number) => a % b);
+controller.addOperation(modula);
+
+document.body.appendChild(controller.getView());
+```
 
 # Technologies
 

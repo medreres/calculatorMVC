@@ -14,6 +14,7 @@ import { expressionInputChangeHandler, expressionInputSubmitHandler } from "./ut
 import "./styles.css";
 
 // TODO change view to more beautiful
+// TODO warnings in console
 class CalculatorView implements ICalculatorView, IObserver {
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
@@ -29,11 +30,11 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.classList.add("calculator", "card");
 
     // expression input
-    const submitHandler = expressionInputSubmitHandler(this);
-    const changeHandler = expressionInputChangeHandler(this);
+    const onSubmit = expressionInputSubmitHandler(this);
+    const onChange = expressionInputChangeHandler(this);
     this.expressionInput = createExpressionInput({
-      onSubmit: submitHandler,
-      onChange: changeHandler,
+      onSubmit,
+      onChange,
     });
     this.container.appendChild(this.expressionInput);
 
