@@ -26,4 +26,8 @@ describe("Complex operations", () => {
   test("(3! + 5 * 3 ^ (5!) - 10) / 10! * 0", () => {
     expect(calc.evaluate("(3! + 5 * 3 ^ (5!) - 10) / 10! * 0")).toBe(0);
   });
+
+  test("2 ^ (3 - 3!) = .125", () => {
+    expect(calc.evaluate("2 ^ (3 - 3!)")).toBe(0.125);
+  });
 });

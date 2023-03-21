@@ -47,7 +47,7 @@ export function evaluate(this: ExpressionParser, expression: string): string {
     const regex = makeRegex(operation);
     const replacement = performOperation.call(this, expression, operation) as string;
 
-    expression = expression.replace(regex, replacement);
+    expression = expression.replace(regex, replacement).trim();
   }
 
   return expression.trim();
@@ -73,14 +73,15 @@ export function updateRegex(this: ExpressionParser) {
   const regexRaw = `(?<=[0-9]|\\s)[${operations
     .filter((operation) => operation.symbol.length === 1)
     .map((operation) => `\\${operation.symbol}`)
-    .join("")}](?=[^0-9]|\\s|$)`;
+    .join("")}](?=[0-9]|[^0-9]|\s|$)`;
 
   this.operationsRegex = new RegExp(regexRaw, "g");
   this.isRegexUpdated = true;
-}
+} 
 
 // create regex for operation depending on its notation
-export const numberRegex = `([\\+\\-]*\\d*\\.*\\d+[eE]?[\\+\\-]?\\d?\\.?\\d?)`;
+// export const numberRegex = `([\\-]?\\d*\\.*\\d+[eE]?[\\+\\-]?\\d?\\.?\\d?)`;
+export const numberRegex = `([\\-]?\\d*\\.?\\d+(?:[Ee][\\+\\-]?\\d+)?)`;
 export function makeRegex(op: Operation, option?: string) {
   let regexRaw;
   const escapeSymbol = /\w/.test(op!.symbol) ? "" : `\\`;

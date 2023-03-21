@@ -50,4 +50,16 @@ describe("Priorities", () => {
   test("2 ^ (300 ^ 0)", () => {
     expect(calc.evaluate("2 ^ (300 ^ 0)")).toBe(2);
   });
+
+  test("2+5-3=4", () => {
+    expect(calc.evaluate("2+5-3")).toBe(4);
+  });
+
+  test("-3-5-10", () => {
+    expect(calc.evaluate("-3-5-10")).toBe(-18);
+  });
+
+  test("2 + 10 + 10 - 10 + 10 + (-10-10)", () => {
+    expect(calc.evaluate("2 + 10 + 10 - 10 + 10 + (-10-10)")).toBe(2);
+  });
 });

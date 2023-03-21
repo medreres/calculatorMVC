@@ -10,6 +10,7 @@ describe("Simple operations", () => {
   test("-(5 + 1) * 3", () => {
     expect(calc.evaluate("-(5 + 1) * 3")).toBe(-18);
   });
+  
 
   test("PI * 3", () => {
     expect(calc.evaluate("PI * 3")).toBe(9.42477796076938);

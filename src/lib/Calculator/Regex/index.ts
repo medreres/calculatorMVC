@@ -1,10 +1,9 @@
 import { defaultOperations } from "../config";
-import { IOperation } from "../../Operation/interfaces";
+import { IOperation, Notation } from "../../Operation/interfaces";
 import { Constants, ICalculator } from "../interfaces";
 import Operation from "../../Operation";
 import ExpressionParser from "../../ExpressionParser";
 
-// TODO FIX SPACE BETWEEN CHARACTERS
 export default class Evaluator implements ICalculator {
   private constants: Map<string, number> = new Map();
   protected parser = new ExpressionParser();
@@ -50,4 +49,13 @@ export default class Evaluator implements ICalculator {
 }
 
 // const calc = new Evaluator();
-// console.log(calc.evaluate('( 2 + 3 * -4)'))
+// const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
+//   let acc = 1;
+//   for (let i = 1; i <= a; i++) {
+//     acc *= i;
+//   }
+//   return acc;
+// });
+
+// calc.addNewOperation(factorial);
+// calc.evaluate('(3! + 5 * 3 ^ (5!) - 10) / 10! * 0')

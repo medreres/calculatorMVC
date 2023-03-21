@@ -32,4 +32,8 @@ describe("Respecting priorities", () => {
   test("2 ^ (3 !) = 64", () => {
     expect(evaluator.evaluate("2 ^ (3 !)")).toBe(64);
   });
+
+  test("2 ^ (3 - 3!) = .125", () => {
+    expect(evaluator.evaluate("2 ^ (3 - 3!)")).toBe(.125);
+  });
 });
