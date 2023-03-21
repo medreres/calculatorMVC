@@ -1,5 +1,6 @@
 import { Operation } from "../lib/Calculator";
 
+// TODO add constants
 export default interface ICalculatorModel {
   setExpression(expression: string): void;
   getExpression(): string;

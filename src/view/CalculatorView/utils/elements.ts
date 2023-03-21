@@ -50,14 +50,13 @@ export const createButtonsContainer = (
   return { buttons, buttonsContainer };
 };
 
+// TODO viewInstance remove
 export function createAdditionalOperationsContainer(viewInstance: CalculatorView): {
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
 } {
   const additionalOperations: string[] = [
-    Operations.LEFT_PARENTHESIS,
-    Operations.RIGHT_PARENTHESIS,
-    Operations.EXPONENTIATION,
+    ...Object.values(Operations).filter((operation) => operation != Operations.DOT),
     ...Object.keys(defaultConstants),
   ];
   const buttons: HTMLButtonElement[] = [];
@@ -102,6 +101,10 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
     case Operations.DIVISION:
       innerHtml = "&divide";
       value = Operations.DIVISION;
+      break;
+
+    case Actions.REMOVE_SYMBOL:
+      classList.push("calc-btn", "operator", "btn", "btn-info", "remove-btn");
       break;
   }
 

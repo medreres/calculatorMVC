@@ -12,7 +12,7 @@ Validity of operation being added is on developer's shoulders
 
 Example
 
-// TODO add static methods addition description
+Adding via addNewOperation method
 ```
 import { Notation } from "./lib/Calculator/Operation/interfaces";
 import CalculatorController from "./controller/CalculatorController/CalculatorController";
@@ -25,9 +25,15 @@ const view = new CalculatorView();
 const controller = new CalculatorController(model, view);
 
 const modula = new Operation("%", 3, Notation.INFIX, (a: number, b: number) => a % b);
-controller.addOperation(modula);
+controller.addNewOperation(modula);
 
 document.body.appendChild(controller.getView());
+```
+
+// TODO add readme
+// TODO adding constants
+Adding via config
+```
 ```
 
 # Technologies

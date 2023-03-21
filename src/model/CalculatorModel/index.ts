@@ -6,7 +6,6 @@ import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
 import config from "../../config/project.config";
 
-// TODO INV( 2 + 5 )
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
   private result: number | string;

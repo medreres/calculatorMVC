@@ -16,9 +16,7 @@ const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
   }
   return acc;
 });
-
-controller.addOperation(factorial);
-
-controller.addOperation(inverse);
+// controller.addNewOperation(factorial);
+// controller.addNewOperation(inverse);
 
 document.body.appendChild(controller.getView());

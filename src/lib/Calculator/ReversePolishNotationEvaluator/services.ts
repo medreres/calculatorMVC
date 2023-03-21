@@ -112,14 +112,6 @@ export function parseExpression(expression: string, operationsSymbols: string[])
 
     if (char === " ") {
       continue;
-    } else if (char === Operations.COMMA) {
-      // support of function with multiple arguments like max(1,3)
-      // just ignore commas and add values to number stack
-      if (currentToken !== "") {
-        tokens.push(currentToken);
-      }
-
-      currentToken = "";
     } else if (
       !isNaN(+char) ||
       char === Operations.DOT ||

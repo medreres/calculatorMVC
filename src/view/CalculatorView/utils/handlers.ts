@@ -6,24 +6,37 @@ import CalculatorView from "..";
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;
 
-  if (btnValue === Actions.CALCULATE) {
-    handler = () => {
-      viewInstance.notify(Events.VIEW_CALCULATE, btnValue);
-    };
-  } else if (btnValue == Actions.CLEAR_INPUT) {
-    handler = () => {
-      viewInstance.setExpression("");
-      viewInstance.setResult("");
-      viewInstance.notify(Events.VIEW_INPUT_CLEARED);
-    };
-  } else {
-    handler = () => {
-      // if it's a number or a dot, then don't add any spaces, in other case add spaces on both sides
-      const isNumber = !isNaN(+btnValue) || btnValue === Operations.DOT;
-      const expression = `${viewInstance.getExpression()}${isNumber ? "" : " "}${btnValue}${isNumber ? "" : " "}`;
-      viewInstance.setExpression(expression);
-      viewInstance.notify(Events.VIEW_INPUT_CHANGED, expression);
-    };
+  switch (btnValue) {
+    case Actions.CALCULATE:
+      handler = () => {
+        viewInstance.notify(Events.VIEW_CALCULATE);
+      };
+      break;
+    case Actions.CLEAR_INPUT:
+      handler = () => {
+        viewInstance.setExpression("");
+        viewInstance.setResult("");
+        viewInstance.notify(Events.VIEW_INPUT_CLEARED);
+      };
+      break;
+
+    case Actions.REMOVE_SYMBOL:
+      handler = () => {
+        const newExpression = viewInstance.getExpression().slice(0, length - 1);
+        viewInstance.setExpression(newExpression);
+        viewInstance.notify(Events.VIEW_INPUT_CHANGED, newExpression);
+      };
+      break;
+
+    default:
+      handler = () => {
+        // if it's a number or a dot, then don't add any spaces, in other case add spaces on both sides
+        const isNumber = !isNaN(+btnValue) || btnValue === Operations.DOT;
+        const expression = `${viewInstance.getExpression()}${isNumber ? "" : " "}${btnValue}${isNumber ? "" : " "}`;
+        viewInstance.setExpression(expression);
+        viewInstance.notify(Events.VIEW_INPUT_CHANGED, expression);
+      };
+      break;
   }
 
   return handler;

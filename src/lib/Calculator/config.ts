@@ -9,7 +9,6 @@ export enum Operations {
   EXPONENTIATION = "^",
   LEFT_PARENTHESIS = "(",
   RIGHT_PARENTHESIS = ")",
-  COMMA = ",",
   DOT = ".",
 }
 
