@@ -30,19 +30,15 @@ export function getMostPrecedentOperator(this: ExpressionParser, operators: stri
 
 export function evaluate(this: ExpressionParser, expression: string): string {
   // replace all constants first
-  let innerMostParenthesis;
-
   // TODO Doesn't use recursion and regex for parentheses search.
   // if parenthesis is found, start inner loop
-  while ((innerMostParenthesis = expression.lastIndexOf(Operations.LEFT_PARENTHESIS)) !== -1) {
-    let closingParenthesis = expression.slice(innerMostParenthesis).indexOf(Operations.RIGHT_PARENTHESIS);
+  let innerMostParenthesis;
+  if ((innerMostParenthesis = expression.indexOf(Operations.LEFT_PARENTHESIS)) !== -1) {
+    let closingParenthesis = expression.lastIndexOf(Operations.RIGHT_PARENTHESIS);
 
     if (closingParenthesis === -1) {
       throw new Error("Missing closing parenthesis");
     }
-
-    // because finding was performed on sliced string
-    closingParenthesis += innerMostParenthesis;
 
     // get left and right part and replace the part between
     const leftPart = expression.slice(0, innerMostParenthesis);
