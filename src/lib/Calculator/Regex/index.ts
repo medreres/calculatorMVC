@@ -48,3 +48,6 @@ export default class Evaluator implements ICalculator {
     return this;
   }
 }
+
+// const calc = new Evaluator();
+// console.log(calc.evaluate('( 2 + 3 * -4)'))

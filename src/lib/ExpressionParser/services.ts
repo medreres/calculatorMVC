@@ -54,9 +54,9 @@ export function evaluate(this: ExpressionParser, expression: string): string {
 
   // parse all operations and perform them one by one, following their precedence
   // TODO Can we search operators along with their operands?
-  let operators = parseOperations.call(this, expression);
+  let operators;
 
-  while (operators.length > 0) {
+  while ((operators = parseOperations.call(this, expression)).length > 0) {
     const operation = getMostPrecedentOperator.call(this, operators);
     const regex = makeRegex(operation);
     const replacement = performOperation.call(this, expression, operation) as string;
@@ -84,10 +84,10 @@ export function performOperation(this: ExpressionParser, exp: string, op: Operat
 export function updateRegex(this: ExpressionParser) {
   const operations = Array.from(this.operationsRaw.values());
 
-  const regexRaw = `[${operations
+  const regexRaw = `(?<=[0-9]|\\s)[${operations
     .filter((operation) => operation.symbol.length === 1)
     .map((operation) => `\\${operation.symbol}`)
-    .join("")}](?=[^0-9]|$)`;
+    .join("")}](?=[^0-9]|\\s|$)`;
 
   this.operationsRegex = new RegExp(regexRaw, "g");
   this.isRegexUpdated = true;

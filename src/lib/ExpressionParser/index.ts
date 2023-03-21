@@ -16,9 +16,10 @@ export default class ExpressionParser {
   }
 
   parseExpression(expression: string): number {
-    if (!this.isValidExpression(expression)) {
-      throw new SyntaxError("Expression is invalid. Please check for correctness");
-    }
+    // TODO connect checking
+    // if (!this.isValidExpression(expression)) {
+    //   throw new SyntaxError("Expression is invalid. Please check for correctness");
+    // }
 
     expression = this.replaceConstants(expression);
 
@@ -35,9 +36,10 @@ export default class ExpressionParser {
 
   addOperation(...operations: Operation[]) {
     operations.forEach((operation) => {
-      if (this.operationsRaw.has(operation.symbol)) {
-        throw new Error(`Operation ${operation.symbol} already exist`);
-      }
+      // FIXME
+      // if (this.operationsRaw.has(operation.symbol)) {
+      //   throw new Error(`Operation ${operation.symbol} already exist`);
+      // }
 
       this.operationsRaw.set(operation.symbol, operation);
     });
