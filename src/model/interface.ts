@@ -1,12 +1,16 @@
 import { Operation } from "../lib/Calculator";
 
-// TODO add constants
 export default interface ICalculatorModel {
   setExpression(expression: string): void;
   getExpression(): string;
+
   setResult(result: number | string): void;
   getResult(): number | string;
+
   calculate(): number | string;
+
   addNewOperation(operation: Operation): void;
   getAvailableOperations(): Operation[];
+
+  addNewConstant(name: string, value: number): void;
 }

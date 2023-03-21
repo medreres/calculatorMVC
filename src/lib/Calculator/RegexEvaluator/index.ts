@@ -47,15 +47,3 @@ export default class RegexEvaluator implements ICalculator {
     return this;
   }
 }
-
-// const calc = new RegexEvaluator();
-// const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
-//   let acc = 1;
-//   for (let i = 1; i <= a; i++) {
-//     acc *= i;
-//   }
-//   return acc;
-// });
-
-// calc.addNewOperation(factorial);
-// calc.evaluate('(3! + 5 * 3 ^ (5!) - 10) / 10! * 0')

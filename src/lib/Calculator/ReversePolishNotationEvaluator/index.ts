@@ -12,8 +12,6 @@ import { ICalculator } from "../interfaces";
 import ExpressionParser from "../../ExpressionParser";
 import Operation from "../../Operation";
 
-// TODO -(3+1)
-// TODO 5+3a
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
  * and operators and returns result of evaluation, support extending with new operations
@@ -86,7 +84,7 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
       params.operation = getOperation.call(this, token as string);
       if (params.operation) return evaluateExpression(params);
 
-      throw new Error(`Invalid character ${token} at position ${index}`);
+      throw new Error(`Invalid character ${token} `);
     });
 
     performResidualOperations(params);

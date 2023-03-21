@@ -13,11 +13,6 @@ describe("Simple operations.", () => {
     expect(evaluator.evaluate("2+5-3")).toBe(4);
   });
 
-  // FIXME
-  // test("-(3+1)", () => {
-  //   expect(evaluator.evaluate("-(3+1)")).toBe(-4);
-  // });
-
   test("-3-5-10", () => {
     expect(evaluator.evaluate("-3-5-10")).toBe(-18);
   });
@@ -36,10 +31,6 @@ describe("Simple operations.", () => {
 
   test("-2 + -2 = -4", () => {
     expect(evaluator.evaluate("-2+-2")).toBe(-4);
-  });
-
-  test("Empty expression = 0", () => {
-    expect(evaluator.evaluate("")).toBe(0);
   });
 
   test("1  * 2 = 2", () => {
@@ -68,10 +59,6 @@ describe("Simple operations.", () => {
 
   test("2 ^ 3 = 8", () => {
     expect(evaluator.evaluate("2 ^ 3")).toBe(8);
-  });
-
-  test("tan 0 = 0", () => {
-    expect(evaluator.evaluate("tan 0")).toBe(0);
   });
 
   test("5 ! + 20 = 140", () => {

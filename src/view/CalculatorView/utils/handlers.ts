@@ -42,26 +42,22 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
   return handler;
 };
 
-export function expressionInputChangeHandler(viewInstance: CalculatorView) {
+export function expressionInputChangeHandler(this: CalculatorView) {
   let handler = (e: Event) => {
     if ((e.target as HTMLInputElement).value.length === 0) {
-      // handler = (e: Event) => {
-      viewInstance.notify(Events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
-      viewInstance.resultInput.value = "";
-      // };
+      this.notify(Events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
+      this.resultInput.value = "";
     } else {
-      // handler = (e: Event) => {
-      viewInstance.notify(Events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
-      // };
+      this.notify(Events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
     }
   };
   return handler;
 }
 
-export function expressionInputSubmitHandler(viewInstance: CalculatorView) {
+export function expressionInputSubmitHandler(this: CalculatorView) {
   return (event: KeyboardEvent) => {
     if (event.key === "Enter") {
-      viewInstance.notify(Events.VIEW_CALCULATE);
+      this.notify(Events.VIEW_CALCULATE);
     }
   };
 }

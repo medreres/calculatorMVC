@@ -18,4 +18,5 @@ export enum Events {
 
   // global events
   ADD_NEW_OPERATION = "addNewOperation",
+  ADD_NEW_CONSTANT = "addNewConstant",
 }

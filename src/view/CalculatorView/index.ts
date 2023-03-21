@@ -7,24 +7,21 @@ import {
   createResultInput,
 } from "./utils/elements";
 import Observer from "../../lib/Observer";
-import { IObserver } from "../../shared/interface";
+import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./utils/services";
 import { Events } from "../../shared/events";
 import { expressionInputChangeHandler, expressionInputSubmitHandler } from "./utils/handlers";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/styles.css";
 
-// TODO change view to more beautiful
-// TODO better operators rendering
-// TODO warnings in console
 class CalculatorView implements ICalculatorView, IObserver {
   private observer: Observer = Observer.getInstance();
-  container: HTMLDivElement;
-  expressionInput: HTMLInputElement;
-  resultInput: HTMLInputElement;
-  buttons: HTMLButtonElement[];
-  additionalOperationsButtons: HTMLButtonElement[];
-  additionalOperationsButtonsContainer: HTMLDivElement;
+  protected container: HTMLDivElement;
+  protected expressionInput: HTMLInputElement;
+  protected resultInput: HTMLInputElement;
+  protected buttons: HTMLButtonElement[];
+  protected additionalOperationsButtons: HTMLButtonElement[];
+  protected additionalOperationsButtonsContainer: HTMLDivElement;
 
   constructor() {
     // main wrapper
@@ -32,8 +29,8 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.classList.add("calculator", "card");
 
     // expression input
-    const onSubmit = expressionInputSubmitHandler(this);
-    const onChange = expressionInputChangeHandler(this);
+    const onSubmit = expressionInputSubmitHandler.call(this);
+    const onChange = expressionInputChangeHandler.call(this);
     this.expressionInput = createExpressionInput({
       onSubmit,
       onChange,
@@ -62,7 +59,7 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.appendChild(calculatorButtonsContainer);
 
     // set rest of the observers
-    initializeObservers(this);
+    initializeObservers.call(this);
   }
 
   setExpression(expression: string) {

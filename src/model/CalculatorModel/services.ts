@@ -1,6 +1,8 @@
 import { Operation } from "../../lib/Calculator";
 import { Events } from "../../shared/events";
 import CalculatorModel from ".";
+import { Constants } from "../../lib/Calculator/interfaces";
+import { IConstant } from "../../shared/interfaces";
 
 export const initializeObservers = (modelInstance: CalculatorModel) => {
   modelInstance.on(Events.MODEL_CALCULATE, () => {
@@ -23,5 +25,9 @@ export const initializeObservers = (modelInstance: CalculatorModel) => {
 
   modelInstance.on(Events.ADD_NEW_OPERATION, (operation: Operation) => {
     modelInstance.addNewOperation(operation);
+  });
+
+  modelInstance.on(Events.ADD_NEW_CONSTANT, ({ name, value }: IConstant) => {
+    modelInstance.addNewConstant(name, value);
   });
 };

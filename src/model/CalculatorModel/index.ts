@@ -1,7 +1,7 @@
 import { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
-import { IObserver } from "../../shared/interface";
+import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
 import config from "../../config/project.config";
@@ -18,6 +18,7 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     initializeObservers(this);
   }
 
+  //------ Interaction
   setExpression(expression: string) {
     this.expression = expression;
   }
@@ -34,6 +35,13 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return this.expression;
   }
 
+  calculate(): number {
+    const result = this.calculator.evaluate(this.expression);
+    this.setResult(result);
+    return result;
+  }
+
+  //----- Operations
   addNewOperation(operation: Operation): void {
     this.calculator.addNewOperation(operation);
   }
@@ -42,18 +50,18 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return this.calculator.getAvailableOperations();
   }
 
+  //----- Contacts
+  addNewConstant(name: string, value: number): void {
+    this.calculator.addNewConstant(name, value);
+  }
+
+  //------ Observers
   on(event: Events, callback: Function): void {
     this.observer.on(event, callback);
   }
 
   notify(event: Events, data?: any): void {
     this.observer.notify(event, data);
-  }
-
-  calculate(): number {
-    const result = this.calculator.evaluate(this.expression);
-    this.setResult(result);
-    return result;
   }
 }
 
