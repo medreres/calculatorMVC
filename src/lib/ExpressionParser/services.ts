@@ -29,23 +29,13 @@ export function getMostPrecedentOperator(this: ExpressionParser, operators: stri
 }
 
 export function evaluate(this: ExpressionParser, expression: string): string {
-  // replace all constants first
-  // TODO Doesn't use recursion and regex for parentheses search.
-  // if parenthesis is found, start inner loop
-  let innerMostParenthesis;
-  if ((innerMostParenthesis = expression.indexOf(Operations.LEFT_PARENTHESIS)) !== -1) {
-    let closingParenthesis = expression.lastIndexOf(Operations.RIGHT_PARENTHESIS);
+  const parenthesesRegex = /\((.*)\)/;
+  const group = expression.match(parenthesesRegex);
 
-    if (closingParenthesis === -1) {
-      throw new Error("Missing closing parenthesis");
-    }
-
-    // get left and right part and replace the part between
-    const leftPart = expression.slice(0, innerMostParenthesis);
-    const rightPart = expression.slice(closingParenthesis + 1, expression.length);
-    const evaluatedPart = evaluate.call(this, expression.slice(innerMostParenthesis + 1, closingParenthesis));
-
-    expression = `${leftPart}${evaluatedPart}${rightPart}`;
+  // if parenthesis are found, start inner loop
+  if (group) {
+    const evaluatedGroup = evaluate.call(this, group[1]);
+    expression = expression.replace(parenthesesRegex, evaluatedGroup);
   }
 
   // parse all operations and perform them one by one, following their precedence
