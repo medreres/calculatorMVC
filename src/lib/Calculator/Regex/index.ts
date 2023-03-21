@@ -1,9 +1,10 @@
 import { defaultOperations } from "../config";
-import { IOperation } from "../Operation/interfaces";
+import { IOperation } from "../../Operation/interfaces";
 import { Constants, ICalculator } from "../interfaces";
-import Operation from "../Operation";
-import ExpressionParser from "../ExpressionParser";
+import Operation from "../../Operation";
+import ExpressionParser from "../../ExpressionParser";
 
+// TODO FIX SPACE BETWEEN CHARACTERS
 export default class Evaluator implements ICalculator {
   private constants: Map<string, number> = new Map();
   protected parser = new ExpressionParser();

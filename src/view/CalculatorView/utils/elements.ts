@@ -1,5 +1,5 @@
 import { buttonValues, Actions } from "../config";
-import CalculatorView from "../CalculatorView";
+import CalculatorView from "..";
 import { btnClickHandler } from "./handlers";
 import { defaultConstants, Operations } from "../../../lib/Calculator";
 
@@ -7,7 +7,6 @@ interface ICreateExpressionInput {
   onSubmit?: (e: KeyboardEvent) => void;
   onChange?: (e: Event) => void;
 }
-
 export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionInput): HTMLInputElement {
   const expressionInput = document.createElement("input");
   expressionInput.classList.add("calculator-screen", "z-depth-1");

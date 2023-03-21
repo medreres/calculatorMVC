@@ -1,16 +1,16 @@
-import Observer from "../Observer";
+import Observer from "..";
 
 describe("Observer", () => {
   test("Observer initializes", () => {
     const foo = () => {
-      new Observer();
+      Observer.getInstance();
     };
 
     expect(foo).not.toThrow(Error);
   });
 
   test("Observer subscribes events and call them", () => {
-    const observer = new Observer();
+    const observer = Observer.getInstance();
     let foo = 1;
     const fn = () => {
       foo++;
@@ -23,7 +23,7 @@ describe("Observer", () => {
   });
 
   test("Observer subscribes events and unsubscribe them", () => {
-    const observer = new Observer();
+    const observer = Observer.getInstance();
     let foo = 1;
     const fn = () => {
       foo++;
@@ -40,7 +40,7 @@ describe("Observer", () => {
   });
 
   test("Observer subscribes different events and calls them", () => {
-    const observer = new Observer();
+    const observer = Observer.getInstance();
     let foo = 1;
     let bar = 2;
     const fn1 = () => {

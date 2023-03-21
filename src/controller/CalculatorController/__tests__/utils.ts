@@ -1,4 +1,4 @@
-import CalculatorController from "../CalculatorController";
+import CalculatorController from "..";
 
 export const initializeController = () => {
   const mockView = {} as any;

@@ -1,7 +1,7 @@
 import Calculator, { CalculatorV2 } from "../lib/Calculator";
 
 /**
- * Algorithm used for calculating
+ * Algorithms available for calculations
  */
 const calculatingAlgorithm = {
   PolishNotation: Calculator,
@@ -10,5 +10,6 @@ const calculatingAlgorithm = {
 
 // settings for project
 export default {
+  /**  Algorithm used for evaluating expression */
   calculatingAlgorithm: calculatingAlgorithm.RegularExpressions,
 };

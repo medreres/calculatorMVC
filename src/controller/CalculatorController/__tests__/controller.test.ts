@@ -1,10 +1,10 @@
-import { Operation } from "../../../lib/Calculator";
-import { Notation } from "../../../lib/Calculator/Operation/interfaces";
+import { Notation } from "../../../lib/Operation/interfaces";
 import Observer from "../../../lib/Observer";
 import { Events } from "../../../shared/events";
 import { initializeController } from "./utils";
+import Operation from "../../../lib/Operation";
 
-const observer = new Observer().getInstance();
+const observer = Observer.getInstance();
 
 describe("Calculator Controller", () => {
   test("Initializes", () => {

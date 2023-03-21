@@ -1,10 +1,8 @@
-import CalculatorController from "./controller/CalculatorController/CalculatorController";
-import CalculatorModel from "./model/CalculatorModel/CalculatorModel";
+import CalculatorController from "./controller/CalculatorController";
+import CalculatorModel from "./model/CalculatorModel";
 import CalculatorView from "./view/CalculatorView";
 import { Operation } from "./lib/Calculator";
-import { Notation } from "./lib/Calculator/Operation/interfaces";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap";
+import { Notation } from "./lib/Operation/interfaces";
 
 const model = new CalculatorModel();
 const view = new CalculatorView();

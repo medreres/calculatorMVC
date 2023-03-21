@@ -1,6 +1,6 @@
 import { Operation } from "../../lib/Calculator";
 import { Events } from "../../shared/events";
-import CalculatorModel from "./CalculatorModel";
+import CalculatorModel from ".";
 
 export const initializeObservers = (modelInstance: CalculatorModel) => {
   modelInstance.on(Events.MODEL_CALCULATE, () => {

@@ -7,10 +7,10 @@ import {
   parseExpression,
   performResidualOperations,
 } from "./services";
-import { Notation } from "../Operation/interfaces";
+import { Notation } from "../../Operation/interfaces";
 import { ICalculator } from "../interfaces";
-import ExpressionParser from "../ExpressionParser";
-import Operation from "../Operation";
+import ExpressionParser from "../../ExpressionParser";
+import Operation from "../../Operation";
 
 // TODO -(3+1)
 // TODO process negation
@@ -51,8 +51,8 @@ export default class Evaluator implements ICalculator {
    * @param {Operation} operation operation being added
    */
   addNewOperation(operation: Operation): Evaluator {
+    // TODO add to parser to check for validity before calculating
     if (this.operations.has(operation.symbol)) throw new Error(`Operation "${operation.symbol} already exists`);
-
     this.operations.set(operation.symbol, operation);
 
     return this;

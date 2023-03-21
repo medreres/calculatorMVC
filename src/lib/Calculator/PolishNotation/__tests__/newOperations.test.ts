@@ -1,5 +1,5 @@
-import { Notation } from "../../Operation/interfaces";
-import Operation from "../../Operation";
+import { Notation } from "../../../Operation/interfaces";
+import Operation from "../../../Operation";
 import { evaluator } from "./utils";
 
 describe("New operations", () => {

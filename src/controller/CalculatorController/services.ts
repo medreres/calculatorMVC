@@ -1,5 +1,5 @@
+import CalculatorController from ".";
 import { Events } from "../../shared/events";
-import CalculatorController from "./CalculatorController";
 
 export const initializeObservers = (controllerInstance: CalculatorController) => {
   // listen for input changes from view

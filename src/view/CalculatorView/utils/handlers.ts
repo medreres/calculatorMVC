@@ -1,7 +1,7 @@
 import { Events } from "../../../shared/events";
 import { Actions } from "../config";
 import { Operations } from "../../../lib/Calculator";
-import CalculatorView from "../CalculatorView";
+import CalculatorView from "..";
 
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;

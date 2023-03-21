@@ -1,6 +1,6 @@
 import { Operation } from "../../lib/Calculator";
 import { Events } from "../../shared/events";
-import CalculatorView from "./CalculatorView";
+import CalculatorView from ".";
 import { createButton } from "./utils/elements";
 import { btnClickHandler } from "./utils/handlers";
 

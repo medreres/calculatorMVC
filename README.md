@@ -8,7 +8,7 @@ Simple implementation of calculator written on typescript using MVC pattern. Cal
 
 To add a new operation, define it via Operation class
 and invoke addOperation() on controller.
-Validity of operation being added resets fully on developer's shoulders
+Validity of operation being added is on developer's shoulders
 
 Example
 

@@ -1,8 +1,8 @@
 import Operation from "../Operation";
 import ExpressionParser from ".";
-import { Constants } from "../interfaces";
+import { Constants } from "../Calculator/interfaces";
 import { Notation } from "../Operation/interfaces";
-import { Operations } from "../config";
+import { Operations } from "../Calculator/config";
 
 export function getMostPrecedentOperator(this: ExpressionParser, operators: string[]): Operation {
   const mostPrecedentOperation = operators.reduce(
@@ -32,6 +32,7 @@ export function evaluate(this: ExpressionParser, expression: string): string {
   // replace all constants first
   let innerMostParenthesis;
 
+  // TODO Doesn't use recursion and regex for parentheses search.
   // if parenthesis is found, start inner loop
   while ((innerMostParenthesis = expression.lastIndexOf(Operations.LEFT_PARENTHESIS)) !== -1) {
     let closingParenthesis = expression.slice(innerMostParenthesis).indexOf(Operations.RIGHT_PARENTHESIS);
@@ -52,8 +53,9 @@ export function evaluate(this: ExpressionParser, expression: string): string {
   }
 
   // parse all operations and perform them one by one, following their precedence
+  // TODO Can we search operators along with their operands?
   let operators = parseOperations.call(this, expression);
-  
+
   while (operators.length > 0) {
     const operation = getMostPrecedentOperator.call(this, operators);
     const regex = makeRegex(operation);

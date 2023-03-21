@@ -1,6 +1,6 @@
 import Observer from "../../../lib/Observer";
 import { Events } from "../../../shared/events";
-import CalculatorModel from "../CalculatorModel";
+import CalculatorModel from "..";
 
 describe("Calculator Model", () => {
   test("Evaluates expression", () => {
@@ -13,7 +13,7 @@ describe("Calculator Model", () => {
 
   test("Listens to Events", () => {
     const calcModel = new CalculatorModel();
-    const observer = new Observer().getInstance();
+    const observer = Observer.getInstance();
 
     const expression = "1 + 2 * 3 - 10 + ( 1 * 2 / ( 5 - 4 ))";
     const answer = -1;

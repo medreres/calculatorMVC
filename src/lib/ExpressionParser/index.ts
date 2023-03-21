@@ -1,5 +1,5 @@
 import Operation from "../Operation";
-import { defaultConstants } from "../config";
+import { defaultConstants } from "../Calculator/config";
 import { evaluate, getAvailableConstants } from "./services";
 
 export default class ExpressionParser {
@@ -16,8 +16,9 @@ export default class ExpressionParser {
   }
 
   parseExpression(expression: string): number {
-    if (!this.isValidExpression(expression))
+    if (!this.isValidExpression(expression)) {
       throw new SyntaxError("Expression is invalid. Please check for correctness");
+    }
 
     expression = this.replaceConstants(expression);
 
@@ -35,7 +36,7 @@ export default class ExpressionParser {
   addOperation(...operations: Operation[]) {
     operations.forEach((operation) => {
       if (this.operationsRaw.has(operation.symbol)) {
-        throw new Error("Operation already exist");
+        throw new Error(`Operation ${operation.symbol} already exist`);
       }
 
       this.operationsRaw.set(operation.symbol, operation);
