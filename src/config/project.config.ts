@@ -1,11 +1,11 @@
-import Calculator, { CalculatorV2 } from "../lib/Calculator";
+import { RegexCalculator, RPNCalculator } from "../lib/Calculator";
 
 /**
  * Algorithms available for calculations
  */
 const calculatingAlgorithm = {
-  PolishNotation: Calculator,
-  RegularExpressions: CalculatorV2,
+  PolishNotation: RPNCalculator,
+  RegularExpressions: RegexCalculator,
 };
 
 // settings for project

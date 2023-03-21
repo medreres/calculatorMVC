@@ -8,22 +8,23 @@ import {
 } from "./utils/elements";
 import Observer from "../../lib/Observer";
 import { IObserver } from "../../shared/interface";
-import { initializeObservers } from "./services";
+import { initializeObservers } from "./utils/services";
 import { Events } from "../../shared/events";
 import { expressionInputChangeHandler, expressionInputSubmitHandler } from "./utils/handlers";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/styles.css";
 
 // TODO change view to more beautiful
+// TODO better operators rendering
 // TODO warnings in console
 class CalculatorView implements ICalculatorView, IObserver {
+  private observer: Observer = Observer.getInstance();
   container: HTMLDivElement;
   expressionInput: HTMLInputElement;
   resultInput: HTMLInputElement;
   buttons: HTMLButtonElement[];
   additionalOperationsButtons: HTMLButtonElement[];
   additionalOperationsButtonsContainer: HTMLDivElement;
-  private observer: Observer = Observer.getInstance();
 
   constructor() {
     // main wrapper

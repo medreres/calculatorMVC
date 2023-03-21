@@ -12,6 +12,7 @@ Validity of operation being added is on developer's shoulders
 
 Example
 
+// TODO add static methods addition description
 ```
 import { Notation } from "./lib/Calculator/Operation/interfaces";
 import CalculatorController from "./controller/CalculatorController/CalculatorController";

@@ -1,8 +1,8 @@
-import { Operation } from "../../lib/Calculator";
-import { Events } from "../../shared/events";
-import CalculatorView from ".";
-import { createButton } from "./utils/elements";
-import { btnClickHandler } from "./utils/handlers";
+import { Operation } from "../../../lib/Calculator";
+import { Events } from "../../../shared/events";
+import CalculatorView from "..";
+import { createButton } from "./elements";
+import { btnClickHandler } from "./handlers";
 
 export const initializeObservers = (viewInstance: CalculatorView) => {
   viewInstance.on(Events.VIEW_SET_RESULT, (value: string) => {
