@@ -1,10 +1,10 @@
 import { defaultOperations } from "../config";
-import { IOperation, Notation } from "../../Operation/interfaces";
+import { IOperation } from "../../Operation/interfaces";
 import { Constants, ICalculator } from "../interfaces";
 import Operation from "../../Operation";
 import ExpressionParser from "../../ExpressionParser";
 
-export default class Evaluator implements ICalculator {
+export default class RegexEvaluator implements ICalculator {
   private constants: Map<string, number> = new Map();
   protected parser = new ExpressionParser();
 
@@ -22,7 +22,7 @@ export default class Evaluator implements ICalculator {
   }
 
   //------ Operations
-  addNewOperation(operation: IOperation): Evaluator {
+  addNewOperation(operation: IOperation): RegexEvaluator {
     this.parser.addOperation(operation);
     return this;
   }
@@ -42,13 +42,13 @@ export default class Evaluator implements ICalculator {
     return constants;
   }
 
-  addNewConstant(key: string, value: number): Evaluator {
+  addNewConstant(key: string, value: number): RegexEvaluator {
     this.parser.addNewConstant(key, value);
     return this;
   }
 }
 
-// const calc = new Evaluator();
+// const calc = new RegexEvaluator();
 // const factorial = new Operation("!", 3, Notation.POSTFIX, (a: number) => {
 //   let acc = 1;
 //   for (let i = 1; i <= a; i++) {

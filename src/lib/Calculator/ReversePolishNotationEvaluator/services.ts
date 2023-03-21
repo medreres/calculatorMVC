@@ -158,7 +158,7 @@ export function parseExpression(expression: string, operationsSymbols: string[])
   }
 
   // if first number is negative, combine minus operation and number
-  if (tokens[0] === Operations.SUBTRACTION) {
+  if (tokens[0] === Operations.SUBTRACTION && !isNaN(+tokens[1])) {
     tokens.shift();
     tokens[0] = -tokens[0];
   }

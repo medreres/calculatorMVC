@@ -13,14 +13,14 @@ import ExpressionParser from "../../ExpressionParser";
 import Operation from "../../Operation";
 
 // TODO -(3+1)
-// TODO process negation
+// TODO 5+3a
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
  * and operators and returns result of evaluation, support extending with new operations
  * via method add addNewOperation
  * @returns {number} result of evaluation
  */
-export default class Evaluator implements ICalculator {
+export default class ReversePolishNotationEvaluator implements ICalculator {
   protected operations: Map<string, Operation> = new Map();
   protected parser = new ExpressionParser();
 
@@ -39,7 +39,7 @@ export default class Evaluator implements ICalculator {
     classOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
   }
 
-  addNewConstant(key: string, value: number): Evaluator {
+  addNewConstant(key: string, value: number): ReversePolishNotationEvaluator {
     this.parser.addNewConstant(key, value);
 
     // chaining
@@ -50,8 +50,7 @@ export default class Evaluator implements ICalculator {
    * @description adds new operation to the class
    * @param {Operation} operation operation being added
    */
-  addNewOperation(operation: Operation): Evaluator {
-    // TODO add to parser to check for validity before calculating
+  addNewOperation(operation: Operation): ReversePolishNotationEvaluator {
     if (this.operations.has(operation.symbol)) throw new Error(`Operation "${operation.symbol} already exists`);
     this.operations.set(operation.symbol, operation);
 
