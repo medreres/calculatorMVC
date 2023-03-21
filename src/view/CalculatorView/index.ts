@@ -12,7 +12,7 @@ import { initializeObservers } from "./utils/services";
 import { Events } from "../../shared/events";
 import { expressionInputChangeHandler, expressionInputSubmitHandler } from "./utils/handlers";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./styles/styles.css";
+import "./styles.css";
 
 class CalculatorView implements ICalculatorView, IObserver {
   private observer: Observer = Observer.getInstance();
@@ -29,11 +29,9 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.classList.add("calculator", "card");
 
     // expression input
-    const onSubmit = expressionInputSubmitHandler.call(this);
-    const onChange = expressionInputChangeHandler.call(this);
     this.expressionInput = createExpressionInput({
-      onSubmit,
-      onChange,
+      onSubmit: expressionInputSubmitHandler.call(this),
+      onChange: expressionInputChangeHandler.call(this),
     });
     this.container.appendChild(this.expressionInput);
 

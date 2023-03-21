@@ -50,7 +50,6 @@ export const createButtonsContainer = (
   return { buttons, buttonsContainer };
 };
 
-// TODO viewInstance remove
 export function createAdditionalOperationsContainer(viewInstance: CalculatorView): {
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
