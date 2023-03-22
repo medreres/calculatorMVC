@@ -29,6 +29,12 @@ export function calculate(this: RegexEvaluator, expression: string): string {
       case Notation.INFIX:
         // split string in two at the operations' position
         [lhs, rhs] = [expression.slice(0, index), expression.slice(index + operation.symbol.length)];
+
+        if (!lhs || !rhs) {
+          // operands missing
+          throw new Error("Invalid expression");
+        }
+
         lhs = calculate.call(this, lhs);
         rhs = calculate.call(this, rhs);
         return operation.evaluate(+lhs, +rhs);

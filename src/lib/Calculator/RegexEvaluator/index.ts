@@ -54,8 +54,3 @@ export default class RegexEvaluator implements ICalculator {
     return this;
   }
 }
-
-const calc = new RegexEvaluator();
-calc.addNewOperation(new Operation("tan", 3, Notation.PREFIX, (a: number) => Math.tan(a)));
-calc.addNewOperation(new Operation("sin", 3, Notation.PREFIX, (a: number) => Math.sin(a)));
-calc.evaluate("(3!+1)!!");

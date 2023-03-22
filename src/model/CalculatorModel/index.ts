@@ -20,7 +20,6 @@ class CalculatorModel implements ICalculatorModel, IObserver {
 
   //------ Interaction
   setExpression(expression: string) {
-    console.log(expression)
     this.expression = expression;
   }
 
