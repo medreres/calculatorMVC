@@ -75,16 +75,17 @@ export function handleParenthesis(params: IParams) {
 }
 
 export function evaluateExpression(params: IParams) {
-  const { operation, operatorStack, getOperation } = params;
+  let { operation, operatorStack, getOperation } = params;
 
   if (operatorStack.length === 0) {
     return operatorStack.push(operation!.symbol);
   }
 
-  const prevOperation = getOperation(operatorStack[operatorStack.length - 1]) as Operation;
+  let prevOperation = getOperation(operatorStack[operatorStack.length - 1]) as Operation;
 
-  if (operation!.precedence <= prevOperation.precedence) {
+  while (prevOperation && operation!.precedence <= prevOperation.precedence) {
     performLastOperation(params);
+    prevOperation = getOperation(operatorStack[operatorStack.length - 1]) as Operation;
   }
 
   operatorStack.push(operation!.symbol);

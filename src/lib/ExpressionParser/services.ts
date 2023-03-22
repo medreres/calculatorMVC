@@ -4,28 +4,36 @@ import { Constants } from "../Calculator/interfaces";
 import { Notation } from "../Operation/interfaces";
 import { Operations } from "../Calculator/config";
 
-export function getMostPrecedentOperator(this: ExpressionParser, operators: string[]): Operation {
+export function getLeastPrecedentOperator(
+  this: ExpressionParser,
+  operators: ParsedOperation[]
+): {
+  operation: Operation;
+  index: number;
+} {
   const mostPrecedentOperation = operators.reduce(
-    (acc, symbol, index): any => {
-      const currentOperation = this.getOperation(symbol.trim());
-      if (currentOperation!.precedence > acc!.operation!.precedence) {
+    (acc, parsedOperation, index): any => {
+      const { operationSymbol, operationIndex } = parsedOperation;
+      const currentOperation = this.getOperation(operationSymbol.trim());
+      if (currentOperation!.precedence <= acc!.operation!.precedence) {
         return {
-          index,
+          arrIndex: index,
+          index: operationIndex,
           operation: currentOperation,
         };
       }
       return acc;
     },
     {
-      index: 0,
-      operation: this.getOperation(operators[0].trim()),
+      index: operators[0].operationIndex,
+      operation: this.getOperation(operators[0].operationSymbol.trim()) as Operation,
     }
   );
 
   // remove that operation
-  operators.splice(mostPrecedentOperation.index, 1);
+  operators.splice((mostPrecedentOperation as any).arrIndex, 1);
 
-  return mostPrecedentOperation.operation as Operation;
+  return mostPrecedentOperation;
 }
 
 export function evaluate(this: ExpressionParser, expression: string): string {
@@ -41,15 +49,25 @@ export function evaluate(this: ExpressionParser, expression: string): string {
 
   // parse all operations and perform them one by one, following their precedence
   // TODO Can we search operators along with their operands?
-  let operators;
 
-  while ((operators = parseOperations.call(this, expression)).length > 0) {
-    const operation = getMostPrecedentOperator.call(this, operators);
-    const regex = makeRegex(operation);
-    const replacement = performOperation.call(this, expression, operation) as string;
-
-    expression = expression.replace(regex, replacement).trim();
+  let operators = parseOperations.call(this, expression);
+  // console.log(operators);
+  if (operators.length > 0) {
+    const { operation, index } = getLeastPrecedentOperator.call(this, operators);
+    // TODO return index in string
+    let [lhs, rhs] = [expression.slice(0, index), expression.slice(index + operation.symbol.length)];
+    lhs = evaluate.call(this, lhs);
+    rhs = evaluate.call(this, rhs);
+    return operation.evaluate(+lhs, +rhs);
   }
+
+  // while (().length > 0) {
+  //   const operation = getLeastPrecedentOperator.call(this, operators);
+  //   const regex = makeRegex(operation);
+  //   const replacement = performOperation.call(this, expression, operation) as string;
+
+  //   expression = expression.replace(regex, replacement).trim();
+  // }
 
   return expression;
 }
@@ -71,10 +89,24 @@ export function performOperation(this: ExpressionParser, exp: string, op: Operat
 export function updateRegex(this: ExpressionParser) {
   const operations = Array.from(this.operationsRaw.values());
 
-  const regexRaw = `(?<=[0-9]|\\s)[${operations
+  const operationRegexRaw = operations
     .filter((operation) => operation.symbol.length === 1)
-    .map((operation) => `\\${operation.symbol}`)
-    .join("")}](?=[0-9]|[^0-9]|\s|$)`;
+    .map((operation) => {
+      const regexRaw = `\\${operation.symbol}`;
+      return regexRaw;
+    })
+    .join("");
+
+  const singleArgumentsOperations = operations
+    .filter((operation) => operation.evaluate.length === 1)
+    .map((operation) => {
+      const regexRaw = `\\${operation.symbol}`;
+      return regexRaw;
+    })
+    .join("");
+
+
+  const regexRaw = `(?<=[0-9]|[${singleArgumentsOperations}]|\\s)[${operationRegexRaw}](?=[0-9]|[^0-9]|\s|$)`;
 
   this.operationsRegex = new RegExp(regexRaw, "g");
   this.isRegexUpdated = true;
@@ -117,24 +149,35 @@ export function getAvailableConstants(this: ExpressionParser): Constants {
   return constants;
 }
 
-export function parseOperations(this: ExpressionParser, exp: string): string[] {
-  let res: string[] = [];
+interface ParsedOperation {
+  operationSymbol: string;
+  operationIndex: number;
+}
+export function parseOperations(this: ExpressionParser, exp: string): ParsedOperation[] {
+  let res: ParsedOperation[] = [];
 
-  const functionRegexRaw = `${this.getAvailableOperations()
-    .filter((operation) => /\w/.test(operation.symbol))
-    .map((operation) => `${operation.symbol}`)
-    .join("|")}`;
+  // const functionRegexRaw = `${this.getAvailableOperations()
+  //   .filter((operation) => /\w/.test(operation.symbol))
+  //   .map((operation) => `${operation.symbol}`)
+  //   .join("|")}`;
 
-  // if there are function operators, parse input for those
-  if (functionRegexRaw) {
-    const functionRegex = new RegExp(functionRegexRaw, "g");
-    const functions: string[] = exp.match(functionRegex) ?? [];
-    res.push(...functions);
-  }
+  // // if there are function operators, parse input for those
+  // if (functionRegexRaw) {
+  //   const functionRegex = new RegExp(functionRegexRaw, "g");
+  //   const functions: string[] = exp.match(functionRegex) ?? [];
+  //   res.push(...functions);
+  // }
 
   const simpleOperationsRegex = getRegex.call(this);
-  const simpleOperations: string[] = exp.match(simpleOperationsRegex) ?? [];
-  res.push(...simpleOperations);
+  // const simpleOperations: string[] = simpleOperationsRegex.exec(exp) ?? [];
+  let match: any;
+  while ((match = simpleOperationsRegex.exec(exp)) != null) {
+    res.push({
+      operationIndex: match.index,
+      operationSymbol: match[0],
+    });
+  }
+  // res.push(...simpleOperations);
 
   return res;
 }

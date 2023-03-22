@@ -22,6 +22,8 @@ export default class ExpressionParser {
 
     expression = this.replaceConstants(expression);
 
+    expression = expression.split(" ").join("");
+
     return +evaluate.call(this, expression);
   }
 

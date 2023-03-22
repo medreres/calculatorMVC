@@ -33,11 +33,6 @@ describe("Exceptions", () => {
     expect(foo).toThrow(Error);
   });
 
-  test("- 2 + 3", () => {
-    const foo = () => calc.evaluate("- 2 + 3");
-    expect(foo).toThrow(Error);
-  });
-
   test("!", () => {
     const foo = () => calc.evaluate("!");
     expect(foo).toThrow(Error);
