@@ -57,4 +57,5 @@ export default class RegexEvaluator implements ICalculator {
 
 const calc = new RegexEvaluator();
 calc.addNewOperation(new Operation("tan", 3, Notation.PREFIX, (a: number) => Math.tan(a)));
-calc.evaluate("tan (1+3)");
+calc.addNewOperation(new Operation("sin", 3, Notation.PREFIX, (a: number) => Math.sin(a)));
+calc.evaluate("(3!+1)!!");

@@ -35,20 +35,32 @@ export function updateRegex(this: ExpressionParser) {
 
   /**
    * ensures that those symbols to the left of operation being parsed are either numbers
-   * unary operators, or whitespace
+   *  or whitespace, not unary operators
    * For example 5! - 10
    * Prevents from wrongly parsing negation as subtraction
    * For example 5 - -10
+   * or
+   * tan-5, which could be parsed as tan and subtraction
    */
-  const singleArgumentsOperations = operations
-    .filter((operation) => operation.evaluate.length === 1)
+  const unaryOperations = operations
+    .filter((operation) => operation.evaluate.length === 1 && operation.symbol.length === 1)
     .map((operation) => {
       const regexRaw = `\\${operation.symbol}`;
       return regexRaw;
     })
     .join("");
 
-  const regexRaw = `(?<=[0-9]|[${singleArgumentsOperations}]|\\s)[${operationRegexRaw}](?=[0-9]|[^0-9]|\s|$)`;
+  // const unaryFunctions = operations
+  //   .filter((operation) => operation.evaluate.length === 1 && operation.symbol.length > 1)
+  //   .map((operation) => {
+  //     const regexRaw = operation.symbol;
+  //     return regexRaw;
+  //   })
+  //   .join("|");
+
+  // console.log(unaryFunctions);
+
+  const regexRaw = `(?<=[0-9]|[${unaryOperations}]|\\s)[${operationRegexRaw}](?=[0-9]|[^0-9]|\s|$)`;
 
   this.operationsRegex = new RegExp(regexRaw, "g");
   this.isRegexUpdated = true;

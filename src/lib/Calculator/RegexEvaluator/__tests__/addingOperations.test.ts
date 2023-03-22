@@ -13,4 +13,19 @@ describe("Adding operations", () => {
 
     expect(result).toEqual(30);
   });
+
+  test("Adding sign", () => {
+    const operation = new Operation("sign", 3, Notation.PREFIX, (a: number) => Math.sign(a));
+    calc.addNewOperation(operation);
+
+    let result = calc.evaluate("sign 10");
+
+    expect(result).toEqual(1);
+  });
+
+  test("Adding sign", () => {
+    let result = calc.evaluate("sign -1123");
+
+    expect(result).toEqual(-1);
+  });
 });

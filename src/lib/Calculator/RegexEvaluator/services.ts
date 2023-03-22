@@ -35,9 +35,11 @@ export function calculate(this: RegexEvaluator, expression: string): string {
 
       case Notation.PREFIX:
         // take only right part
-        rhs = expression.slice(index + operation.symbol.length);
-        rhs = calculate.call(this, rhs);
-        return operation.evaluate(+rhs);
+        [lhs, rhs] = [expression.slice(0, index), expression.slice(index + operation.symbol.length)];
+        // rhs = calculate.call(this, rhs);
+        rhs = operation.evaluate(+rhs);
+        expression = calculate.call(this, lhs + rhs);
+        break;
 
       case Notation.POSTFIX:
         // take only left part
