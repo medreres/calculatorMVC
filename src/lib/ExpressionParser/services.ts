@@ -29,7 +29,8 @@ export function getMostPrecedentOperator(this: ExpressionParser, operators: stri
 }
 
 export function evaluate(this: ExpressionParser, expression: string): string {
-  const parenthesesRegex = /\((.*)\)/;
+  const parenthesesRegexRaw = `\\${Operations.LEFT_PARENTHESIS}(.*)\\${Operations.RIGHT_PARENTHESIS}`;
+  const parenthesesRegex = new RegExp(parenthesesRegexRaw);
   const group = expression.match(parenthesesRegex);
 
   // if parenthesis are found, start inner loop
@@ -50,7 +51,7 @@ export function evaluate(this: ExpressionParser, expression: string): string {
     expression = expression.replace(regex, replacement).trim();
   }
 
-  return expression.trim();
+  return expression;
 }
 
 export function performOperation(this: ExpressionParser, exp: string, op: Operation) {
@@ -77,7 +78,7 @@ export function updateRegex(this: ExpressionParser) {
 
   this.operationsRegex = new RegExp(regexRaw, "g");
   this.isRegexUpdated = true;
-} 
+}
 
 // create regex for operation depending on its notation
 // export const numberRegex = `([\\-]?\\d*\\.*\\d+[eE]?[\\+\\-]?\\d?\\.?\\d?)`;

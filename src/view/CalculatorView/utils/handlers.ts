@@ -12,6 +12,7 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
         viewInstance.notify(Events.VIEW_CALCULATE);
       };
       break;
+
     case Actions.CLEAR_INPUT:
       handler = () => {
         viewInstance.setExpression("");

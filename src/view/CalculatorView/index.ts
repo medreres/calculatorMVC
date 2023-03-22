@@ -72,16 +72,16 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.resultInput.value = result;
   }
 
+  getView(): HTMLElement {
+    return this.container;
+  }
+
   on(event: Events, callback: Function): void {
     this.observer.on(event, callback);
   }
 
   notify(event: Events, data?: any): void {
     this.observer.notify(event, data);
-  }
-
-  getView(): HTMLElement {
-    return this.container;
   }
 }
 
