@@ -1,6 +1,6 @@
 import Operation from "../../Operation";
 import { defaultConstants, defaultOperations, Operations } from "../config";
-import { getAvailableConstants, getRegex, ParsedOperation, parseFunctions, parseSimpleOperations } from "./services";
+import { getAvailableConstants, ParsedOperation, parseFunctions, parseSimpleOperations } from "./services";
 
 export default class ExpressionParser {
   protected isRegexUpdated: boolean = false;

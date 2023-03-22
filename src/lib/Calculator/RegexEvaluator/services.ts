@@ -1,31 +1,50 @@
 import RegexEvaluator from ".";
 import Operation from "../../Operation";
+import { Notation } from "../../Operation/interfaces";
 import { Operations } from "../config";
 import { ParsedOperation } from "../ExpressionParser/services";
 
-export function evaluate(this: RegexEvaluator, expression: string): string {
+export function calculate(this: RegexEvaluator, expression: string): string {
   const parenthesesRegexRaw = `\\${Operations.LEFT_PARENTHESIS}(.*)\\${Operations.RIGHT_PARENTHESIS}`;
   const parenthesesRegex = new RegExp(parenthesesRegexRaw);
   const group = expression.match(parenthesesRegex);
 
   // if parenthesis are found, start inner loop
   if (group) {
-    const evaluatedGroup = evaluate.call(this, group[1]);
-    expression = expression.replace(parenthesesRegex, evaluatedGroup);
+    const calculatedGroup = calculate.call(this, group[1]);
+    expression = expression.replace(parenthesesRegex, calculatedGroup);
   }
 
   // parse all operations and perform them one by one, following their precedence
-  // TODO Can we search operators along with their operands?
 
   let operators = this.parser.parseOperations(expression);
-  // console.log(operators);
   if (operators.length > 0) {
     const { operation, index } = getLeastPrecedentOperator.call(this, operators);
-    // TODO return index in string
-    let [lhs, rhs] = [expression.slice(0, index), expression.slice(index + operation.symbol.length)];
-    lhs = evaluate.call(this, lhs);
-    rhs = evaluate.call(this, rhs);
-    return operation.evaluate(+lhs, +rhs);
+
+    // left and right hand sides of operation
+    let lhs: string | undefined;
+    let rhs: string | undefined;
+
+    switch (operation.notation) {
+      case Notation.INFIX:
+        // split string in two at the operations' position
+        [lhs, rhs] = [expression.slice(0, index), expression.slice(index + operation.symbol.length)];
+        lhs = calculate.call(this, lhs);
+        rhs = calculate.call(this, rhs);
+        return operation.evaluate(+lhs, +rhs);
+
+      case Notation.PREFIX:
+        // take only right part
+        rhs = expression.slice(index + operation.symbol.length);
+        rhs = calculate.call(this, rhs);
+        return operation.evaluate(+rhs);
+
+      case Notation.POSTFIX:
+        // take only left part
+        lhs = expression.slice(0, index);
+        lhs = calculate.call(this, lhs);
+        return operation.evaluate(+lhs);
+    }
   }
 
   return expression;

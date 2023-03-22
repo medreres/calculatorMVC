@@ -33,6 +33,13 @@ export function updateRegex(this: ExpressionParser) {
     })
     .join("");
 
+  /**
+   * ensures that those symbols to the left of operation being parsed are either numbers
+   * unary operators, or whitespace
+   * For example 5! - 10
+   * Prevents from wrongly parsing negation as subtraction
+   * For example 5 - -10
+   */
   const singleArgumentsOperations = operations
     .filter((operation) => operation.evaluate.length === 1)
     .map((operation) => {
@@ -47,10 +54,9 @@ export function updateRegex(this: ExpressionParser) {
   this.isRegexUpdated = true;
 }
 
-// export const ExpressionParser.numberRegex = `([\\-]?\\d*\\.*\\d+[eE]?[\\+\\-]?\\d?\\.?\\d?)`;
 /**
  * @description create regex for operation depending on its notation
- *  */
+ */
 export function makeRegex(op: Operation, option?: string) {
   let regexRaw;
   const escapeSymbol = /\w/.test(op!.symbol) ? "" : `\\`;

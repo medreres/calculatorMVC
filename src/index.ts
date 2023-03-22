@@ -8,6 +8,6 @@ const model = new CalculatorModel();
 const view = new CalculatorView();
 const controller = new CalculatorController(model, view);
 
-controller.addNewOperation(new Operation("tan", 4, Notation.POSTFIX, (a: number) => Math.tan(a)));
+controller.addNewOperation(new Operation("tan", 4, Notation.PREFIX, (a: number) => Math.tan(a)));
 
 document.body.appendChild(controller.getView());

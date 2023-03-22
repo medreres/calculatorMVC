@@ -89,6 +89,3 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
     return Array.from(this.operations.values());
   }
 }
-
-const calc = new ReversePolishNotationEvaluator();
-calc.evaluate("1 + 2");
