@@ -11,5 +11,5 @@ const calculatingAlgorithm = {
 // settings for project
 export default {
   /**  Algorithm used for evaluating expression */
-  calculatingAlgorithm: calculatingAlgorithm.PolishNotation,
+  calculatingAlgorithm: calculatingAlgorithm.RegularExpressions,
 };

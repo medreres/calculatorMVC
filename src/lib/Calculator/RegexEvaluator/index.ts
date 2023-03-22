@@ -1,8 +1,10 @@
+import { Notation } from './../../Operation/interfaces';
 import { defaultOperations } from "../config";
 import { IOperation } from "../../Operation/interfaces";
 import { Constants, ICalculator } from "../interfaces";
 import Operation from "../../Operation";
-import ExpressionParser from "../../ExpressionParser";
+import ExpressionParser from "../ExpressionParser";
+import { evaluate } from "./services";
 
 export default class RegexEvaluator implements ICalculator {
   private constants: Map<string, number> = new Map();
@@ -10,11 +12,20 @@ export default class RegexEvaluator implements ICalculator {
 
   constructor() {
     // initialize parser
-    this.parser.addOperation(...defaultOperations);
+    // this.parser.addOperation();
   }
 
   evaluate(expression: string): number {
-    const result = this.parser.parseExpression(expression);
+    if (!this.parser.isValidExpression(expression)) {
+      throw new SyntaxError("Expression is invalid. Please check for correctness");
+    }
+
+    expression = this.parser.replaceConstants(expression);
+
+    // remove spaces
+    expression = expression.split(" ").join("");
+
+    const result = +evaluate.call(this, expression);
 
     if (isNaN(result)) throw new Error(`Invalid expression`);
 
@@ -47,3 +58,7 @@ export default class RegexEvaluator implements ICalculator {
     return this;
   }
 }
+
+const calc = new RegexEvaluator();
+calc.addNewOperation(new Operation("tan", 3, Notation.PREFIX, (a: number) => Math.tan(a)))
+calc.evaluate('tan 0 + 10 * 3')

@@ -1,15 +1,8 @@
-import { Operations, defaultOperations } from "../config";
-import {
-  evaluateExpression,
-  getOperation,
-  handleParenthesis,
-  IParams,
-  parseExpression,
-  performResidualOperations,
-} from "./services";
+import { Operations } from "../config";
+import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
 import { Notation } from "../../Operation/interfaces";
 import { ICalculator } from "../interfaces";
-import ExpressionParser from "../../ExpressionParser";
+import ExpressionParser from "../ExpressionParser";
 import Operation from "../../Operation";
 
 /**
@@ -29,12 +22,7 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
       new Operation(Operations.RIGHT_PARENTHESIS, 0, Notation.PREFIX, () => 0),
     ];
 
-    defaultOperations.forEach((operation) => {
-      this.parser.addOperation(operation);
-      this.addNewOperation(operation);
-    });
-
-    classOperations.forEach((operation) => this.operations.set(operation.symbol, operation));
+    classOperations.forEach((operation) => this.parser.addOperation(operation));
   }
 
   addNewConstant(key: string, value: number): ReversePolishNotationEvaluator {
@@ -60,7 +48,9 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
     expression = this.parser.replaceConstants(expression);
 
     // get all the operation symbols, except function names
-    const operationSymbols = Array.from(this.operations.keys()).filter((operation) => operation.length === 1);
+    const operationSymbols = Array.from(this.parser.getAvailableOperations())
+      .filter((operation) => operation.symbol.length === 1)
+      .map((operation) => operation.symbol);
     const tokens = parseExpression(expression, operationSymbols);
 
     const numberStack: number[] = [];
@@ -69,7 +59,7 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
     const params: IParams = {
       operatorStack,
       numberStack,
-      getOperation: getOperation.bind(this),
+      getOperation: this.parser.getOperation.bind(this.parser),
       symbol: "",
       operation: undefined,
     };
@@ -81,7 +71,8 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
       if (token === Operations.LEFT_PARENTHESIS || token === Operations.RIGHT_PARENTHESIS)
         return handleParenthesis(params);
 
-      params.operation = getOperation.call(this, token as string);
+      // params.operation = getOperation.call(this, token as string);
+      params.operation = this.parser.getOperation(token as string);
       if (params.operation) return evaluateExpression(params);
 
       throw new Error(`Invalid character ${token} `);
@@ -98,3 +89,6 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
     return Array.from(this.operations.values());
   }
 }
+
+const calc = new ReversePolishNotationEvaluator();
+calc.evaluate("1 + 2");
