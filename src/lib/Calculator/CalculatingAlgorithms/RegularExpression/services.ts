@@ -1,8 +1,8 @@
 import RegexEvaluator from ".";
-import Operation from "../../Operation";
-import { Notation } from "../../Operation/interfaces";
-import { Operations } from "../config";
-import { ParsedOperation } from "../ExpressionParser/services";
+import Operation from "../../utils/Operation";
+import { Notation } from "../../utils/Operation/interfaces";
+import { Operations } from "../../config";
+import { ParsedOperation } from "../../utils/ExpressionParser/services";
 
 export function calculate(this: RegexEvaluator, expression: string): string {
   const parenthesesRegexRaw = `\\${Operations.LEFT_PARENTHESIS}(.*)\\${Operations.RIGHT_PARENTHESIS}`;

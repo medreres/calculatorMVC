@@ -1,6 +1,6 @@
 import CalculatorController from "./controller/CalculatorController";
-import Operation from "./lib/Operation";
-import { Notation } from "./lib/Operation/interfaces";
+import Operation from "./lib/Calculator/utils/Operation";
+import { Notation } from "./lib/Calculator/utils/Operation/interfaces";
 import CalculatorModel from "./model/CalculatorModel";
 import CalculatorView from "./view/CalculatorView";
 

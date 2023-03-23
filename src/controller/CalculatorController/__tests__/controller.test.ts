@@ -1,8 +1,8 @@
-import { Notation } from "../../../lib/Operation/interfaces";
+import { Notation } from "../../../lib/Calculator/utils/Operation/interfaces";
 import Observer from "../../../lib/Observer";
 import { Events } from "../../../shared/events";
 import { initializeController } from "./utils";
-import Operation from "../../../lib/Operation";
+import Operation from "../../../lib/Calculator/utils/Operation";
 
 const observer = Observer.getInstance();
 

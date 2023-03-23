@@ -1,4 +1,4 @@
-import { Operation } from "../../lib/Calculator";
+import Calculator, { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
 import { IObserver } from "../../shared/interfaces";
@@ -9,7 +9,7 @@ import config from "../../config/project.config";
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
   private result: number | string;
-  private calculator = new config.calculatingAlgorithm();
+  private calculator = new Calculator();
   private observer: Observer = Observer.getInstance();
 
   constructor() {

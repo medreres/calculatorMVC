@@ -1,6 +1,4 @@
-import IObserver from "./interface";
-
-class Observer implements IObserver {
+export default class Observer {
   private observers = new Map<string, Function[]>();
   private static instance: Observer | null = null;
 
@@ -32,6 +30,3 @@ class Observer implements IObserver {
     this.observers.get(evt)?.forEach((subscription) => subscription(data));
   }
 }
-
-export default Observer;
-export { IObserver };

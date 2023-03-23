@@ -1,7 +1,7 @@
-import Operation from "../../Operation";
+import Operation from "../Operation";
 import ExpressionParser from ".";
-import { Constants } from "../interfaces";
-import { Notation } from "../../Operation/interfaces";
+import { Constants } from "../../interfaces";
+import { Notation } from "../Operation/interfaces";
 
 export interface ParsedOperation {
   operationSymbol: string;

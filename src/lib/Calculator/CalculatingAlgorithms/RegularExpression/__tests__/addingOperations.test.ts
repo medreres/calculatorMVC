@@ -1,5 +1,5 @@
-import Operation from "../../../Operation";
-import { Notation } from "../../../Operation/interfaces";
+import Operation from "../../../utils/Operation";
+import { Notation } from "../../../utils/Operation/interfaces";
 import { initializeCalculator } from "./utils";
 
 const calc = initializeCalculator();

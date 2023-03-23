@@ -1,5 +1,5 @@
-import Operation from "../../Operation";
-import { defaultConstants, defaultOperations, Operations } from "../config";
+import Operation from "../Operation";
+import { defaultConstants, defaultOperations, Operations } from "../../config";
 import { getAvailableConstants, ParsedOperation, parseFunctions, parseSimpleOperations } from "./services";
 
 export default class ExpressionParser {

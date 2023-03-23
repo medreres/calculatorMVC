@@ -1,9 +1,10 @@
-import { Operations } from "../config";
+import { Operations } from "../../config";
 import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
-import { Notation } from "../../Operation/interfaces";
-import { ICalculator } from "../interfaces";
-import ExpressionParser from "../ExpressionParser";
-import Operation from "../../Operation";
+import { Notation } from "../../utils/Operation/interfaces";
+import { ICalculator } from "../../interfaces";
+import ExpressionParser from "../../utils/ExpressionParser";
+import Operation from "../../utils/Operation";
+import { ICalculatingAlgorithm } from "..";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
@@ -11,7 +12,7 @@ import Operation from "../../Operation";
  * via method add addNewOperation
  * @returns {number} result of evaluation
  */
-export default class ReversePolishNotationEvaluator implements ICalculator {
+export default class ReversePolishNotation implements ICalculatingAlgorithm {
   protected operations: Map<string, Operation> = new Map();
   protected parser = new ExpressionParser();
 
@@ -23,24 +24,6 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
     ];
 
     classOperations.forEach((operation) => this.parser.addOperation(operation));
-  }
-
-  addNewConstant(key: string, value: number): ReversePolishNotationEvaluator {
-    this.parser.addNewConstant(key, value);
-
-    // chaining
-    return this;
-  }
-
-  /**
-   * @description adds new operation to the class
-   * @param {Operation} operation operation being added
-   */
-  addNewOperation(operation: Operation): ReversePolishNotationEvaluator {
-    if (this.operations.has(operation.symbol)) throw new Error(`Operation "${operation.symbol} already exists`);
-    this.operations.set(operation.symbol, operation);
-
-    return this;
   }
 
   evaluate(expression: string): number {
@@ -83,9 +66,5 @@ export default class ReversePolishNotationEvaluator implements ICalculator {
     if (numberStack.length > 1) throw new Error("Invalid expression. Several operands left");
 
     return (numberStack.pop() as number) ?? 0;
-  }
-
-  getAvailableOperations(): Operation[] {
-    return Array.from(this.operations.values());
   }
 }
