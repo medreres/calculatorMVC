@@ -1,6 +1,10 @@
 import CalculatingAlgorithm from "../CalculatingAlgorithm";
 import { calculate } from "./services";
 
+/**
+ * @description Parse expression using regex and recursion
+ * @returns {number} result of evaluation
+ */
 export default class RegularExpression extends CalculatingAlgorithm {
   constructor() {
     super();
@@ -16,6 +20,7 @@ export default class RegularExpression extends CalculatingAlgorithm {
     // remove spaces
     expression = expression.split(" ").join("");
 
+    // call recursion function
     const result = +calculate.call(this, expression);
 
     if (isNaN(result)) throw new Error(`Invalid expression`);

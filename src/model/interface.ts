@@ -10,7 +10,5 @@ export default interface ICalculatorModel {
   calculate(): number | string;
 
   addNewOperation(operation: Operation): void;
-  // getAvailableOperations(): Operation[];
-
   addNewConstant(name: string, value: number): void;
 }

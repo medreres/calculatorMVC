@@ -4,8 +4,7 @@ import { Notation } from "../../utils/Operation/interfaces";
 import { Operations } from "../../config";
 import { ParsedOperation } from "../../utils/ExpressionParser/services";
 
-// TODO
-export function calculate(this: RegexEvaluator, expression: string): string {
+export function evaluateParenthesesGroup(this: RegexEvaluator, expression: string) {
   const parenthesesRegexRaw = new RegExp(
     `\\${Operations.LEFT_PARENTHESIS}(?!.*\\${Operations.LEFT_PARENTHESIS})([^${Operations.RIGHT_PARENTHESIS}]*)\\${Operations.RIGHT_PARENTHESIS}`
   );
@@ -16,53 +15,84 @@ export function calculate(this: RegexEvaluator, expression: string): string {
   // if parenthesis are found, start inner loop
   while ((group = expression.match(parenthesesRegex)) != null) {
     const calculatedGroup = calculate.call(this, group[1]);
-    expression = " " + expression.replace(parenthesesRegex, calculatedGroup);
-  }
-
-  // parse all operations and perform them one by one, following their precedence
-
-  let operators = this.parser.parseOperations(expression);
-  if (operators.length > 0) {
-    const { operation, index } = getLeastPrecedentOperator.call(this, operators);
-
-    // left and right hand sides of operation
-    let lhs: string | undefined;
-    let rhs: string | undefined;
-
-    switch (operation.notation) {
-      case Notation.INFIX:
-        // split string in two at the operations' position
-        [lhs, rhs] = [expression.slice(0, index), expression.slice(index + operation.symbol.length)];
-
-        if (!lhs || !rhs) {
-          // operands missing
-          throw new Error("Invalid expression");
-        }
-
-        lhs = calculate.call(this, lhs);
-        rhs = calculate.call(this, rhs);
-        return operation.evaluate(+lhs, +rhs);
-
-      case Notation.PREFIX:
-        // take only right part
-        [lhs, rhs] = [expression.slice(0, index), expression.slice(index + operation.symbol.length)];
-        // rhs = calculate.call(this, rhs);
-        rhs = operation.evaluate(+rhs);
-        expression = calculate.call(this, lhs + rhs);
-        break;
-
-      case Notation.POSTFIX:
-        // take only left part
-        lhs = expression.slice(0, index);
-        lhs = calculate.call(this, lhs);
-        return operation.evaluate(+lhs);
-    }
+    expression = expression.replace(parenthesesRegex, calculatedGroup);
   }
 
   return expression;
 }
 
-export function getLeastPrecedentOperator(
+export function calculate(this: RegexEvaluator, expression: string): string {
+  // evaluate all parentheses groups
+  expression = evaluateParenthesesGroup.call(this, expression);
+
+  // parse all operations and perform them one by one, following their precedence
+  let operators = this.parser.getOperations(expression);
+  if (operators.length > 0) {
+    const { operation, index } = getLeastPrecedentOperation.call(this, operators);
+    expression = performOperation.call(this, {
+      operation,
+      expression,
+      operationIndexInString: index,
+    });
+  }
+
+  return expression;
+}
+
+interface IPerformOperation {
+  expression: string;
+  operation: Operation;
+  operationIndexInString: number;
+}
+export function performOperation(
+  this: RegexEvaluator,
+  { expression, operation, operationIndexInString }: IPerformOperation
+) {
+  // left and right hand sides of operation
+  let leftPart: string | undefined;
+  let rightPart: string | undefined;
+
+  switch (operation.notation) {
+    case Notation.INFIX:
+      // split string in two at the operations' position
+      [leftPart, rightPart] = [
+        expression.slice(0, operationIndexInString),
+        expression.slice(operationIndexInString + operation.symbol.length),
+      ];
+
+      if (!leftPart || !rightPart) {
+        // operands missing
+        throw new Error("Invalid expression");
+      }
+
+      leftPart = calculate.call(this, leftPart);
+      rightPart = calculate.call(this, rightPart);
+      expression = operation.evaluate(+leftPart, +rightPart);
+      break;
+
+    case Notation.PREFIX:
+      // take only right part
+      [leftPart, rightPart] = [
+        expression.slice(0, operationIndexInString),
+        expression.slice(operationIndexInString + operation.symbol.length),
+      ];
+      // rightPart = calculate.call(this, rightPart);
+      rightPart = operation.evaluate(+rightPart);
+      expression = calculate.call(this, leftPart + rightPart);
+      break;
+
+    case Notation.POSTFIX:
+      // take only left part
+      leftPart = expression.slice(0, operationIndexInString);
+      leftPart = calculate.call(this, leftPart);
+      expression = operation.evaluate(+leftPart);
+      break;
+  }
+
+  return expression;
+}
+
+export function getLeastPrecedentOperation(
   this: RegexEvaluator,
   operators: ParsedOperation[]
 ): {

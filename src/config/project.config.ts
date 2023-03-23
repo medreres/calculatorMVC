@@ -1,6 +1,4 @@
 // algorithms available
-
-// ? help
 import { calculatingAlgorithms } from "../lib/Calculator/config";
 
 // settings for project

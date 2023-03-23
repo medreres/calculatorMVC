@@ -50,16 +50,6 @@ export function updateRegex(this: ExpressionParser) {
     })
     .join("");
 
-  // const unaryFunctions = operations
-  //   .filter((operation) => operation.evaluate.length === 1 && operation.symbol.length > 1)
-  //   .map((operation) => {
-  //     const regexRaw = operation.symbol;
-  //     return regexRaw;
-  //   })
-  //   .join("|");
-
-  // console.log(unaryFunctions);
-
   const regexRaw = `(?<=[0-9]|[${unaryOperations}]|\\s)[${operationRegexRaw}](?=[0-9]|[^0-9]|\s|$)`;
 
   this.operationsRegex = new RegExp(regexRaw, "g");
@@ -137,7 +127,6 @@ export function parseFunctions(this: ExpressionParser, expression: string): Pars
 export function parseSimpleOperations(this: ExpressionParser, expression: string): ParsedOperation[] {
   let result: ParsedOperation[] = [];
   const simpleOperationsRegex = getRegex.call(this);
-  // const simpleOperations: string[] = simpleOperationsRegex.exec(expression) ?? [];
   let match: any;
   while ((match = simpleOperationsRegex.exec(expression)) != null) {
     result.push({

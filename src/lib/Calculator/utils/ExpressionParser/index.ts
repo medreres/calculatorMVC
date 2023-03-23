@@ -20,7 +20,7 @@ export default class ExpressionParser {
     this.addOperation(...defaultOperations);
   }
 
-  parseOperations(this: ExpressionParser, expression: string): ParsedOperation[] {
+  getOperations(expression: string): ParsedOperation[] {
     const functions = parseFunctions.call(this, expression);
 
     const simpleOperations = parseSimpleOperations.call(this, expression);
