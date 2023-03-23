@@ -8,7 +8,7 @@ export default interface ICalculatorController {
 
   getView(): HTMLElement;
 
-  addNewOperation(operation: Operation): void;
+  addOperation(operation: Operation): void;
 
-  addNewConstant(name: string, value: number): void;
+  addConstant(name: string, value: number): void;
 }

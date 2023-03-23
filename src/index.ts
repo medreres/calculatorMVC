@@ -8,7 +8,7 @@ const model = new CalculatorModel();
 const view = new CalculatorView();
 const controller = new CalculatorController(model, view);
 
-controller.addNewOperation(new Operation("tan", 4, Notation.PREFIX, (a: number) => Math.tan(a)));
-controller.addNewOperation(new Operation("sin", 4, Notation.PREFIX, (a: number) => Math.sin(a)));
+controller.addOperation(new Operation("tan", 4, Notation.PREFIX, (a: number) => Math.tan(a)));
+controller.addOperation(new Operation("sin", 4, Notation.PREFIX, (a: number) => Math.sin(a)));
 
 document.body.appendChild(controller.getView());

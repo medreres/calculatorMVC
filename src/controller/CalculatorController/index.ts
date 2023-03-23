@@ -30,11 +30,11 @@ class CalculatorController implements ICalculatorController, IObserver {
     return this.view.getView();
   }
 
-  addNewOperation(operation: Operation): void {
+  addOperation(operation: Operation): void {
     this.notify(Events.ADD_NEW_OPERATION, operation);
   }
 
-  addNewConstant(name: string, value: number): void {
+  addConstant(name: string, value: number): void {
     this.notify(Events.ADD_NEW_CONSTANT, { name, value });
   }
 }

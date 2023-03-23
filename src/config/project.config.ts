@@ -1,15 +1,9 @@
-import { RegexCalculator, RPNCalculator } from "../lib/Calculator";
+// algorithms available
 
-/**
- * Algorithms available for calculations
- */
-const calculatingAlgorithm = {
-  PolishNotation: RPNCalculator,
-  RegularExpressions: RegexCalculator,
-};
+import CalculatingAlgorithms from "../lib/Calculator/CalculatingAlgorithms";
 
 // settings for project
 export default {
   /**  Algorithm used for evaluating expression */
-  calculatingAlgorithm: calculatingAlgorithm.RegularExpressions,
+  evaluatingAlgorithm: CalculatingAlgorithms.RegularExpression,
 };

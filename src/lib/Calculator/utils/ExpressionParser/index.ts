@@ -13,9 +13,10 @@ export default class ExpressionParser {
   constructor() {
     // default constants
     Object.entries(defaultConstants).forEach(([key, value]: [string, number]) => {
-      this.addNewConstant(key, value);
+      this.addConstant(key, value);
     });
 
+    // default operations
     this.addOperation(...defaultOperations);
   }
 
@@ -57,7 +58,7 @@ export default class ExpressionParser {
     return exp;
   }
 
-  addNewConstant(key: string, value: number): ExpressionParser {
+  addConstant(key: string, value: number): ExpressionParser {
     if (this.constants.has(key)) throw new Error("Constant already exist");
     this.constants.set(key, value);
 

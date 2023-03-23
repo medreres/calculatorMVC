@@ -43,7 +43,7 @@ class CalculatorModel implements ICalculatorModel, IObserver {
 
   //----- Operations
   addNewOperation(operation: Operation): void {
-    this.calculator.addNewOperation(operation);
+    this.calculator.addOperation(operation);
   }
 
   // getAvailableOperations(): Operation[] {
@@ -52,7 +52,7 @@ class CalculatorModel implements ICalculatorModel, IObserver {
 
   //----- Contacts
   addNewConstant(name: string, value: number): void {
-    this.calculator.addNewConstant(name, value);
+    this.calculator.addConstant(name, value);
   }
 
   //------ Observers

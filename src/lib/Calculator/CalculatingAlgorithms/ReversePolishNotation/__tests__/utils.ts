@@ -3,6 +3,6 @@ import Calculator from "../../../index";
 
 export const evaluator = (function () {
   const evaluator = new Calculator();
-
+  evaluator.setCalculatingAlgorithm(new ReversePolishNotation());
   return evaluator;
 })();

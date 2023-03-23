@@ -1,6 +1,11 @@
-export { default as RegularExpression } from "./RegularExpression";
-export { default as ReversePolishNotation } from "./ReversePolishNotation";
+import { default as RegularExpression } from "./RegularExpression";
+import { default as ReversePolishNotation } from "./ReversePolishNotation";
+import CalculatingAlgorithm from "./CalculatingAlgorithm";
 
-export interface ICalculatingAlgorithm {
-  evaluate: (expression: string) => number;
-}
+export { CalculatingAlgorithm };
+export { RegularExpression };
+export { ReversePolishNotation };
+export default {
+  RegularExpression,
+  ReversePolishNotation,
+};

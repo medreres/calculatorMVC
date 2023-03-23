@@ -7,7 +7,7 @@ const calc = initializeCalculator();
 describe("Adding operations", () => {
   test("Adding tan function", () => {
     const operation = new Operation("tan", 3, Notation.PREFIX, (a: number) => Math.tan(a));
-    calc.addNewOperation(operation);
+    calc.addOperation(operation);
 
     let result = calc.evaluate("tan 0 + 10 * 3");
 
@@ -16,7 +16,7 @@ describe("Adding operations", () => {
 
   test("Adding sign", () => {
     const operation = new Operation("sign", 3, Notation.PREFIX, (a: number) => Math.sign(a));
-    calc.addNewOperation(operation);
+    calc.addOperation(operation);
 
     let result = calc.evaluate("sign 10");
 

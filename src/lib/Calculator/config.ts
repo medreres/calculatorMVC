@@ -1,5 +1,7 @@
+import calculatingAlgorithms from "./CalculatingAlgorithms";
 import { Notation } from "./utils/Operation/interfaces";
 import Operation from "./utils/Operation";
+import projectConfig from "../../config/project.config";
 
 export enum Operations {
   ADDITION = "+",
@@ -32,3 +34,5 @@ export const defaultOperations = [
     return acc;
   }),
 ];
+
+export const evaluatingAlgorithm = projectConfig.evaluatingAlgorithm;

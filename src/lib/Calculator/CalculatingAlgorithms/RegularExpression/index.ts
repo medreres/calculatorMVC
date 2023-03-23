@@ -1,20 +1,18 @@
-import ExpressionParser from "../../utils/ExpressionParser";
+import CalculatingAlgorithm from "../CalculatingAlgorithm";
 import { calculate } from "./services";
-import { ICalculatingAlgorithm } from "..";
 
-export default class RegularExpression implements ICalculatingAlgorithm {
-  protected parser: ExpressionParser;
-  
-  constructor(parser: ExpressionParser) {
-    this.parser = parser;
+export default class RegularExpression extends CalculatingAlgorithm {
+  constructor() {
+    super();
+    console.log('RegularExpression')
   }
 
   evaluate(expression: string): number {
-    // if (!this.parser.isValidExpression(expression)) {
-    //   throw new SyntaxError("Expression is invalid. Please check for correctness");
-    // }
+    if (!this.parser.isValidExpression(expression)) {
+      throw new SyntaxError("Expression is invalid. Please check for correctness");
+    }
 
-    // expression = this.parser.replaceConstants(expression);
+    expression = this.parser.replaceConstants(expression);
 
     // remove spaces
     expression = expression.split(" ").join("");

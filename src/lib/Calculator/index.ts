@@ -1,48 +1,41 @@
 import Operation from "./utils/Operation";
-import { ICalculatingAlgorithm, RegularExpression, ReversePolishNotation } from "./CalculatingAlgorithms";
-import ExpressionParser from "./utils/ExpressionParser";
+import { CalculatingAlgorithm } from "./CalculatingAlgorithms";
+import { evaluatingAlgorithm } from "./config";
 
-export { default as RPNCalculator } from "./CalculatingAlgorithms/ReversePolishNotation";
-export { default as RegexCalculator } from "./CalculatingAlgorithms/RegularExpression";
 export { default as Operation } from "./utils/Operation";
 export { Operations, defaultConstants } from "./config";
 
 // TODO  tan 1 sin 5
 // TODO switchable
 // TODO (1+2)*(2+3)
+// TODO 5 PI
 export default class Calculator {
-  private calculatingAlgorithm: ICalculatingAlgorithm;
-  protected parser;
+  private calculatingAlgorithm: CalculatingAlgorithm;
 
   constructor() {
-    this.parser = new ExpressionParser();
-
-    this.calculatingAlgorithm = new ReversePolishNotation(this.parser);
+    this.calculatingAlgorithm = new evaluatingAlgorithm();
   }
 
   evaluate(expression: string): number {
-    if (!this.parser.isValidExpression(expression)) {
-      throw new Error("Invalid expression");
-    }
+    const result = this.calculatingAlgorithm.evaluate(expression);
 
-    expression = this.parser.replaceConstants(expression);
+    return result;
+  }
 
-    return this.calculatingAlgorithm.evaluate(expression);
+  setCalculatingAlgorithm(calculatingAlgorithm: CalculatingAlgorithm) {
+    this.calculatingAlgorithm = calculatingAlgorithm;
   }
 
   //------ Operations
-  addNewOperation(operation: Operation) {
-    this.parser.addOperation(operation);
+  addOperation(operation: Operation) {
+    this.calculatingAlgorithm.addOperation(operation);
   }
 
-  // getAvailableOperations(): Operation[] {
-  //   return this.parser.getAvailableOperations();
-  // }
-
-  addNewConstant(key: string, value: number) {
-    this.parser.addNewConstant(key, value);
+  addConstant(key: string, value: number) {
+    this.calculatingAlgorithm.addConstant(key, value);
   }
 }
 
+// TODO remove
 // const calc = new Calculator();
-// calc.evaluate('( 1 + 2 ) * ( 1 + 3 )')
+// calc.evaluate("5PI");

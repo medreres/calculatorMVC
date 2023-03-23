@@ -1,9 +1,8 @@
 import { Operations } from "../../config";
 import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
 import { Notation } from "../../utils/Operation/interfaces";
-import ExpressionParser from "../../utils/ExpressionParser";
 import Operation from "../../utils/Operation";
-import { ICalculatingAlgorithm } from "..";
+import CalculatingAlgorithm from "../CalculatingAlgorithm";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
@@ -11,13 +10,12 @@ import { ICalculatingAlgorithm } from "..";
  * via method add addNewOperation
  * @returns {number} result of evaluation
  */
-export default class ReversePolishNotation implements ICalculatingAlgorithm {
+export default class ReversePolishNotation extends CalculatingAlgorithm {
   protected operations: Map<string, Operation> = new Map();
-  protected parser: ExpressionParser;
 
-  constructor(parser: ExpressionParser) {
-    this.parser = parser;
-
+  constructor() {
+    super();
+    console.log("RPN");
     // initialize with some basics operations
     const classOperations = [
       new Operation(Operations.LEFT_PARENTHESIS, 0, Notation.POSTFIX, () => 0),
@@ -28,6 +26,12 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
   }
 
   evaluate(expression: string): number {
+    if (!this.parser.isValidExpression(expression)) {
+      throw new SyntaxError("Expression is invalid. Please check for correctness");
+    }
+
+    expression = this.parser.replaceConstants(expression);
+
     // replace all constants
     // expression = this.parser.replaceConstants(expression);
 
@@ -49,7 +53,7 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
       operation: undefined,
     };
 
-    tokens.forEach((token, index) => {
+    tokens.forEach((token) => {
       if (!isNaN(token as number)) return numberStack.push(Number(token));
 
       params.symbol = token as string;
