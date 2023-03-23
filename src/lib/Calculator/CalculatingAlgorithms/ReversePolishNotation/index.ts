@@ -15,7 +15,6 @@ export default class ReversePolishNotation extends CalculatingAlgorithm {
 
   constructor() {
     super();
-    console.log("RPN");
     // initialize with some basics operations
     const classOperations = [
       new Operation(Operations.LEFT_PARENTHESIS, 0, Notation.POSTFIX, () => 0),

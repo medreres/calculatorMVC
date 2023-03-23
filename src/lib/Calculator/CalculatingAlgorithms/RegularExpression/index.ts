@@ -4,7 +4,6 @@ import { calculate } from "./services";
 export default class RegularExpression extends CalculatingAlgorithm {
   constructor() {
     super();
-    console.log('RegularExpression')
   }
 
   evaluate(expression: string): number {

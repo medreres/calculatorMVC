@@ -1,9 +1,10 @@
 // algorithms available
 
-import CalculatingAlgorithms from "../lib/Calculator/CalculatingAlgorithms";
+// ? help
+import { calculatingAlgorithms } from "../lib/Calculator/config";
 
 // settings for project
 export default {
   /**  Algorithm used for evaluating expression */
-  evaluatingAlgorithm: CalculatingAlgorithms.RegularExpression,
+  evaluatingAlgorithm: calculatingAlgorithms.RegularExpression,
 };
