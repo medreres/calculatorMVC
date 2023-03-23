@@ -37,5 +37,5 @@ export default class Calculator {
 }
 
 // TODO remove
-// const calc = new Calculator();
-// calc.evaluate("5PI");
+const calc = new Calculator();
+calc.evaluate("(3! + 5)!");

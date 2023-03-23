@@ -4,16 +4,19 @@ import { Notation } from "../../utils/Operation/interfaces";
 import { Operations } from "../../config";
 import { ParsedOperation } from "../../utils/ExpressionParser/services";
 
-// TODO 
+// TODO
 export function calculate(this: RegexEvaluator, expression: string): string {
-  const parenthesesRegexRaw = `\\${Operations.LEFT_PARENTHESIS}(.*)\\${Operations.RIGHT_PARENTHESIS}`;
+  const parenthesesRegexRaw = new RegExp(
+    `\\${Operations.LEFT_PARENTHESIS}(?!.*\\${Operations.LEFT_PARENTHESIS})([^${Operations.RIGHT_PARENTHESIS}]*)\\${Operations.RIGHT_PARENTHESIS}`
+  );
+
   const parenthesesRegex = new RegExp(parenthesesRegexRaw);
-  const group = expression.match(parenthesesRegex);
+  let group;
 
   // if parenthesis are found, start inner loop
-  if (group) {
+  while ((group = expression.match(parenthesesRegex)) != null) {
     const calculatedGroup = calculate.call(this, group[1]);
-    expression = expression.replace(parenthesesRegex, calculatedGroup);
+    expression = " " + expression.replace(parenthesesRegex, calculatedGroup);
   }
 
   // parse all operations and perform them one by one, following their precedence
