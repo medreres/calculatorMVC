@@ -1,6 +1,6 @@
 import Operation from "../Operation";
 import { defaultConstants, defaultOperations, Operations } from "../../config";
-import { getAvailableConstants, ParsedOperation, parseFunctions, parseSimpleOperations } from "./services";
+import { getAvailableConstants, ParsedOperation, parseFunctions, parseSimpleOperations, parseTokens } from "./services";
 
 export default class ExpressionParser {
   protected isRegexUpdated: boolean = false;
@@ -64,6 +64,14 @@ export default class ExpressionParser {
 
     // chaining
     return this;
+  }
+
+  getTokens(expression: string) {
+    const operationSymbols = Array.from(this.getAvailableOperations())
+    .filter((operation) => operation.symbol.length === 1)
+    .map((operation) => operation.symbol);
+
+    return parseTokens.call(this, expression, operationSymbols)
   }
 
   isValidExpression(expression: string): boolean {

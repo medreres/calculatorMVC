@@ -1,5 +1,5 @@
 import { Operations } from "../../config";
-import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
+import { evaluateExpression, handleParenthesis, IParams, performResidualOperations } from "./services";
 import { Notation } from "../../utils/Operation/interfaces";
 import Operation from "../../utils/Operation";
 import CalculatingAlgorithm from "../CalculatingAlgorithm";
@@ -31,15 +31,7 @@ export default class ReversePolishNotation extends CalculatingAlgorithm {
 
     expression = this.parser.replaceConstants(expression);
 
-    // replace all constants
-    // expression = this.parser.replaceConstants(expression);
-
-    // get all the operation symbols, except function names
-    const operationSymbols = Array.from(this.parser.getAvailableOperations())
-      .filter((operation) => operation.symbol.length === 1)
-      .map((operation) => operation.symbol);
-
-    const tokens = parseExpression(expression, operationSymbols);
+    const tokens = this.parser.getTokens(expression);
 
     const numberStack: number[] = [];
     const operatorStack: string[] = [];
