@@ -4,6 +4,7 @@ import { Notation } from "../../utils/Operation/interfaces";
 import { Operations } from "../../config";
 import { ParsedOperation } from "../../utils/ExpressionParser/services";
 
+// TODO 
 export function calculate(this: RegexEvaluator, expression: string): string {
   const parenthesesRegexRaw = `\\${Operations.LEFT_PARENTHESIS}(.*)\\${Operations.RIGHT_PARENTHESIS}`;
   const parenthesesRegex = new RegExp(parenthesesRegexRaw);

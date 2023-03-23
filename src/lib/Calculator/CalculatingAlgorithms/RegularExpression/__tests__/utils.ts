@@ -1,4 +1,4 @@
-import Evaluator from "..";
+import Evaluator from "../../../index";
 
 export function initializeCalculator() {
   const calc = new Evaluator();

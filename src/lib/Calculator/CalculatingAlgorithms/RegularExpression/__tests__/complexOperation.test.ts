@@ -34,4 +34,8 @@ describe("Complex operations", () => {
   test("2 ^ (3 - 3!) = .125", () => {
     expect(calc.evaluate("2 ^ (3 - 3!)")).toBe(0.125);
   });
+
+  test("( 1 + 2 ) * ( 1 + 3 )", () => {
+    expect(calc.evaluate("( 1 + 2 ) * ( 1 + 3 )")).toBe(12);
+  });
 });

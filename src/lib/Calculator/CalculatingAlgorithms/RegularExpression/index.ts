@@ -3,16 +3,18 @@ import { calculate } from "./services";
 import { ICalculatingAlgorithm } from "..";
 
 export default class RegularExpression implements ICalculatingAlgorithm {
-  protected parser = new ExpressionParser();
-
-  constructor() {}
+  protected parser: ExpressionParser;
+  
+  constructor(parser: ExpressionParser) {
+    this.parser = parser;
+  }
 
   evaluate(expression: string): number {
-    if (!this.parser.isValidExpression(expression)) {
-      throw new SyntaxError("Expression is invalid. Please check for correctness");
-    }
+    // if (!this.parser.isValidExpression(expression)) {
+    //   throw new SyntaxError("Expression is invalid. Please check for correctness");
+    // }
 
-    expression = this.parser.replaceConstants(expression);
+    // expression = this.parser.replaceConstants(expression);
 
     // remove spaces
     expression = expression.split(" ").join("");

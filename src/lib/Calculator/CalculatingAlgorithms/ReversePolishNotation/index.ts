@@ -1,7 +1,6 @@
 import { Operations } from "../../config";
 import { evaluateExpression, handleParenthesis, IParams, parseExpression, performResidualOperations } from "./services";
 import { Notation } from "../../utils/Operation/interfaces";
-import { ICalculator } from "../../interfaces";
 import ExpressionParser from "../../utils/ExpressionParser";
 import Operation from "../../utils/Operation";
 import { ICalculatingAlgorithm } from "..";
@@ -14,9 +13,11 @@ import { ICalculatingAlgorithm } from "..";
  */
 export default class ReversePolishNotation implements ICalculatingAlgorithm {
   protected operations: Map<string, Operation> = new Map();
-  protected parser = new ExpressionParser();
+  protected parser: ExpressionParser;
 
-  constructor() {
+  constructor(parser: ExpressionParser) {
+    this.parser = parser;
+
     // initialize with some basics operations
     const classOperations = [
       new Operation(Operations.LEFT_PARENTHESIS, 0, Notation.POSTFIX, () => 0),
@@ -28,12 +29,13 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
 
   evaluate(expression: string): number {
     // replace all constants
-    expression = this.parser.replaceConstants(expression);
+    // expression = this.parser.replaceConstants(expression);
 
     // get all the operation symbols, except function names
     const operationSymbols = Array.from(this.parser.getAvailableOperations())
       .filter((operation) => operation.symbol.length === 1)
       .map((operation) => operation.symbol);
+
     const tokens = parseExpression(expression, operationSymbols);
 
     const numberStack: number[] = [];

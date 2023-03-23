@@ -46,9 +46,9 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     this.calculator.addNewOperation(operation);
   }
 
-  getAvailableOperations(): Operation[] {
-    return this.calculator.getAvailableOperations();
-  }
+  // getAvailableOperations(): Operation[] {
+  //   return this.calculator.getAvailableOperations();
+  // }
 
   //----- Contacts
   addNewConstant(name: string, value: number): void {
