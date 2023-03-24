@@ -4,7 +4,6 @@ import ICalculatorModel from "../interface";
 import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
-import config from "../../config/project.config";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
@@ -45,10 +44,6 @@ class CalculatorModel implements ICalculatorModel, IObserver {
   addNewOperation(operation: Operation): void {
     this.calculator.addOperation(operation);
   }
-
-  // getAvailableOperations(): Operation[] {
-  //   return this.calculator.getAvailableOperations();
-  // }
 
   //----- Contacts
   addNewConstant(name: string, value: number): void {

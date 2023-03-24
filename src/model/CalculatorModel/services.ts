@@ -1,7 +1,6 @@
 import { Operation } from "../../lib/Calculator";
 import { Events } from "../../shared/events";
 import CalculatorModel from ".";
-import { Constants } from "../../lib/Calculator/interfaces";
 import { IConstant } from "../../shared/interfaces";
 
 export const initializeObservers = (modelInstance: CalculatorModel) => {
