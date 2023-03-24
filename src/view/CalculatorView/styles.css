@@ -82,15 +82,15 @@ body {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  height: 15%;
+  /* height: 15%; */
   grid-gap: 5px;
   padding: 10px 20px;
 }
 
 .operations-keys > button {
-  height: 5%;
+  height: initial !important;
   width: 15%;
-  padding: 0.8em;
+  /* padding: 0.8em; */
   font-size: 1em !important;
   display: flex;
   justify-content: center;
