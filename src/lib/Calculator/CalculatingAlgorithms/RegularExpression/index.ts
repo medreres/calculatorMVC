@@ -1,13 +1,27 @@
-import CalculatingAlgorithm from "../CalculatingAlgorithm";
+import ExpressionParser from "../../utils/ExpressionParser";
+import Operation from "../../utils/Operation";
+import ICalculatingAlgorithm from "../interface";
 import { calculate } from "./services";
 
 /**
  * @description Parse expression using regex and recursion
  * @returns {number} result of evaluation
  */
-export default class RegularExpression extends CalculatingAlgorithm {
+export default class RegularExpression implements ICalculatingAlgorithm {
+  protected parser: ExpressionParser;
+
   constructor() {
-    super();
+    this.parser = new ExpressionParser();
+  }
+
+  addOperation(operation: Operation) {
+    this.parser.addOperation(operation);
+  }
+
+  addConstant(key: string, value: number) {
+    {
+      this.parser.addConstant(key, value);
+    }
   }
 
   evaluate(expression: string): number {

@@ -1,6 +1,6 @@
 import { default as RegularExpression } from "./RegularExpression";
 import { default as ReversePolishNotation } from "./ReversePolishNotation";
-import CalculatingAlgorithm from "./CalculatingAlgorithm";
+import CalculatingAlgorithm from "./interface";
 
 export { CalculatingAlgorithm };
 export { RegularExpression };

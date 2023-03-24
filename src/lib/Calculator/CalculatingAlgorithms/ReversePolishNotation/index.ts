@@ -2,7 +2,8 @@ import { Operations } from "../../config";
 import { evaluateExpression, handleParenthesis, IParams, performResidualOperations } from "./services";
 import { Notation } from "../../utils/Operation/interfaces";
 import Operation from "../../utils/Operation";
-import CalculatingAlgorithm from "../CalculatingAlgorithm";
+import ICalculatingAlgorithm from "../interface";
+import ExpressionParser from "../../utils/ExpressionParser";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
@@ -10,11 +11,12 @@ import CalculatingAlgorithm from "../CalculatingAlgorithm";
  * via method add addNewOperation
  * @returns {number} result of evaluation
  */
-export default class ReversePolishNotation extends CalculatingAlgorithm {
+export default class ReversePolishNotation implements ICalculatingAlgorithm {
   protected operations: Map<string, Operation> = new Map();
+  protected parser: ExpressionParser;
 
   constructor() {
-    super();
+    this.parser = new ExpressionParser();
     // initialize with some basics operations
     const classOperations = [
       new Operation(Operations.LEFT_PARENTHESIS, 0, Notation.POSTFIX, () => 0),
@@ -22,6 +24,16 @@ export default class ReversePolishNotation extends CalculatingAlgorithm {
     ];
 
     classOperations.forEach((operation) => this.parser.addOperation(operation));
+  }
+
+  addOperation(operation: Operation) {
+    this.parser.addOperation(operation);
+  }
+
+  addConstant(key: string, value: number) {
+    {
+      this.parser.addConstant(key, value);
+    }
   }
 
   evaluate(expression: string): number {
@@ -60,7 +72,9 @@ export default class ReversePolishNotation extends CalculatingAlgorithm {
 
     performResidualOperations(params);
 
-    if (numberStack.length > 1) throw new Error("Invalid expression. Several operands left");
+    if (numberStack.length > 1) {
+      throw new Error("Invalid expression. Several operands left");
+    }
 
     return (numberStack.pop() as number) ?? 0;
   }
