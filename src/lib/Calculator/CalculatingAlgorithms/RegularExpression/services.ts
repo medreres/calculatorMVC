@@ -2,7 +2,6 @@ import RegexEvaluator from ".";
 import Operation from "../../utils/Operation";
 import { Notation } from "../../utils/Operation/interfaces";
 import { Operations } from "../../config";
-import { ParsedOperation } from "../../utils/ExpressionParser/services";
 
 export function evaluateParenthesesGroup(this: RegexEvaluator, expression: string) {
   const parenthesesRegexRaw = new RegExp(
@@ -25,14 +24,14 @@ export function calculate(this: RegexEvaluator, expression: string): string {
   // evaluate all parentheses groups
   expression = evaluateParenthesesGroup.call(this, expression);
 
-  // parse all operations and perform them one by one, following their precedence
-  let operators = this.parser.getOperations(expression);
-  if (operators.length > 0) {
-    const { operation, index } = getLeastPrecedentOperation.call(this, operators);
+  // get least precedent operation is such exist
+  const leastPrecedentOperation = getLeastPrecedentOperation.call(this, expression);
+
+  if (leastPrecedentOperation) {
     expression = performOperation.call(this, {
-      operation,
+      operation: leastPrecedentOperation.operation,
       expression,
-      operationIndexInString: index,
+      operationIndexInString: leastPrecedentOperation.index,
     });
   }
 
@@ -92,34 +91,31 @@ export function performOperation(
   return expression;
 }
 
-export function getLeastPrecedentOperation(
-  this: RegexEvaluator,
-  operators: ParsedOperation[]
-): {
+interface formattedOperation {
   operation: Operation;
   index: number;
-} {
-  const mostPrecedentOperation = operators.reduce(
-    (acc, parsedOperation, index): any => {
-      const { operationSymbol, operationIndex } = parsedOperation;
-      const currentOperation = this.parser.getOperation(operationSymbol.trim());
-      if (currentOperation!.precedence <= acc!.operation!.precedence) {
-        return {
-          arrIndex: index,
-          index: operationIndex,
-          operation: currentOperation,
-        };
-      }
-      return acc;
-    },
-    {
-      index: operators[0].operationIndex,
-      operation: this.parser.getOperation(operators[0].operationSymbol.trim()) as Operation,
+}
+export function getLeastPrecedentOperation(this: RegexEvaluator, expression: string): formattedOperation | undefined {
+  const operationSymbols = this.parser.getOperations(expression);
+
+  if (operationSymbols.length === 0) return undefined;
+
+  // set initial value
+  let result: formattedOperation = {
+    operation: this.parser.getOperation(operationSymbols[0].operationSymbol) as Operation,
+    index: 0,
+  };
+
+  for (const { operationIndex, operationSymbol } of operationSymbols) {
+    const operation = this.parser.getOperation(operationSymbol);
+
+    if (operation!.precedence <= result.operation.precedence) {
+      result = {
+        operation: operation as Operation,
+        index: operationIndex,
+      };
     }
-  );
+  }
 
-  // remove that operation
-  operators.splice((mostPrecedentOperation as any).arrIndex, 1);
-
-  return mostPrecedentOperation;
+  return result;
 }
