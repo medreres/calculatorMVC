@@ -7,9 +7,11 @@ interface ICreateExpressionInput {
   onSubmit?: (e: KeyboardEvent) => void;
   onChange?: (e: Event) => void;
 }
-export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionInput): HTMLInputElement {
+export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionInput) {
+  const wrapper = document.createElement("div");
+  wrapper.classList.add("col-md-12");
   const expressionInput = document.createElement("input");
-  expressionInput.classList.add("calculator-screen", "z-depth-1");
+  expressionInput.classList.add("calculator-screen", "z-depth-1", "form-control");
 
   if (onChange) {
     expressionInput.oninput = onChange;
@@ -19,7 +21,11 @@ export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionI
     expressionInput.onkeydown = onSubmit;
   }
 
-  return expressionInput;
+  wrapper.appendChild(expressionInput);
+  return {
+    wrapper,
+    input: expressionInput,
+  };
 }
 
 export function createResultInput(): HTMLInputElement {

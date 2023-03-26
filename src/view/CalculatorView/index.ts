@@ -29,11 +29,12 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.classList.add("calculator", "card");
 
     // expression input
-    this.expressionInput = createExpressionInput({
+    const { wrapper, input } = createExpressionInput({
       onSubmit: expressionInputSubmitHandler.call(this),
       onChange: expressionInputChangeHandler.call(this),
     });
-    this.container.appendChild(this.expressionInput);
+    this.expressionInput = input;
+    this.container.appendChild(wrapper);
 
     // result input
     this.resultInput = createResultInput();

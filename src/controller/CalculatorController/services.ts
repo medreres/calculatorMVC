@@ -25,4 +25,13 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
   controllerInstance.on(Events.MODEL_INVALID_EXPRESSION, (msg: string) => {
     controllerInstance.notify(Events.VIEW_INVALID_EXPRESSION, msg);
   });
+
+  // input validation
+  controllerInstance.on(Events.VIEW_CHECK_EXPRESSION, (expr: string) => {
+    controllerInstance.notify(Events.MODEL_CHECK_EXPRESSION, expr);
+  });
+
+  controllerInstance.on(Events.MODEL_EXPRESSION_CHECKED, (isValid: boolean) => {
+    controllerInstance.notify(Events.VIEW_EXPRESSION_CHECKED, isValid);
+  });
 };

@@ -34,6 +34,10 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return this.expression;
   }
 
+  isExpressionValid(expression: string) {
+    return this.calculator.isExpressionValid(expression);
+  }
+
   calculate(): number {
     const result = this.calculator.evaluate(this.expression);
     this.setResult(result);

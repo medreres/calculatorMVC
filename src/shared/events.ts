@@ -8,6 +8,8 @@ export enum Events {
   VIEW_CHANGE_INPUT = "viewChangeInput",
   VIEW_ADD_BUTTON = "viewAddButton",
   VIEW_INVALID_EXPRESSION = "viewInvalidExpression",
+  VIEW_EXPRESSION_CHECKED = "viewExpressionChecked",
+  VIEW_CHECK_EXPRESSION = "viewCheckExpression",
 
   // Model events
   MODEL_CHANGE_INPUT = "changeModelInput",
@@ -15,6 +17,8 @@ export enum Events {
   MODEL_CALCULATED = "modelCalculated",
   MODEL_CLEAR_INPUT = "modelClearInput",
   MODEL_INVALID_EXPRESSION = "modelInvalidExpression",
+  MODEL_CHECK_EXPRESSION = "modelCheckExpression",
+  MODEL_EXPRESSION_CHECKED = "modelExpressionChecked",
 
   // global events
   ADD_NEW_OPERATION = "addNewOperation",

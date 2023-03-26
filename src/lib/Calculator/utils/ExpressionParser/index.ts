@@ -1,11 +1,22 @@
 import Operation from "../Operation";
 import { defaultConstants, defaultOperations, numberRegexRaw, Operations } from "../../config";
-import { getAvailableConstants, ParsedOperation, parseFunctions, parseSimpleOperations, parseTokens } from "./services";
+import {
+  createExpressionValidityRegex,
+  getAvailableConstants,
+  ParsedOperation,
+  parseFunctions,
+  parseSimpleOperations,
+  parseTokens,
+} from "./services";
 
 export default class ExpressionParser {
+  protected expressionValidityRegex: RegExp | null = null;
+  protected isValidityRegexUpdated: boolean = false;
+
   protected isRegexUpdated: boolean = false;
   protected operationsRaw: Map<string, Operation> = new Map();
   protected operationsRegex: RegExp | null = null;
+
   protected constants: Map<string, number> = new Map();
 
   constructor() {
@@ -16,6 +27,7 @@ export default class ExpressionParser {
 
     // default operations
     this.addOperation(...defaultOperations);
+    this.isValidityRegexUpdated = false;
   }
 
   getOperations(expression: string): ParsedOperation[] {
@@ -46,6 +58,7 @@ export default class ExpressionParser {
     // if we add new operation, set isRegexUpdated to false
     // regex needs to be updated
     this.isRegexUpdated = false;
+    this.isValidityRegexUpdated = false;
   }
 
   replaceConstants(exp: string): string {
@@ -76,21 +89,12 @@ export default class ExpressionParser {
   }
 
   isValidExpression(expression: string): boolean {
-    // allows parentheses in string
-    const parenthesesRaw = `\\${Operations.LEFT_PARENTHESIS}?\\${Operations.RIGHT_PARENTHESIS}?`;
+    // instantiate validity regex if not updated or initialized
+    if (!this.isValidityRegexUpdated || this.expressionValidityRegex == null) {
+      this.expressionValidityRegex = createExpressionValidityRegex.call(this);
+      this.isValidityRegexUpdated = true;
+    }
 
-    // regex that consist of operations available in calculator class
-    const operationsRaw = this.getAvailableOperations()
-      .map((operation) => {
-        // if one symbol - better to escape it with //
-        const isOneSymbolOperator = operation.symbol.length === 1 ? "\\" : "";
-        return `(${isOneSymbolOperator}${operation.symbol})?`;
-      })
-      .join("");
-
-    const regexRaw = `^(${numberRegexRaw}*\\s?${parenthesesRaw}\\w*${operationsRaw})*$`;
-    const validityRegex = new RegExp(regexRaw, "gi");
-
-    return validityRegex.test(expression);
+    return this.expressionValidityRegex.test(expression);
   }
 }

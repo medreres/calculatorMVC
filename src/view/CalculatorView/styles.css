@@ -23,13 +23,18 @@ body {
 
 .calculator-screen {
   height: 80px;
+  border-radius: 0 !important;
   border: none;
-  background-color: #252525;
-  color: #fff;
+  background-color: #252525 !important;
+  color: #fff !important;
   text-align: right;
-  padding-right: 20px;
+  padding-right: .75rem !important;
   padding-left: 10px;
   font-size: 4rem;
+}
+.form-control.is-invalid {
+  background-position: left calc(0.375em + 0.1875rem) center !important;
+  /* padding-right: .75rem !important; */
 }
 
 .result-screen {
@@ -67,7 +72,7 @@ body {
 
 .calculator-keys-container {
   display: flex;
-  flex-flow: column;
+  /* flex-flow: column; */
   align-items: stretch;
   flex-flow: column;
 }

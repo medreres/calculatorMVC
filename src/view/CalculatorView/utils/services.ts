@@ -17,7 +17,7 @@ export function initializeObservers(this: CalculatorView) {
   });
 
   this.on(Events.VIEW_INVALID_EXPRESSION, (msg: string) => {
-    alert(msg);
+    setInputValidity(this.expressionInput, false);
   });
 
   this.on(Events.ADD_NEW_CONSTANT, ({ name }: IConstant) => {
@@ -25,4 +25,15 @@ export function initializeObservers(this: CalculatorView) {
     button.onclick = btnClickHandler(button.value, this);
     this.additionalOperationsButtonsContainer.appendChild(button);
   });
+}
+
+export function setInputValidity(input: HTMLInputElement, isValid: boolean): void {
+  const calcBtn = document.querySelector(".equal-sign") as HTMLButtonElement;
+  if (isValid) {
+    input.classList.remove("is-invalid");
+    calcBtn.disabled = false;
+  } else {
+    input.classList.add("is-invalid");
+    calcBtn.disabled = true;
+  }
 }

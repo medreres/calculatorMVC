@@ -29,4 +29,9 @@ export const initializeObservers = (modelInstance: CalculatorModel) => {
   modelInstance.on(Events.ADD_NEW_CONSTANT, ({ name, value }: IConstant) => {
     modelInstance.addNewConstant(name, value);
   });
+
+  modelInstance.on(Events.MODEL_CHECK_EXPRESSION, (expr: string) => {
+    const isValid = modelInstance.isExpressionValid(expr);
+    modelInstance.notify(Events.MODEL_EXPRESSION_CHECKED, isValid);
+  });
 };

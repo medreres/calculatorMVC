@@ -10,4 +10,6 @@ export default interface ICalculatingAlgorithm {
   addOperation: (operation: Operation) => void;
 
   addConstant: (key: string, value: number) => void;
+
+  isExpressionValid: (expression: string) => boolean;
 }

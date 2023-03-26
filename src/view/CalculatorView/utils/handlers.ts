@@ -1,7 +1,7 @@
 import { Events } from "../../../shared/events";
 import { Actions } from "../config";
-import { Operations } from "../../../lib/Calculator";
 import CalculatorView from "..";
+import { setInputValidity } from "./services";
 
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;
@@ -32,8 +32,7 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
     default:
       handler = () => {
         // if it's a number or a dot, then don't add any spaces, in other case add spaces on both sides
-        const isNumber = !isNaN(+btnValue) || btnValue === Operations.DOT;
-        const expression = `${viewInstance.getExpression()}${isNumber ? "" : " "}${btnValue}${isNumber ? "" : " "}`;
+        const expression = `${viewInstance.getExpression()}${btnValue}`;
         viewInstance.setExpression(expression);
         viewInstance.notify(Events.VIEW_INPUT_CHANGED, expression);
       };
@@ -48,8 +47,17 @@ export function expressionInputChangeHandler(this: CalculatorView) {
     if ((e.target as HTMLInputElement).value.length === 0) {
       this.notify(Events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
       this.resultInput.value = "";
+      setInputValidity(e.target as HTMLInputElement, true);
     } else {
-      this.notify(Events.VIEW_INPUT_CHANGED, (e?.target as HTMLInputElement).value);
+      const inputValue = (e?.target as HTMLInputElement).value;
+      // send request to model to check if expression is valid
+      this.notify(Events.VIEW_CHECK_EXPRESSION, inputValue);
+
+      this.on(Events.VIEW_EXPRESSION_CHECKED, (isValid: boolean) => {
+        setInputValidity(e.target as HTMLInputElement, isValid);
+      });
+
+      this.notify(Events.VIEW_INPUT_CHANGED, inputValue);
     }
   };
   return handler;
@@ -58,6 +66,11 @@ export function expressionInputChangeHandler(this: CalculatorView) {
 export function expressionInputSubmitHandler(this: CalculatorView) {
   return (event: KeyboardEvent) => {
     if (event.key === "Enter") {
+      // if button is disabled do nothing
+      if ((event.target as HTMLInputElement).classList.contains("is-invalid")) {
+        return;
+      }
+
       this.notify(Events.VIEW_CALCULATE);
     }
   };

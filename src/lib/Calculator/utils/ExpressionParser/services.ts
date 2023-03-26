@@ -23,6 +23,25 @@ export function performOperation(this: ExpressionParser, exp: string, op: Operat
   }
 }
 
+export function createExpressionValidityRegex(this: ExpressionParser) {
+  // allows parentheses in string
+  const parenthesesRaw = `\\${Operations.LEFT_PARENTHESIS}?\\${Operations.RIGHT_PARENTHESIS}?`;
+
+  // regex that consist of operations available in calculator class
+  const operationsRaw = this.getAvailableOperations()
+    .map((operation) => {
+      // if one symbol - better to escape it with //
+      const isOneSymbolOperator = operation.symbol.length === 1 ? "\\" : "";
+      return `(${isOneSymbolOperator}${operation.symbol})?`;
+    })
+    .join("");
+
+  const regexRaw = `^(${numberRegexRaw}*\\s?${parenthesesRaw}\\w*${operationsRaw})*$`;
+  const validityRegex = new RegExp(regexRaw);
+
+  return validityRegex;
+}
+
 /**
  * @description
  *  updates regex for searching for either simple operations like addition or subtraction

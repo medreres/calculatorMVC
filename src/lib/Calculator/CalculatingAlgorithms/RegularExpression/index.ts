@@ -41,4 +41,8 @@ export default class RegularExpression implements ICalculatingAlgorithm {
 
     return result;
   }
+
+  isExpressionValid(expression: string) {
+    return this.parser.isValidExpression(expression);
+  }
 }

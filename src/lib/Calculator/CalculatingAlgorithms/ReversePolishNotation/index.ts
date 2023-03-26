@@ -76,4 +76,8 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
 
     return (numberStack.pop() as number) ?? 0;
   }
+
+  isExpressionValid (expression: string) {
+    return this.parser.isValidExpression(expression)
+  }
 }

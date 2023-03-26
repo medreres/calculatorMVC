@@ -28,4 +28,8 @@ export default class Calculator {
   addConstant(key: string, value: number) {
     this.calculatingAlgorithm.addConstant(key, value);
   }
+
+  isExpressionValid(expression: string): boolean {
+    return this.calculatingAlgorithm.isExpressionValid(expression);
+  }
 }
