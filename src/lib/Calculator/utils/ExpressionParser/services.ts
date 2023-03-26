@@ -2,7 +2,7 @@ import Operation from "../Operation";
 import ExpressionParser from ".";
 import { Constants } from "../../interfaces";
 import { Notation } from "../Operation/interfaces";
-import { functionRegex, numberRegexRaw, Operations } from "../../config";
+import { functionRegex, numberRegexRaw, Operations, parenthesesSetRegexRaw } from "../../config";
 
 export interface ParsedOperation {
   operationSymbol: string;
@@ -24,19 +24,16 @@ export function performOperation(this: ExpressionParser, exp: string, op: Operat
 }
 
 export function createExpressionValidityRegex(this: ExpressionParser) {
-  // allows parentheses in string
-  const parenthesesRaw = `\\${Operations.LEFT_PARENTHESIS}?\\${Operations.RIGHT_PARENTHESIS}?`;
-
   // regex that consist of operations available in calculator class
   const operationsRaw = this.getAvailableOperations()
     .map((operation) => {
       // if one symbol - better to escape it with //
       const isOneSymbolOperator = operation.symbol.length === 1 ? "\\" : "";
-      return `(${isOneSymbolOperator}${operation.symbol})?`;
+      return `(${isOneSymbolOperator}${operation.symbol})*`;
     })
     .join("");
 
-  const regexRaw = `^(${numberRegexRaw}*\\s?${parenthesesRaw}\\w*${operationsRaw})*$`;
+  const regexRaw = `^(${numberRegexRaw}*\\s?${parenthesesSetRegexRaw}\\w*${operationsRaw})*$`;
   const validityRegex = new RegExp(regexRaw);
 
   return validityRegex;
@@ -96,7 +93,7 @@ export function makeRegex(op: Operation, option?: string) {
   const escapeSymbol = /\w/.test(op!.symbol) ? "" : `\\`;
 
   /**
-   * ${numberRegexRaw} - ensures previous symbol is number
+   * ${numberRegexRaw} - ensures previous symbol is a number
    *
    * ${escapeSymbol}${op.symbol} - search for stated symbol, adds escape symbol if needed
    */

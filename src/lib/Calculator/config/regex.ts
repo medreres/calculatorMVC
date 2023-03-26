@@ -31,3 +31,9 @@ export const numberRegexRaw = `([\\-]?\\d\\.?\\d+(?:[Ee][\\+\\-]?\\d+)?)`;
  * [a-zA-Z] - set of letters that are used to define function name
  */
 export const functionRegex = /[a-zA-Z]/;
+
+/**
+ * @description
+ * \\${Operations.LEFT_PARENTHESIS}? - ensures that there could be at least one left and right parentheses
+ */
+export const parenthesesSetRegexRaw = `\\${Operations.LEFT_PARENTHESIS}*\\${Operations.RIGHT_PARENTHESIS}*`;
