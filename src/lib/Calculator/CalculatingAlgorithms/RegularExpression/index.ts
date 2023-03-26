@@ -32,7 +32,7 @@ export default class RegularExpression implements ICalculatingAlgorithm {
     expression = this.parser.replaceConstants(expression);
 
     // remove spaces
-    expression = expression.split(" ").join("");
+    expression = expression.replaceAll(" ", "");
 
     // call recursion function
     const result = +calculate.call(this, expression);
