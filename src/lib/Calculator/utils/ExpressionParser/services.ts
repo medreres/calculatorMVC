@@ -169,6 +169,10 @@ export function parseTokens(
   operationsSymbols: string[]
 ): (string | number)[] {
   const tokens = [];
+  /**
+   * [${operationsSymbols.map((operation) => `\\${operation}`)}] - group of operations
+   * symbols that could be in string
+   */
   const regexRaw = `[${operationsSymbols.map((operation) => `\\${operation}`)}]`;
   const operationRegex = new RegExp(regexRaw);
 

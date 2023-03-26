@@ -31,9 +31,7 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
   }
 
   addConstant(key: string, value: number) {
-    {
-      this.parser.addConstant(key, value);
-    }
+    this.parser.addConstant(key, value);
   }
 
   evaluate(expression: string): number {
