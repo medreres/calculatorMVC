@@ -14,7 +14,7 @@ Example
 
 Adding via addNewOperation method
 
-```
+```ts
 import { Notation } from "./lib/Calculator/Operation/interfaces";
 import CalculatorController from "./controller/CalculatorController/CalculatorController";
 import CalculatorModel from "./model/CalculatorModel/CalculatorModel";
@@ -37,7 +37,7 @@ or via config in `lib/Calculator/config.ts`
 
 Adding via addNewConstant method
 
-```
+```ts
 import CalculatorController from "./controller/CalculatorController";
 import CalculatorModel from "./model/CalculatorModel";
 import CalculatorView from "./view/CalculatorView";
