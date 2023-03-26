@@ -1,5 +1,5 @@
 import Operation from "../Operation";
-import { defaultConstants, defaultOperations, Operations } from "../../config";
+import { defaultConstants, defaultOperations, numberRegexRaw, Operations } from "../../config";
 import { getAvailableConstants, ParsedOperation, parseFunctions, parseSimpleOperations, parseTokens } from "./services";
 
 export default class ExpressionParser {
@@ -7,8 +7,6 @@ export default class ExpressionParser {
   protected operationsRaw: Map<string, Operation> = new Map();
   protected operationsRegex: RegExp | null = null;
   protected constants: Map<string, number> = new Map();
-
-  static numberRegex = `([\\-]?\\d*\\.?\\d+(?:[Ee][\\+\\-]?\\d+)?)`;
 
   constructor() {
     // default constants
@@ -52,14 +50,17 @@ export default class ExpressionParser {
 
   replaceConstants(exp: string): string {
     Object.entries(getAvailableConstants.call(this)).forEach(([key, value]) => {
-      exp = exp.replace(key, value.toString());
+      exp = exp.replaceAll(key, value.toString());
     });
 
     return exp;
   }
 
   addConstant(key: string, value: number): ExpressionParser {
-    if (this.constants.has(key)) throw new Error("Constant already exist");
+    if (this.constants.has(key)) {
+      throw new Error("Constant already exist");
+    }
+
     this.constants.set(key, value);
 
     // chaining
@@ -68,16 +69,17 @@ export default class ExpressionParser {
 
   getTokens(expression: string) {
     const operationSymbols = Array.from(this.getAvailableOperations())
-    .filter((operation) => operation.symbol.length === 1)
-    .map((operation) => operation.symbol);
+      .filter((operation) => operation.symbol.length === 1)
+      .map((operation) => operation.symbol);
 
-    return parseTokens.call(this, expression, operationSymbols)
+    return parseTokens.call(this, expression, operationSymbols);
   }
 
   isValidExpression(expression: string): boolean {
-    // regex for all operators and operands
-    const numbersRaw = "([+-]?\\d\\.?\\d?)*";
+    // allows parentheses in string
     const parenthesesRaw = `\\${Operations.LEFT_PARENTHESIS}?\\${Operations.RIGHT_PARENTHESIS}?`;
+
+    // regex that consist of operations available in calculator class
     const operationsRaw = this.getAvailableOperations()
       .map((operation) => {
         // if one symbol - better to escape it with //
@@ -86,7 +88,7 @@ export default class ExpressionParser {
       })
       .join("");
 
-    const regexRaw = `^(${numbersRaw}\\s?${parenthesesRaw}\\w*${operationsRaw})*$`;
+    const regexRaw = `^(${numberRegexRaw}*\\s?${parenthesesRaw}\\w*${operationsRaw})*$`;
     const validityRegex = new RegExp(regexRaw, "gi");
 
     return validityRegex.test(expression);

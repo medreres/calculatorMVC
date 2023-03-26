@@ -2,7 +2,7 @@ import Operation from "../Operation";
 import ExpressionParser from ".";
 import { Constants } from "../../interfaces";
 import { Notation } from "../Operation/interfaces";
-import { Operations } from "../../config";
+import { functionRegex, numberRegexRaw, Operations } from "../../config";
 
 export interface ParsedOperation {
   operationSymbol: string;
@@ -23,10 +23,16 @@ export function performOperation(this: ExpressionParser, exp: string, op: Operat
   }
 }
 
+/**
+ * @description
+ *  updates regex for searching for either simple operations like addition or subtraction
+ *  and unary operations like factorial
+ */
 export function updateRegex(this: ExpressionParser) {
   const operations = Array.from(this.operationsRaw.values());
 
-  const operationRegexRaw = operations
+  // create regex for all operations of length 1
+  const operationsRegexRaw = operations
     .filter((operation) => operation.symbol.length === 1)
     .map((operation) => {
       const regexRaw = `\\${operation.symbol}`;
@@ -51,7 +57,12 @@ export function updateRegex(this: ExpressionParser) {
     })
     .join("");
 
-  const regexRaw = `(?<=[0-9]|[${unaryOperations}]|\\s)[${operationRegexRaw}](?=[0-9]|[^0-9]|\s|$)`;
+  /** (?<=[0-9]|[${unaryOperations}]|\\s) - lookbehind ensures that previous symbol can be either
+   * one of unary operations or number, for example -1 + 5, 2! + 3
+   *
+   * [${operationRegexRaw}] - all operations of length 1
+   */
+  const regexRaw = `(?<=[0-9]|[${unaryOperations}]|\\s)[${operationsRegexRaw}]`;
 
   this.operationsRegex = new RegExp(regexRaw, "g");
   this.isRegexUpdated = true;
@@ -62,22 +73,29 @@ export function updateRegex(this: ExpressionParser) {
  */
 export function makeRegex(op: Operation, option?: string) {
   let regexRaw;
+
   const escapeSymbol = /\w/.test(op!.symbol) ? "" : `\\`;
+
+  /**
+   * ${numberRegexRaw} - ensures previous symbol is number
+   *
+   * ${escapeSymbol}${op.symbol} - search for stated symbol, adds escape symbol if needed
+   */
   switch (op.notation) {
     case Notation.INFIX:
-      regexRaw = `${ExpressionParser.numberRegex}\\s*${escapeSymbol}${op.symbol}\\s*${ExpressionParser.numberRegex}`;
+      regexRaw = `${numberRegexRaw}\\s*${escapeSymbol}${op.symbol}\\s*${numberRegexRaw}`;
       break;
 
     case Notation.PREFIX:
-      regexRaw = `${escapeSymbol}${op.symbol}\\s*${ExpressionParser.numberRegex}`;
+      regexRaw = `${escapeSymbol}${op.symbol}\\s*${numberRegexRaw}`;
       break;
 
     case Notation.POSTFIX:
-      regexRaw = `${ExpressionParser.numberRegex}\\s*${escapeSymbol}${op.symbol}\\s*`;
+      regexRaw = `${numberRegexRaw}\\s*${escapeSymbol}${op.symbol}\\s*`;
       break;
 
     default:
-      regexRaw = `${ExpressionParser.numberRegex}\\s*${escapeSymbol}${op.symbol}\\s*${ExpressionParser.numberRegex}`;
+      regexRaw = `${numberRegexRaw}\\s*${escapeSymbol}${op.symbol}\\s*${numberRegexRaw}`;
       break;
   }
 
@@ -104,6 +122,10 @@ export function getRegex(this: ExpressionParser): RegExp {
 export function parseFunctions(this: ExpressionParser, expression: string): ParsedOperation[] {
   let result: ParsedOperation[] = [];
 
+  /**
+   * gets all functions names and combines them using alternate (|) operation,
+   * for example sin|cos
+   */
   const functionRegexRaw = `${this.getAvailableOperations()
     .filter((operation) => /\w/.test(operation.symbol))
     .map((operation) => `${operation.symbol}`)
@@ -113,7 +135,7 @@ export function parseFunctions(this: ExpressionParser, expression: string): Pars
   if (functionRegexRaw) {
     const functionRegex = new RegExp(functionRegexRaw, "g");
 
-    let match: any;
+    let match: RegExpExecArray | null;
     while ((match = functionRegex.exec(expression)) != null) {
       result.push({
         operationIndex: match.index,
@@ -128,7 +150,9 @@ export function parseFunctions(this: ExpressionParser, expression: string): Pars
 export function parseSimpleOperations(this: ExpressionParser, expression: string): ParsedOperation[] {
   let result: ParsedOperation[] = [];
   const simpleOperationsRegex = getRegex.call(this);
+
   let match: any;
+
   while ((match = simpleOperationsRegex.exec(expression)) != null) {
     result.push({
       operationIndex: match.index,
@@ -147,7 +171,7 @@ export function parseTokens(
   const tokens = [];
   const regexRaw = `[${operationsSymbols.map((operation) => `\\${operation}`)}]`;
   const operationRegex = new RegExp(regexRaw);
-  const functionRegex = /[a-zA-Z]/;
+
   let currentToken = "";
 
   for (let i = 0; i < expression.length; i++) {

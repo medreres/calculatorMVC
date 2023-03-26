@@ -1,10 +1,5 @@
-import calculatingAlgorithms, { RegularExpression } from "./CalculatingAlgorithms";
-import { Notation } from "./utils/Operation/interfaces";
-import Operation from "./utils/Operation";
-import projectConfig from "../../config/project.config";
-
-// available algorithms for evaluating expressions
-export { calculatingAlgorithms };
+import Operation from "../utils/Operation";
+import { Notation } from "../utils/Operation/interfaces";
 
 export enum Operations {
   ADDITION = "+",
@@ -37,6 +32,3 @@ export const defaultOperations = [
     return acc;
   }),
 ];
-
-// fallback to regular expression algorithm
-export const evaluatingAlgorithm = projectConfig.evaluatingAlgorithm || RegularExpression;

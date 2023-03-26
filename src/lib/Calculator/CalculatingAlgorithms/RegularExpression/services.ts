@@ -1,20 +1,15 @@
 import RegexEvaluator from ".";
 import Operation from "../../utils/Operation";
 import { Notation } from "../../utils/Operation/interfaces";
-import { Operations } from "../../config";
+import { parenthesesGroupRegex } from "../../config";
 
 export function evaluateParenthesesGroup(this: RegexEvaluator, expression: string) {
-  const parenthesesRegexRaw = new RegExp(
-    `\\${Operations.LEFT_PARENTHESIS}(?!.*\\${Operations.LEFT_PARENTHESIS})([^${Operations.RIGHT_PARENTHESIS}]*)\\${Operations.RIGHT_PARENTHESIS}`
-  );
-
-  const parenthesesRegex = new RegExp(parenthesesRegexRaw);
-  let group;
+  let group: RegExpMatchArray | null;
 
   // if parenthesis are found, start inner loop
-  while ((group = expression.match(parenthesesRegex)) != null) {
+  while ((group = expression.match(parenthesesGroupRegex)) != null) {
     const calculatedGroup = calculate.call(this, group[1]);
-    expression = expression.replace(parenthesesRegex, calculatedGroup);
+    expression = expression.replace(parenthesesGroupRegex, calculatedGroup);
   }
 
   return expression;
@@ -101,7 +96,7 @@ export function getLeastPrecedentOperation(this: RegexEvaluator, expression: str
   if (operationSymbols.length === 0) return undefined;
 
   // set initial value
-  let result: formattedOperation = {
+  let leastPrecedentOperation: formattedOperation = {
     operation: this.parser.getOperation(operationSymbols[0].operationSymbol) as Operation,
     index: 0,
   };
@@ -109,13 +104,17 @@ export function getLeastPrecedentOperation(this: RegexEvaluator, expression: str
   for (const { operationIndex, operationSymbol } of operationSymbols) {
     const operation = this.parser.getOperation(operationSymbol);
 
-    if (operation!.precedence <= result.operation.precedence) {
-      result = {
+    if (!operation) {
+      throw new Error(`Invalid operation ${operationSymbol}`);
+    }
+
+    if (operation.precedence <= leastPrecedentOperation.operation.precedence) {
+      leastPrecedentOperation = {
         operation: operation as Operation,
         index: operationIndex,
       };
     }
   }
 
-  return result;
+  return leastPrecedentOperation;
 }
