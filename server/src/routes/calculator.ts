@@ -29,4 +29,11 @@ router.get("/calculate", (req, res) => {
   res.status(200).json({ result });
 });
 
+router.get("/operations", (req, res) => {
+  const operations = calculator.getOperations();
+  const operationsSymbols = operations.map((operation) => operation.symbol);
+
+  res.status(200).json({ operations: operationsSymbols });
+});
+
 export { router as calculatorRoutes };

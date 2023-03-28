@@ -30,6 +30,10 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
     this.parser.addOperation(operation);
   }
 
+  getOperations(): Operation[] {
+    return this.parser.getAvailableOperations();
+  }
+
   addConstant(key: string, value: number) {
     this.parser.addConstant(key, value);
   }

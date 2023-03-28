@@ -32,4 +32,8 @@ export default class Calculator {
   isExpressionValid(expression: string): boolean {
     return this.calculatingAlgorithm.isExpressionValid(expression);
   }
+
+  getOperations(): Operation[] {
+    return this.calculatingAlgorithm.getOperations();
+  }
 }

@@ -11,7 +11,9 @@ export enum Operations {
   LEFT_PARENTHESIS = "(",
   RIGHT_PARENTHESIS = ")",
   DOT = ".",
-  COS = 'cos'
+  COS = "cos",
+  SIN = "sin",
+  TAN = "tan",
 }
 
 export const defaultConstants = {
@@ -26,6 +28,9 @@ export const defaultOperations = [
   new Operation(Operations.MULTIPLICATION, 2, Notation.INFIX, (a: number, b: number) => a * b),
   new Operation(Operations.DIVISION, 2, Notation.INFIX, (a: number, b: number) => a / b),
   new Operation(Operations.EXPONENTIATION, 3, Notation.INFIX, (a: number, b: number) => a ** b),
+  new Operation(Operations.SIN, 3, Notation.PREFIX, (a: number) => Math.sin(a)),
+  new Operation(Operations.COS, 3, Notation.PREFIX, (a: number) => Math.cos(a)),
+  new Operation(Operations.TAN, 3, Notation.PREFIX, (a: number) => Math.tan(a)),
   new Operation(Operations.FACTORIAL, 4, Notation.POSTFIX, (a: number) => {
     let acc = 1;
     for (let i = 1; i <= a; i++) {
@@ -33,5 +38,4 @@ export const defaultOperations = [
     }
     return acc;
   }),
-  new Operation(Operations.COS, 3, Notation.PREFIX, (a: number) => Math.cos(a)),
 ];
