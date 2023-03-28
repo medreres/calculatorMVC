@@ -1,7 +1,6 @@
 import { buttonValues, Actions } from "../config";
 import CalculatorView from "..";
 import { btnClickHandler } from "./handlers";
-import { defaultConstants, Operations } from "../../../lib/Calculator";
 
 interface ICreateExpressionInput {
   onSubmit?: (e: KeyboardEvent) => void;
@@ -11,6 +10,7 @@ export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionI
   const wrapper = document.createElement("div");
   wrapper.classList.add("col-md-12");
   const expressionInput = document.createElement("input");
+  expressionInput.autofocus = true;
   expressionInput.classList.add("calculator-screen", "z-depth-1", "form-control");
 
   if (onChange) {
@@ -60,20 +60,21 @@ export function createAdditionalOperationsContainer(viewInstance: CalculatorView
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
 } {
-  const additionalOperations: string[] = [
-    ...Object.values(Operations).filter((operation) => operation != Operations.DOT),
-    ...Object.keys(defaultConstants),
-  ];
+  // const additionalOperations: string[] = [
+  //   ...Object.values(Operations).filter((operation) => operation != Operations.DOT),
+  //   ...Object.keys(defaultConstants),
+  // ];
   const buttons: HTMLButtonElement[] = [];
 
+  // TODO server will be sending available operatins
   const buttonsContainer = document.createElement("div");
-  buttonsContainer.classList.add("operations-keys");
-  buttonsContainer.id = "operations-keys";
-  additionalOperations.forEach((value) => {
-    const button = createButton(viewInstance, value);
-    buttons.push(button);
-    buttonsContainer.appendChild(button);
-  });
+  // buttonsContainer.classList.add("operations-keys");
+  // buttonsContainer.id = "operations-keys";
+  // additionalOperations.forEach((value) => {
+  //   const button = createButton(viewInstance, value);
+  //   buttons.push(button);
+  //   buttonsContainer.appendChild(button);
+  // });
 
   return { buttons, buttonsContainer };
 }
@@ -85,7 +86,7 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
   let value = null;
 
   switch (btnValue) {
-    case Operations.DOT:
+    case Actions.DOT:
       classList.push("calc-btn", "decimal", "function", "btn", "btn-secondary");
       break;
 
@@ -98,18 +99,22 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
       classList.push("calc-btn", "equal-sign", "operator", "btn", "btn-light");
       break;
 
-    case Operations.MULTIPLICATION:
+    case Actions.MULTIPLICATION:
       innerHtml = "&times;";
-      value = Operations.MULTIPLICATION;
+      value = Actions.MULTIPLICATION;
       break;
 
-    case Operations.DIVISION:
+    case Actions.DIVISION:
       innerHtml = "&divide";
-      value = Operations.DIVISION;
+      value = Actions.DIVISION;
       break;
 
     case Actions.REMOVE_SYMBOL:
       classList.push("calc-btn", "operator", "btn", "btn-info", "remove-btn");
+      break;
+
+    case "0":
+      classList.push("calc-btn", "operator", "btn", "btn-info", "zero-btn");
       break;
   }
 

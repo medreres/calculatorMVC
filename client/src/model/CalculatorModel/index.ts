@@ -1,14 +1,13 @@
-import Calculator, { Operation } from "../../lib/Calculator";
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
 import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
+import { buildUrl } from "../../utils/buildUrl";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
   private result: number | string;
-  private calculator = new Calculator();
   private observer: Observer = Observer.getInstance();
 
   constructor() {
@@ -35,23 +34,16 @@ class CalculatorModel implements ICalculatorModel, IObserver {
   }
 
   isExpressionValid(expression: string) {
-    return this.calculator.isExpressionValid(expression);
+    // return this.calculator.isExpressionValid(expression);
   }
 
-  calculate(): number {
-    const result = this.calculator.evaluate(this.expression);
-    this.setResult(result);
-    return result;
-  }
-
-  //----- Operations
-  addNewOperation(operation: Operation): void {
-    this.calculator.addOperation(operation);
-  }
-
-  //----- Contacts
-  addNewConstant(name: string, value: number): void {
-    this.calculator.addConstant(name, value);
+  async calculate(): Promise<number> {
+    const url = buildUrl("/calculate", "http://localhost:7890", {
+      expression: this.getExpression(),
+    });
+    return fetch(url)
+      .then((response) => response.json())
+      .then(({ result }) => result as number);
   }
 
   //------ Observers

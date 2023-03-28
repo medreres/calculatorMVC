@@ -1,4 +1,3 @@
-import { Operation } from "../../../lib/Calculator";
 import { Events } from "../../../shared/events";
 import CalculatorView from "..";
 import { createButton } from "./elements";
@@ -10,16 +9,6 @@ export function initializeObservers(this: CalculatorView) {
     this.setResult(value);
   });
 
-  this.on(Events.ADD_NEW_OPERATION, (operation: Operation) => {
-    const button = createButton(this, operation.symbol);
-    button.onclick = btnClickHandler(button.value, this);
-    this.additionalOperationsButtonsContainer.appendChild(button);
-  });
-
-  this.on(Events.VIEW_INVALID_EXPRESSION, (msg: string) => {
-    setInputValidity(this.expressionInput, false);
-  });
-
   this.on(Events.ADD_NEW_CONSTANT, ({ name }: IConstant) => {
     const button = createButton(this, name);
     button.onclick = btnClickHandler(button.value, this);
@@ -29,6 +18,7 @@ export function initializeObservers(this: CalculatorView) {
 
 export function setInputValidity(input: HTMLInputElement, isValid: boolean): void {
   const calcBtn = document.querySelector(".equal-sign") as HTMLButtonElement;
+  // TODO remove
   if (isValid) {
     input.classList.remove("is-invalid");
     calcBtn.disabled = false;

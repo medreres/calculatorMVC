@@ -59,7 +59,11 @@ body {
 
 .equal-sign {
   height: 98%;
-  grid-area: 2 / 4 / 5 / 5;
+  /* grid-area: 2 / 4 / 5 / 5; */
+}
+
+.zero-btn {
+  grid-column: 1 / 3;
 }
 
 .calculator-keys {
@@ -78,7 +82,7 @@ body {
 }
 
 .remove-btn {
-  grid-area: 1 / 4 / 1 /5;
+  /* grid-area: 1 / 4 / 1 /5; */
 }
 
 .operations-keys {

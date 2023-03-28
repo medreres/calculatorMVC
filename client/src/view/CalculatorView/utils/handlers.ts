@@ -34,6 +34,8 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
         // if it's a number or a dot, then don't add any spaces, in other case add spaces on both sides
         const expression = `${viewInstance.getExpression()}${btnValue}`;
         viewInstance.setExpression(expression);
+        // TODO
+        // setInputValidity(e.target as HTMLInputElement, false);
         viewInstance.notify(Events.VIEW_INPUT_CHANGED, expression);
       };
       break;
@@ -51,12 +53,8 @@ export function expressionInputChangeHandler(this: CalculatorView) {
     } else {
       const inputValue = (e?.target as HTMLInputElement).value;
       // send request to model to check if expression is valid
-      this.notify(Events.VIEW_CHECK_EXPRESSION, inputValue);
-
-      this.on(Events.VIEW_EXPRESSION_CHECKED, (isValid: boolean) => {
-        setInputValidity(e.target as HTMLInputElement, isValid);
-      });
-
+      // TOOD perform check
+      // setInputValidity(e.target as HTMLInputElement, false);
       this.notify(Events.VIEW_INPUT_CHANGED, inputValue);
     }
   };

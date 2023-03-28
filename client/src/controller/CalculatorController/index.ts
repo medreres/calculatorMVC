@@ -4,8 +4,6 @@ import ICalculatorView from "../../view/interface";
 import ICalculatorController from "../interface";
 import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
-import { Operation } from "../../lib/Calculator";
-import { Events } from "../../shared/events";
 
 class CalculatorController implements ICalculatorController, IObserver {
   model: ICalculatorModel;
@@ -28,14 +26,6 @@ class CalculatorController implements ICalculatorController, IObserver {
 
   getView(): HTMLElement {
     return this.view.getView();
-  }
-
-  addOperation(operation: Operation): void {
-    this.notify(Events.ADD_NEW_OPERATION, operation);
-  }
-
-  addConstant(name: string, value: number): void {
-    this.notify(Events.ADD_NEW_CONSTANT, { name, value });
   }
 }
 

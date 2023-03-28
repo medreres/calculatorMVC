@@ -14,6 +14,8 @@ import { expressionInputChangeHandler, expressionInputSubmitHandler } from "./ut
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css";
 
+// TODO better validation
+// TODO toggle sign button
 class CalculatorView implements ICalculatorView, IObserver {
   private observer: Observer = Observer.getInstance();
   protected container: HTMLDivElement;
