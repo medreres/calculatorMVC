@@ -4,6 +4,7 @@ import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
 import { buildUrl } from "../../utils/buildUrl";
+import { BASE_URL } from "../../config";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
@@ -34,11 +35,13 @@ class CalculatorModel implements ICalculatorModel, IObserver {
   }
 
   isExpressionValid(expression: string) {
+    // TODO simple regex for checking expression for validity
+    // ? could be used endpoint getOperations to create regex
     // return this.calculator.isExpressionValid(expression);
   }
 
   async calculate(): Promise<number> {
-    const url = buildUrl("/calculate", "http://localhost:7890", {
+    const url = buildUrl("/evaluate", BASE_URL, {
       expression: this.getExpression(),
     });
     return fetch(url)

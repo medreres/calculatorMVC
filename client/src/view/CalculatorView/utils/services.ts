@@ -17,13 +17,16 @@ export function initializeObservers(this: CalculatorView) {
 }
 
 export function setInputValidity(input: HTMLInputElement, isValid: boolean): void {
-  const calcBtn = document.querySelector(".equal-sign") as HTMLButtonElement;
-  // TODO remove
   if (isValid) {
     input.classList.remove("is-invalid");
-    calcBtn.disabled = false;
   } else {
     input.classList.add("is-invalid");
-    calcBtn.disabled = true;
   }
+
+  toggleCalculateButton(!isValid);
+}
+
+export function toggleCalculateButton(disabled: boolean) {
+  const calcBtn = document.querySelector(".equal-sign") as HTMLButtonElement;
+  calcBtn.disabled = disabled;
 }

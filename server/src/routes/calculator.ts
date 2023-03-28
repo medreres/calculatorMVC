@@ -1,3 +1,4 @@
+import "../lib/Calculator"; // side effect import for circular imports resolve
 import { Router } from "express";
 import { calculatorConfig } from "../config";
 import Calculator from "../lib/Calculator";
@@ -6,7 +7,6 @@ const router = Router();
 
 const calculator = new Calculator();
 
-// TODO better error handling
 router.get("/evaluate", (req, res) => {
   const expr = req.query.expression as string;
 

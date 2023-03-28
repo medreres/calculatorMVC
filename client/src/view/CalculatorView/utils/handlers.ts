@@ -1,7 +1,7 @@
 import { Events } from "../../../shared/events";
 import { Actions } from "../config";
 import CalculatorView from "..";
-import { setInputValidity } from "./services";
+import { setInputValidity, toggleCalculateButton } from "./services";
 
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;
@@ -49,12 +49,16 @@ export function expressionInputChangeHandler(this: CalculatorView) {
     if ((e.target as HTMLInputElement).value.length === 0) {
       this.notify(Events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
       this.resultInput.value = "";
-      setInputValidity(e.target as HTMLInputElement, true);
+      toggleCalculateButton(true);
     } else {
       const inputValue = (e?.target as HTMLInputElement).value;
       // send request to model to check if expression is valid
       // TOOD perform check
-      // setInputValidity(e.target as HTMLInputElement, false);
+
+      const regex = /\d/;
+
+      setInputValidity(e.target as HTMLInputElement, regex.test(inputValue));
+
       this.notify(Events.VIEW_INPUT_CHANGED, inputValue);
     }
   };
@@ -65,7 +69,8 @@ export function expressionInputSubmitHandler(this: CalculatorView) {
   return (event: KeyboardEvent) => {
     if (event.key === "Enter") {
       // if button is disabled do nothing
-      if ((event.target as HTMLInputElement).classList.contains("is-invalid")) {
+      const target = event.target as HTMLInputElement;
+      if (target.classList.contains("is-invalid") || target.value.length === 0) {
         return;
       }
 

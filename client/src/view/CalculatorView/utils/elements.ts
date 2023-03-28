@@ -97,6 +97,7 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
 
     case Actions.CALCULATE:
       classList.push("calc-btn", "equal-sign", "operator", "btn", "btn-light");
+      button.disabled = true;
       break;
 
     case Actions.MULTIPLICATION:
