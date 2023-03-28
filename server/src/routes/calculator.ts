@@ -7,7 +7,7 @@ const router = Router();
 const calculator = new Calculator();
 
 // TODO better error handling
-router.get("/calculate", (req, res) => {
+router.get("/evaluate", (req, res) => {
   const expr = req.query.expression as string;
 
   if (!expr) {

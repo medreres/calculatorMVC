@@ -19,8 +19,18 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
     this.parser = new ExpressionParser();
     // initialize with some basics operations
     const classOperations = [
-      new Operation(Operations.LEFT_PARENTHESIS, 0, Notation.POSTFIX, () => 0),
-      new Operation(Operations.RIGHT_PARENTHESIS, 0, Notation.PREFIX, () => 0),
+      new Operation({
+        symbol: Operations.LEFT_PARENTHESIS,
+        precedence: 0,
+        notation: Notation.PREFIX,
+        evaluate: () => 0,
+      }),
+      new Operation({
+        symbol: Operations.RIGHT_PARENTHESIS,
+        precedence: 0,
+        notation: Notation.PREFIX,
+        evaluate: () => 0,
+      }),
     ];
 
     classOperations.forEach((operation) => this.parser.addOperation(operation));
@@ -81,7 +91,7 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
     return (numberStack.pop() as number) ?? 0;
   }
 
-  isExpressionValid (expression: string) {
-    return this.parser.isValidExpression(expression)
+  isExpressionValid(expression: string) {
+    return this.parser.isValidExpression(expression);
   }
 }
