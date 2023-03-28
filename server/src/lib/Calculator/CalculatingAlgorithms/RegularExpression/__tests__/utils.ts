@@ -1,8 +1,7 @@
-import { calculatingAlgorithms } from "../../../config";
-import Evaluator from "../../../index";
+import { CalculatingAlgorithms, Calculator } from "../../../internal";
 
 export function initializeCalculator() {
-  const calc = new Evaluator();
-  calc.setCalculatingAlgorithm(new calculatingAlgorithms.RegularExpression());
+  const calc = new Calculator();
+  calc.setCalculatingAlgorithm(new CalculatingAlgorithms.RegularExpression());
   return calc;
 }

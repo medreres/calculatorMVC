@@ -15,3 +15,4 @@ class Operation implements IOperation {
 }
 
 export default Operation;
+export { IConstructor, IOperation, Notation }

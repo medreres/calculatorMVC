@@ -1,9 +1,6 @@
-import { Operations } from "../../config";
-import { evaluateExpression, handleParenthesis, IParams, performResidualOperations } from "./services";
-import { Notation } from "../../utils/Operation/interfaces";
-import Operation from "../../utils/Operation";
+import { ExpressionParser, Notation, Operation, Operations } from "../../internal";
 import ICalculatingAlgorithm from "../interface";
-import ExpressionParser from "../../utils/ExpressionParser";
+import { evaluateExpression, handleParenthesis, IParams, performResidualOperations } from "./internal";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands

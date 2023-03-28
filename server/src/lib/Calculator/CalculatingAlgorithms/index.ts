@@ -1,8 +1,7 @@
-import CalculatingAlgorithm from "./interface";
+export { default as CalculatingAlgorithm } from "./interface";
 import { default as RegularExpression } from "./RegularExpression";
 import { default as ReversePolishNotation } from "./ReversePolishNotation";
 
-export { CalculatingAlgorithm };
 export { RegularExpression };
 export { ReversePolishNotation };
 export default {

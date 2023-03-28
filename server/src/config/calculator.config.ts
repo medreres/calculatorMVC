@@ -1,6 +1,7 @@
 // algorithms available
 
-import {CalculatingAlgorithms} from "../lib/Calculator/config";
+import CalculatingAlgorithms from "../lib/Calculator/CalculatingAlgorithms";
+
 
 // Errors description
 const errorsDescription = {

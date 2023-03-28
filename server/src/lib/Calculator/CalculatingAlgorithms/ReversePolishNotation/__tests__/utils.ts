@@ -1,8 +1,7 @@
-import { calculatingAlgorithms } from "../../../config";
-import Calculator from "../../../index";
+import { CalculatingAlgorithms, Calculator } from "../../../internal";
 
 export const evaluator = (function () {
   const evaluator = new Calculator();
-  evaluator.setCalculatingAlgorithm(new calculatingAlgorithms.ReversePolishNotation());
+  evaluator.setCalculatingAlgorithm(new CalculatingAlgorithms.ReversePolishNotation());
   return evaluator;
 })();

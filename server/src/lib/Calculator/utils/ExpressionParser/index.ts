@@ -1,5 +1,6 @@
+import { defaultConstants, defaultOperations } from "../../internal";
 import Operation from "../Operation";
-import { defaultConstants, defaultOperations } from "../../config";
+
 import {
   createExpressionValidityRegex,
   getAvailableConstants,

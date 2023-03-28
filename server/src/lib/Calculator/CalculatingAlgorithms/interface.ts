@@ -1,4 +1,5 @@
-import Operation from "../utils/Operation";
+import { Operation } from "../internal";
+
 
 /**
  * @description Abstract base class providing main functionality for

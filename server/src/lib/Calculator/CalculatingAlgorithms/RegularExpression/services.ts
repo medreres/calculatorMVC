@@ -1,7 +1,4 @@
-import Operation from "../../utils/Operation";
-import { Notation } from "../../utils/Operation/interfaces";
-import { parenthesesGroupRegex } from "../../config";
-import RegularExpression from ".";
+import { Notation, Operation, parenthesesGroupRegex, RegularExpression } from "../../internal";
 
 export function evaluateParenthesesGroup(this: RegularExpression, expression: string) {
   let group: RegExpMatchArray | null;

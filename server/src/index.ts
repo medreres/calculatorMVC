@@ -1,3 +1,4 @@
+import "./lib/Calculator";
 import cors from "cors";
 import express from "express";
 import { calculatorRoutes } from "./routes/calculator";

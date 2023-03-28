@@ -1,4 +1,4 @@
-import { Notation } from "../utils/Operation/interfaces";
+import { Notation } from "../utils/Operation";
 
 export enum Operations {
   ADDITION = "+",
