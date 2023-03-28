@@ -1,7 +1,6 @@
-import ExpressionParser from "../../utils/ExpressionParser";
-import Operation from "../../utils/Operation";
+import { ExpressionParser, Operation } from "../../internal";
 import ICalculatingAlgorithm from "../interface";
-import { calculate } from "./services";
+import { calculate } from "./internal";
 
 /**
  * @description Parse expression using regex and recursion
@@ -18,10 +17,12 @@ export default class RegularExpression implements ICalculatingAlgorithm {
     this.parser.addOperation(operation);
   }
 
+  getOperations(): Operation[] {
+    return this.parser.getAvailableOperations();
+  }
+
   addConstant(key: string, value: number) {
-    {
-      this.parser.addConstant(key, value);
-    }
+    this.parser.addConstant(key, value);
   }
 
   evaluate(expression: string): number {

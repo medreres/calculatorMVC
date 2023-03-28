@@ -1,9 +1,5 @@
-import Operation from "./utils/Operation";
-import { CalculatingAlgorithm } from "./CalculatingAlgorithms";
-import { evaluatingAlgorithm } from "./config";
-
+import { evaluatingAlgorithm, CalculatingAlgorithm, Operation } from "./internal";
 export { default as Operation } from "./utils/Operation";
-export { Operations, defaultConstants } from "./config";
 
 export default class Calculator {
   private calculatingAlgorithm: CalculatingAlgorithm;
@@ -31,5 +27,9 @@ export default class Calculator {
 
   isExpressionValid(expression: string): boolean {
     return this.calculatingAlgorithm.isExpressionValid(expression);
+  }
+
+  getOperations(): Operation[] {
+    return this.calculatingAlgorithm.getOperations();
   }
 }

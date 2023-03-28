@@ -1,4 +1,4 @@
-import { Operations } from "./dataManipulation";
+import { Operations } from "../internal";
 
 const parenthesesRegexRaw = new RegExp(
   `\\${Operations.LEFT_PARENTHESIS}(?!.*\\${Operations.LEFT_PARENTHESIS})([^${Operations.RIGHT_PARENTHESIS}]*)\\${Operations.RIGHT_PARENTHESIS}`
