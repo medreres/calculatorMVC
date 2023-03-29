@@ -2,6 +2,7 @@ import { Events } from "../../../shared/events";
 import { Actions } from "../config";
 import CalculatorView from "..";
 import { setInputValidity, toggleCalculateButton } from "./services";
+import { isInputValid } from "./regex";
 
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;
@@ -16,7 +17,8 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
     case Actions.CLEAR_INPUT:
       handler = () => {
         viewInstance.setExpression("");
-        viewInstance.setResult("");
+        setInputValidity(true);
+        toggleCalculateButton(true);
         viewInstance.notify(Events.VIEW_INPUT_CLEARED);
       };
       break;
@@ -34,9 +36,10 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
         // if it's a number or a dot, then don't add any spaces, in other case add spaces on both sides
         const expression = `${viewInstance.getExpression()}${btnValue}`;
         viewInstance.setExpression(expression);
-        // TODO
-        // setInputValidity(e.target as HTMLInputElement, false);
+
         viewInstance.notify(Events.VIEW_INPUT_CHANGED, expression);
+
+        setInputValidity(isInputValid(expression));
       };
       break;
   }
@@ -48,16 +51,13 @@ export function expressionInputChangeHandler(this: CalculatorView) {
   let handler = (e: Event) => {
     if ((e.target as HTMLInputElement).value.length === 0) {
       this.notify(Events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
-      this.resultInput.value = "";
+      setInputValidity(true);
       toggleCalculateButton(true);
     } else {
       const inputValue = (e?.target as HTMLInputElement).value;
       // send request to model to check if expression is valid
-      // TOOD perform check
 
-      const regex = /\d/;
-
-      setInputValidity(e.target as HTMLInputElement, regex.test(inputValue));
+      setInputValidity(isInputValid(inputValue));
 
       this.notify(Events.VIEW_INPUT_CHANGED, inputValue);
     }

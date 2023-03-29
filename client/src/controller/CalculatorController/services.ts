@@ -17,6 +17,11 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
     controllerInstance.notify(Events.MODEL_CLEAR_INPUT);
   });
 
+   // clear input in model
+   controllerInstance.on(Events.MODEL_INVALID_INPUT, () => {
+    controllerInstance.notify(Events.VIEW_INVALID_INPUT);
+  });
+
   // provide view with calculated values
   controllerInstance.on(Events.MODEL_CALCULATED, (value: string) => {
     controllerInstance.notify(Events.VIEW_SET_RESULT, value);

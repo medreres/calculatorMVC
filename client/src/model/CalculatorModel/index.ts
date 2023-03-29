@@ -34,19 +34,21 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return this.expression;
   }
 
-  isExpressionValid(expression: string) {
-    // TODO simple regex for checking expression for validity
-    // ? could be used endpoint getOperations to create regex
-    // return this.calculator.isExpressionValid(expression);
-  }
-
   async calculate(): Promise<number> {
     const url = buildUrl("/evaluate", BASE_URL, {
       expression: this.getExpression(),
     });
+
+    // TODO somehow error bubbles to the console
     return fetch(url)
       .then((response) => response.json())
-      .then(({ result }) => result as number);
+
+      .then(({ result, error }) => {
+        if (!isNaN(result)) {
+          return result as number;
+        }
+        throw new Error(error);
+      });
   }
 
   //------ Observers
