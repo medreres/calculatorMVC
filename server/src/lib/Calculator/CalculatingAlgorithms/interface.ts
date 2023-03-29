@@ -1,5 +1,5 @@
+import { Constant } from "../interfaces";
 import { Operation } from "../internal";
-
 
 /**
  * @description Abstract base class providing main functionality for
@@ -12,6 +12,7 @@ export default interface ICalculatingAlgorithm {
   getOperations(): Operation[];
 
   addConstant: (key: string, value: number) => void;
+  getConstants(): Constant[];
 
   isExpressionValid: (expression: string) => boolean;
 }

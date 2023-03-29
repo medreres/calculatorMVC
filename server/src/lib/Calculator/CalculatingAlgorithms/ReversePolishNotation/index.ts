@@ -1,3 +1,4 @@
+import { Constant } from "../../interfaces";
 import { ExpressionParser, Notation, Operation, Operations } from "../../internal";
 import ICalculatingAlgorithm from "../interface";
 import { evaluateExpression, handleParenthesis, IParams, performResidualOperations } from "./internal";
@@ -43,6 +44,10 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
 
   addConstant(key: string, value: number) {
     this.parser.addConstant(key, value);
+  }
+
+  getConstants(): Constant[] {
+    return this.parser.getConstants();
   }
 
   evaluate(expression: string): number {

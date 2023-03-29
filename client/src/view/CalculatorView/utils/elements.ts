@@ -1,4 +1,4 @@
-import { buttonValues, Actions, MainOperations, AdditionalOperations } from "../config";
+import { buttonValues, Actions, MainOperations } from "../config";
 import CalculatorView from "..";
 import { btnClickHandler } from "./handlers";
 import { buildUrl } from "../../../utils/buildUrl";

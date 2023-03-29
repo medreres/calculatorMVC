@@ -1,3 +1,4 @@
+import { Constant } from "../../interfaces";
 import { defaultConstants, defaultOperations } from "../../internal";
 import Operation from "../Operation";
 
@@ -31,7 +32,7 @@ export default class ExpressionParser {
     this.isValidityRegexUpdated = false;
   }
 
-  getOperations(expression: string): ParsedOperation[] {
+  parseOperations(expression: string): ParsedOperation[] {
     const functions = parseFunctions.call(this, expression);
 
     const simpleOperations = parseSimpleOperations.call(this, expression);
@@ -79,6 +80,14 @@ export default class ExpressionParser {
 
     // chaining
     return this;
+  }
+
+  getConstants(): Constant[] {
+    const constants: Constant[] = [];
+    Array.from(this.constants.entries()).forEach(([key, value]) => {
+      constants.push({ key, value });
+    });
+    return constants;
   }
 
   getTokens(expression: string) {
