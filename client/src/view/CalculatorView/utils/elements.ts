@@ -68,7 +68,6 @@ export function createAdditionalOperationsContainer(this: CalculatorView): {
 
   const url = buildUrl("/operations", BASE_URL);
 
-  // TODO handle if server is not responding properly
   fetch(url)
     .then((response) => response.json())
     .then(({ operations }) => {
@@ -86,6 +85,12 @@ export function createAdditionalOperationsContainer(this: CalculatorView): {
           buttons.push(button);
           buttonsContainer.appendChild(button);
         });
+    })
+    .catch(() => {
+      document.body.innerHTML =
+        `<div class="alert alert-danger" role="alert">
+      Server is not responding. Please try again later.
+    </div>` + document.body.innerHTML;
     });
 
   return { buttons, buttonsContainer };
