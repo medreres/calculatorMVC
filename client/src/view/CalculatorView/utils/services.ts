@@ -37,7 +37,7 @@ export const isInputValid = (expression: string, operators?: string[]) => {
     return !simpleValidityRegex.test(expression);
   }
 
-  // if regex is already initialized, then use it
+  // if regex is already initialized, then use it in order not to create it each time
   if (!validityRegex) {
     // take all one symbol length operators make regex out of them
     let operatorsRegexRaw = operators

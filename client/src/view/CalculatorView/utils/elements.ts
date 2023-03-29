@@ -3,6 +3,7 @@ import CalculatorView from "..";
 import { btnClickHandler } from "./handlers";
 import { buildUrl } from "../../../utils/buildUrl";
 import { BASE_URL } from "../../../config";
+import { formatAvailableOperations } from "./formatting";
 
 interface ICreateExpressionInput {
   onSubmit?: (e: KeyboardEvent) => void;
@@ -72,19 +73,14 @@ export function createAdditionalOperationsContainer(this: CalculatorView): {
     .then((response) => response.json())
     .then(({ operations }) => {
       // save those operations
+      const formattedOperations = formatAvailableOperations(operations) as string[];
       this.availableOperators = operations;
 
-      const operationSymbols = [...(Object.values(AdditionalOperations) as string[]), ...(operations as string[])];
-
-      const presentOperationSymbols: string[] = Object.values(MainOperations);
-
-      operationSymbols
-        .filter((symbol) => !presentOperationSymbols.includes(symbol))
-        .forEach((symbol) => {
-          const button = createButton(this, symbol);
-          buttons.push(button);
-          buttonsContainer.appendChild(button);
-        });
+      formattedOperations.forEach((symbol) => {
+        const button = createButton(this, symbol);
+        buttons.push(button);
+        buttonsContainer.appendChild(button);
+      });
     })
     .catch(() => {
       document.body.innerHTML =
@@ -141,7 +137,7 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
 
   if (!isNaN(+btnValue)) button.classList.add("btn", "btn-light", "waves-effect");
 
-  button.onclick = btnClickHandler(btnValue, viewInstance);
+  button.onclick = btnClickHandler.call(viewInstance, btnValue);
   button.innerHTML = innerHtml ?? btnValue;
   button.value = value ?? btnValue;
   button.classList.add(...classList);

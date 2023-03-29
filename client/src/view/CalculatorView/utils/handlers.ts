@@ -3,20 +3,20 @@ import { Actions } from "../config";
 import CalculatorView from "..";
 import { isInputValid, setInputValidity, toggleCalculateButton } from "./services";
 
-export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
+export function btnClickHandler(this: CalculatorView, btnValue: string): () => void {
   let handler;
 
   const clearInput = () => {
-    viewInstance.setExpression("");
+    this.setExpression("");
     setInputValidity(true);
     toggleCalculateButton(true);
-    viewInstance.notify(Events.VIEW_INPUT_CHANGED, "");
+    this.notify(Events.VIEW_INPUT_CHANGED, "");
   };
 
   switch (btnValue) {
     case Actions.CALCULATE:
       handler = () => {
-        viewInstance.notify(Events.VIEW_CALCULATE);
+        this.notify(Events.VIEW_CALCULATE);
       };
       break;
 
@@ -26,32 +26,29 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
 
     case Actions.REMOVE_SYMBOL:
       handler = () => {
-        const newExpression = viewInstance.getExpression().slice(0, length - 1);
+        const newExpression = this.getExpression().slice(0, length - 1);
 
         if (newExpression.length === 0) {
           return clearInput();
         }
 
-        viewInstance.setExpression(newExpression);
-        viewInstance.notify(Events.VIEW_INPUT_CHANGED, newExpression);
+        this.setExpression(newExpression);
+        this.notify(Events.VIEW_INPUT_CHANGED, newExpression);
       };
       break;
 
     default:
       handler = () => {
-        // if it's a number or a dot, then don't add any spaces, in other case add spaces on both sides
-        const expression = `${viewInstance.getExpression()}${btnValue}`;
-        viewInstance.setExpression(expression);
-
-        viewInstance.notify(Events.VIEW_INPUT_CHANGED, expression);
-
-        setInputValidity(isInputValid(expression));
+        const expression = `${this.getExpression()}${btnValue}`;
+        this.setExpression(expression);
+        setInputValidity(isInputValid(expression, this.availableOperators));
+        this.notify(Events.VIEW_INPUT_CHANGED, expression);
       };
       break;
   }
 
   return handler;
-};
+}
 
 export function expressionInputChangeHandler(this: CalculatorView) {
   let handler = (e: Event) => {
