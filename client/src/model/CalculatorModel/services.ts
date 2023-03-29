@@ -16,9 +16,4 @@ export const initializeObservers = (modelInstance: CalculatorModel) => {
   modelInstance.on(Events.MODEL_CHANGE_INPUT, (data: string) => {
     modelInstance.setExpression(data);
   });
-
-  modelInstance.on(Events.MODEL_CLEAR_INPUT, () => {
-    modelInstance.setExpression("");
-    modelInstance.setResult("");
-  });
 };

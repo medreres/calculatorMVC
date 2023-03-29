@@ -1,7 +1,6 @@
 // name of all events used by controller, model and view
 export enum Events {
   // View events
-  VIEW_INPUT_CLEARED = "viewInputCleared",
   VIEW_INPUT_CHANGED = "viewInputChanged",
   VIEW_CALCULATE = "viewCalculate",
   VIEW_SET_RESULT = "viewSetResult",
@@ -13,7 +12,6 @@ export enum Events {
   MODEL_CHANGE_INPUT = "changeModelInput",
   MODEL_CALCULATE = "modelCalculate",
   MODEL_CALCULATED = "modelCalculated",
-  MODEL_CLEAR_INPUT = "modelClearInput",
   MODEL_INVALID_INPUT = "modelInvalidInput",
 
   // global events

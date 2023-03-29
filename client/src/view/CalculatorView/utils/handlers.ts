@@ -7,6 +7,13 @@ import { isInputValid } from "./regex";
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;
 
+  const clearInput = () => {
+    viewInstance.setExpression("");
+    setInputValidity(true);
+    toggleCalculateButton(true);
+    viewInstance.notify(Events.VIEW_INPUT_CHANGED, "");
+  };
+
   switch (btnValue) {
     case Actions.CALCULATE:
       handler = () => {
@@ -15,17 +22,17 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
       break;
 
     case Actions.CLEAR_INPUT:
-      handler = () => {
-        viewInstance.setExpression("");
-        setInputValidity(true);
-        toggleCalculateButton(true);
-        viewInstance.notify(Events.VIEW_INPUT_CLEARED);
-      };
+      handler = clearInput;
       break;
 
     case Actions.REMOVE_SYMBOL:
       handler = () => {
         const newExpression = viewInstance.getExpression().slice(0, length - 1);
+
+        if (newExpression.length === 0) {
+          return clearInput();
+        }
+
         viewInstance.setExpression(newExpression);
         viewInstance.notify(Events.VIEW_INPUT_CHANGED, newExpression);
       };
@@ -50,7 +57,7 @@ export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView):
 export function expressionInputChangeHandler(this: CalculatorView) {
   let handler = (e: Event) => {
     if ((e.target as HTMLInputElement).value.length === 0) {
-      this.notify(Events.VIEW_INPUT_CLEARED, (e?.target as HTMLInputElement).value);
+      this.notify(Events.VIEW_INPUT_CHANGED, "");
       setInputValidity(true);
       toggleCalculateButton(true);
     } else {

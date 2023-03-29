@@ -13,12 +13,7 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
   });
 
   // clear input in model
-  controllerInstance.on(Events.VIEW_INPUT_CLEARED, () => {
-    controllerInstance.notify(Events.MODEL_CLEAR_INPUT);
-  });
-
-   // clear input in model
-   controllerInstance.on(Events.MODEL_INVALID_INPUT, () => {
+  controllerInstance.on(Events.MODEL_INVALID_INPUT, () => {
     controllerInstance.notify(Events.VIEW_INVALID_INPUT);
   });
 
