@@ -13,6 +13,7 @@ export enum Operations {
   COS = "cos",
   SIN = "sin",
   TAN = "tan",
+  MODULA = "%",
 }
 
 export const operations: IOperation[] = [
@@ -63,6 +64,12 @@ export const operations: IOperation[] = [
     precedence: 3,
     notation: Notation.PREFIX,
     evaluate: (a: number) => Math.tan(a),
+  },
+  {
+    symbol: Operations.MODULA,
+    precedence: 3,
+    notation: Notation.INFIX,
+    evaluate: (a: number, b: number) => a % b,
   },
   {
     symbol: Operations.FACTORIAL,

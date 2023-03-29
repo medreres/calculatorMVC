@@ -9,6 +9,7 @@ export default class Calculator {
   }
 
   evaluate(expression: string): number {
+    //? TODO toFixed to avoid cluttering?
     return this.calculatingAlgorithm.evaluate(expression);
   }
 
