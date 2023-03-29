@@ -7,6 +7,6 @@ router.get("/evaluate", calculatorController.evaluate);
 
 router.get("/operations", calculatorController.getOperations);
 
-// TODO getConstants route
+router.get("/constants", calculatorController.getConstants);
 
 export { router as calculatorRoutes };
