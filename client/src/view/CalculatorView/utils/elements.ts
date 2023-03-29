@@ -55,7 +55,7 @@ export const createButtonsContainer = (
   return { buttons, buttonsContainer };
 };
 
-export function createAdditionalOperationsContainer(viewInstance: CalculatorView): {
+export function createAdditionalOperationsContainer(this: CalculatorView): {
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
 } {
@@ -68,20 +68,21 @@ export function createAdditionalOperationsContainer(viewInstance: CalculatorView
 
   const url = buildUrl("/operations", BASE_URL);
 
+  // TODO handle if server is not responding properly
   fetch(url)
     .then((response) => response.json())
-    .then((response) => {
-      const operationSymbols = [
-        ...(Object.values(AdditionalOperations) as string[]),
-        ...(response.operations as string[]),
-      ];
+    .then(({ operations }) => {
+      // save those operations
+      this.availableOperators = operations;
+
+      const operationSymbols = [...(Object.values(AdditionalOperations) as string[]), ...(operations as string[])];
 
       const presentOperationSymbols: string[] = Object.values(MainOperations);
 
       operationSymbols
         .filter((symbol) => !presentOperationSymbols.includes(symbol))
         .forEach((symbol) => {
-          const button = createButton(viewInstance, symbol);
+          const button = createButton(this, symbol);
           buttons.push(button);
           buttonsContainer.appendChild(button);
         });

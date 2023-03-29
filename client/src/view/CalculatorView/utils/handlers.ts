@@ -1,8 +1,7 @@
 import { Events } from "../../../shared/events";
 import { Actions } from "../config";
 import CalculatorView from "..";
-import { setInputValidity, toggleCalculateButton } from "./services";
-import { isInputValid } from "./regex";
+import { isInputValid, setInputValidity, toggleCalculateButton } from "./services";
 
 export const btnClickHandler = (btnValue: string, viewInstance: CalculatorView): (() => void) => {
   let handler;
@@ -64,7 +63,7 @@ export function expressionInputChangeHandler(this: CalculatorView) {
       const inputValue = (e?.target as HTMLInputElement).value;
       // send request to model to check if expression is valid
 
-      setInputValidity(isInputValid(inputValue));
+      setInputValidity(isInputValid(inputValue, this.availableOperators));
 
       this.notify(Events.VIEW_INPUT_CHANGED, inputValue);
     }
