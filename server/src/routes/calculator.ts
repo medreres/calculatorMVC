@@ -23,7 +23,7 @@ router.get("/evaluate", (req, res) => {
   try {
     result = calculator.evaluate(expr);
   } catch (error) {
-    return res.status(400).send(calculatorConfig.errorsDescription.INVALID_EXPRESSION);
+    return res.status(400).json({ error: calculatorConfig.errorsDescription.INVALID_EXPRESSION });
   }
 
   res.status(200).json({ result });
@@ -35,5 +35,7 @@ router.get("/operations", (req, res) => {
 
   res.status(200).json({ operations: operationsSymbols });
 });
+
+// TODO getConstants route
 
 export { router as calculatorRoutes };
