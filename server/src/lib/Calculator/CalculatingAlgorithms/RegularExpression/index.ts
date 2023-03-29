@@ -26,10 +26,6 @@ export default class RegularExpression implements ICalculatingAlgorithm {
   }
 
   evaluate(expression: string): number {
-    // if (!this.parser.isValidExpression(expression)) {
-    //   throw new SyntaxError("Expression is invalid. Please check for correctness");
-    // }
-
     expression = this.parser.replaceConstants(expression);
 
     // remove spaces
