@@ -1,6 +1,6 @@
 import { MainOperations } from "../config";
 
-export const formatAvailableOperations = (operations: string[]) => {
+export const formatSymbols = (operations: string[]) => {
   const operationSymbols = operations as string[];
 
   const presentOperationSymbols: string[] = Object.values(MainOperations);

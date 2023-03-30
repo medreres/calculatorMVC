@@ -34,6 +34,8 @@ const getOperations = (req: Request, res: Response) => {
   res.status(200).json({ operations: operationsSymbols });
 };
 
+// ? should we sent value of constants or just their names to provide
+// ?uniform interface between getOperations and getConstants
 const getConstants = (req: Request, res: Response) => {
   const constants = calculator.getConstants();
 

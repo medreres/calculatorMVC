@@ -2,6 +2,9 @@ import { Events } from "../../../shared/events";
 import CalculatorView from "..";
 import { simpleValidityRegex } from "./regex";
 import { AdditionalOperations } from "../config";
+import { BASE_URL } from "../../../config";
+import { IConstant } from "../../../shared/interfaces";
+import { buildUrl } from "../../../utils/buildUrl";
 
 export function initializeObservers(this: CalculatorView) {
   this.on(Events.VIEW_SET_RESULT, (value: string) => {
@@ -52,3 +55,19 @@ export const isInputValid = (expression: string, operators?: string[]) => {
 
   return !validityRegex.test(expression);
 };
+
+export async function fetchSymbols() {
+  // make uniform interface for all symbols to work easier
+  const symbols = Promise.all([
+    fetch(buildUrl("/operations", BASE_URL))
+      .then((response) => response.json())
+      .then(({ operations }) => operations),
+
+    // we only need name of those constants
+    fetch(buildUrl("/constants", BASE_URL))
+      .then((response) => response.json())
+      .then(({ constants }) => constants.map((constant: IConstant) => constant.key)),
+  ]);
+
+  return symbols;
+}

@@ -1,9 +1,8 @@
 import { buttonValues, Actions, MainOperations } from "../config";
 import CalculatorView from "..";
 import { btnClickHandler } from "./handlers";
-import { buildUrl } from "../../../utils/buildUrl";
-import { BASE_URL } from "../../../config";
-import { formatAvailableOperations } from "./formatting";
+import { formatSymbols } from "./formatting";
+import { fetchSymbols } from "./services";
 
 interface ICreateExpressionInput {
   onSubmit?: (e: KeyboardEvent) => void;
@@ -67,16 +66,14 @@ export function createAdditionalOperationsContainer(this: CalculatorView): {
   buttonsContainer.style.display = "none";
   buttonsContainer.id = "operations-keys";
 
-  const url = buildUrl("/operations", BASE_URL);
-
-  fetch(url)
-    .then((response) => response.json())
-    .then(({ operations }) => {
+  fetchSymbols()
+    .then((result) => {
+      const symbols = result.flat();
+      const formattedSymbols = formatSymbols(symbols) as string[];
       // save those operations
-      const formattedOperations = formatAvailableOperations(operations) as string[];
-      this.availableOperators = operations;
 
-      formattedOperations.forEach((symbol) => {
+      this.availableOperators = symbols;
+      formattedSymbols.forEach((symbol) => {
         const button = createButton(this, symbol);
         buttons.push(button);
         buttonsContainer.appendChild(button);
@@ -85,8 +82,8 @@ export function createAdditionalOperationsContainer(this: CalculatorView): {
     .catch(() => {
       document.body.innerHTML =
         `<div class="alert alert-danger" role="alert">
-      Server is not responding. Please try again later.
-    </div>` + document.body.innerHTML;
+        Server is not responding. Please try again later.
+      </div>` + document.body.innerHTML;
     });
 
   return { buttons, buttonsContainer };
