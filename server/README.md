@@ -44,3 +44,7 @@ Response object:
     ]
 }
 ```
+
+# Config
+
+You may want to change algorithm used for evaluating, to do so go to `./src/lib/Calculator/config/algorithm.config.ts` and chose one of available algorithms in `CalculatingAlgorithms` object.
