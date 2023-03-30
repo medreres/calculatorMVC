@@ -34,6 +34,8 @@ export function toggleCalculateButton(disabled: boolean) {
 }
 
 let validityRegex: RegExp;
+//? Potentially could be problem that symbols are not fetched yet, then fallback
+//? to simpleValidityRegex
 export const isInputValid = (expression: string, operators?: string[]) => {
   // in case operators are undefined yet
   if (!operators) {
@@ -58,7 +60,7 @@ export const isInputValid = (expression: string, operators?: string[]) => {
 
 export async function fetchSymbols() {
   // make uniform interface for all symbols to work easier
-  const symbols = Promise.all([
+  return Promise.all([
     fetch(buildUrl("/operations", BASE_URL))
       .then((response) => response.json())
       .then(({ data }) => data),
@@ -68,6 +70,4 @@ export async function fetchSymbols() {
       .then((response) => response.json())
       .then(({ data }) => data.map((constant: IConstant) => constant.key)),
   ]);
-
-  return symbols;
 }

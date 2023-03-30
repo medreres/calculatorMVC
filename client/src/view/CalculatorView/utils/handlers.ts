@@ -8,9 +8,9 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
 
   const clearInput = () => {
     this.setExpression("");
+    this.notify(Events.VIEW_INPUT_CHANGED, "");
     setInputValidity(true);
     toggleCalculateButton(true);
-    this.notify(Events.VIEW_INPUT_CHANGED, "");
   };
 
   switch (btnValue) {

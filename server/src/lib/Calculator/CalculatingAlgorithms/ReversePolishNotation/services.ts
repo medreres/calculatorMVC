@@ -1,15 +1,7 @@
 import Operation from "../../utils/Operation";
 import Evaluator from ".";
 import { Operations } from "../../config";
-
-
-export interface IParams {
-  operatorStack: string[];
-  numberStack: number[];
-  getOperation: (symbol: string) => Operation | undefined;
-  symbol: string | null;
-  operation: Operation | undefined;
-}
+import { IParams } from "./interfaces";
 
 /**
  * @description takes last operation from operation stack and performs it
@@ -101,7 +93,6 @@ export function performResidualOperations(params: IParams) {
     if (symbol === Operations.LEFT_PARENTHESIS) throw new Error("Extra parentheses");
   }
 }
-
 
 /**
  *

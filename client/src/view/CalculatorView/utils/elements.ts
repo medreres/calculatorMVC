@@ -23,6 +23,8 @@ export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionI
   }
 
   wrapper.appendChild(expressionInput);
+  // ? feedback in case server sends specific error code
+  // ? For example: "Invalid symbol *"
   // const feedback = document.createElement("div");
   // feedback.classList.add('invalid-feedback')
   // feedback.innerHTML = 'Looks good!'

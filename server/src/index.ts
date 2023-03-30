@@ -4,11 +4,9 @@ import { calculatorRoutes } from "./api/modules/calculator/calculatorRoutes";
 import dotenv from "dotenv";
 
 const app = express();
-
 dotenv.config();
 app.use(cors({ origin: "*" }));
 
-//? versioning of api
 app.use(calculatorRoutes);
 
 const port = process.env.SERVER_PORT || 7890;

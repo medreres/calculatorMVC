@@ -1,6 +1,7 @@
 import RegularExpression from ".";
 import { parenthesesGroupRegex } from "../../config";
 import Operation, { Notation } from "../../utils/Operation";
+import { formattedOperation, IPerformOperation } from "./interfaces";
 
 export function evaluateParenthesesGroup(this: RegularExpression, expression: string) {
   let group: RegExpMatchArray | null;
@@ -32,11 +33,6 @@ export function calculate(this: RegularExpression, expression: string): string {
   return expression;
 }
 
-interface IPerformOperation {
-  expression: string;
-  operation: Operation;
-  operationIndexInString: number;
-}
 export function performOperation(
   this: RegularExpression,
   { expression, operation, operationIndexInString }: IPerformOperation
@@ -85,10 +81,6 @@ export function performOperation(
   return expression;
 }
 
-interface formattedOperation {
-  operation: Operation;
-  index: number;
-}
 export function getLeastPrecedentOperation(
   this: RegularExpression,
   expression: string

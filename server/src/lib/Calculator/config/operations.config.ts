@@ -18,6 +18,12 @@ export enum Operations {
   SQRT = "√",
 }
 
+interface IOperation {
+  symbol: string;
+  precedence: number;
+  notation: Notation;
+  evaluate: Function;
+}
 const operations: IOperation[] = [
   {
     symbol: Operations.LEFT_PARENTHESIS,
@@ -31,6 +37,7 @@ const operations: IOperation[] = [
     notation: Notation.POSTFIX,
     evaluate: () => 0,
   },
+
   {
     symbol: Operations.ADDITION,
     precedence: 1,
@@ -110,11 +117,5 @@ const operations: IOperation[] = [
     },
   },
 ];
-interface IOperation {
-  symbol: string;
-  precedence: number;
-  notation: Notation;
-  evaluate: Function;
-}
 
 export const defaultOperations = operations.map((operation) => new Operation(operation));
