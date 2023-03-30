@@ -1,6 +1,6 @@
 import Operation from "../../utils/Operation";
 import Evaluator from ".";
-import { Operations } from "../../internal";
+import { Operations } from "../../config";
 
 
 export interface IParams {

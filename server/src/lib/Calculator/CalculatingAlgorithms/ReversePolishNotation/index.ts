@@ -1,7 +1,9 @@
+import { Operations } from "../../config";
 import { Constant } from "../../interfaces";
-import { ExpressionParser, Notation, Operation, Operations } from "../../internal";
+import ExpressionParser from "../../utils/ExpressionParser";
+import Operation from "../../utils/Operation";
 import ICalculatingAlgorithm from "../interface";
-import { evaluateExpression, handleParenthesis, IParams, performResidualOperations } from "./internal";
+import { IParams, handleParenthesis, evaluateExpression, performResidualOperations } from "./services";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
@@ -15,23 +17,6 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
 
   constructor() {
     this.parser = new ExpressionParser();
-    // initialize with some basics operations
-    const classOperations = [
-      new Operation({
-        symbol: Operations.LEFT_PARENTHESIS,
-        precedence: 0,
-        notation: Notation.PREFIX,
-        evaluate: () => 0,
-      }),
-      new Operation({
-        symbol: Operations.RIGHT_PARENTHESIS,
-        precedence: 0,
-        notation: Notation.PREFIX,
-        evaluate: () => 0,
-      }),
-    ];
-
-    classOperations.forEach((operation) => this.parser.addOperation(operation));
   }
 
   addOperation(operation: Operation) {

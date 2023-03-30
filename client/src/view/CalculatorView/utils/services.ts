@@ -61,12 +61,12 @@ export async function fetchSymbols() {
   const symbols = Promise.all([
     fetch(buildUrl("/operations", BASE_URL))
       .then((response) => response.json())
-      .then(({ operations }) => operations),
+      .then(({ data }) => data),
 
     // we only need name of those constants
     fetch(buildUrl("/constants", BASE_URL))
       .then((response) => response.json())
-      .then(({ constants }) => constants.map((constant: IConstant) => constant.key)),
+      .then(({ data }) => data.map((constant: IConstant) => constant.key)),
   ]);
 
   return symbols;

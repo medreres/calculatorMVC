@@ -1,7 +1,8 @@
 import { Constant } from "../../interfaces";
-import { ExpressionParser, Operation } from "../../internal";
+import ExpressionParser from "../../utils/ExpressionParser";
+import Operation from "../../utils/Operation";
 import ICalculatingAlgorithm from "../interface";
-import { calculate } from "./internal";
+import { calculate } from "./services";
 
 /**
  * @description Parse expression using regex and recursion

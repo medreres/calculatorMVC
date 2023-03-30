@@ -1,7 +1,5 @@
-import { Operation, operations, calculatorConfig } from "../internal";
-
-// operations for calculation
-export const defaultOperations = operations.map((operation) => new Operation(operation));
-
-// algorithm for evaluating expressions
-export const evaluatingAlgorithm = calculatorConfig.evaluatingAlgorithm;
+export * from "./algorithm.config";
+export * from "./constants.config";
+export * from "./errors.config";
+export * from "./operations.config";
+export * from "./regex.config";

@@ -1,5 +1,5 @@
 import { Constant } from "../interfaces";
-import { Operation } from "../internal";
+import Operation from "../utils/Operation";
 
 /**
  * @description Abstract base class providing main functionality for

@@ -39,13 +39,12 @@ class CalculatorModel implements ICalculatorModel, IObserver {
       expression: this.getExpression(),
     });
 
-    // TODO somehow error bubbles to the console
     return fetch(url)
       .then((response) => response.json())
 
-      .then(({ result, error }) => {
-        if (!isNaN(result)) {
-          return result as number;
+      .then(({ data, error }) => {
+        if (!isNaN(data)) {
+          return data as number;
         }
         throw new Error(error);
       });

@@ -1,4 +1,5 @@
-import { CalculatingAlgorithms, Calculator } from "../../../internal";
+import Calculator from "../../../../Calculator";
+import CalculatingAlgorithms from "../..";
 
 export const evaluator = (function () {
   const evaluator = new Calculator();

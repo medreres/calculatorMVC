@@ -37,6 +37,7 @@ or via config in `lib/Calculator/config.ts`
 
 Adding via addNewConstant method
 
+// TODO remove adding operations
 ```ts
 import CalculatorController from "./controller/CalculatorController";
 import CalculatorModel from "./model/CalculatorModel";

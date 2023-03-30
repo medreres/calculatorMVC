@@ -2,7 +2,7 @@ import Operation from "../Operation";
 import ExpressionParser from ".";
 import { Constants } from "../../interfaces";
 import { Notation } from "../Operation/interfaces";
-import { functionRegex, numberRegexRaw, Operations, parenthesesSetRegexRaw } from "../../internal";
+import { numberRegexRaw, parenthesesSetRegexRaw, Operations, functionRegex } from "../../config";
 
 export interface ParsedOperation {
   operationSymbol: string;

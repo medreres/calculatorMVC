@@ -1,6 +1,6 @@
 import cors from "cors";
 import express from "express";
-import { calculatorRoutes } from "./api/routes/calculator";
+import { calculatorRoutes } from "./api/modules/calculator/calculatorRoutes";
 import dotenv from "dotenv";
 
 const app = express();

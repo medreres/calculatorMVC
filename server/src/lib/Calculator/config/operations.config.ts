@@ -1,4 +1,4 @@
-import { Notation } from "../utils/Operation";
+import Operation, { Notation } from "../utils/Operation";
 
 export enum Operations {
   ADDITION = "+",
@@ -18,7 +18,19 @@ export enum Operations {
   SQRT = "√",
 }
 
-export const operations: IOperation[] = [
+const operations: IOperation[] = [
+  {
+    symbol: Operations.LEFT_PARENTHESIS,
+    precedence: 0,
+    notation: Notation.PREFIX,
+    evaluate: () => 0,
+  },
+  {
+    symbol: Operations.RIGHT_PARENTHESIS,
+    precedence: 0,
+    notation: Notation.POSTFIX,
+    evaluate: () => 0,
+  },
   {
     symbol: Operations.ADDITION,
     precedence: 1,
@@ -104,3 +116,5 @@ interface IOperation {
   notation: Notation;
   evaluate: Function;
 }
+
+export const defaultOperations = operations.map((operation) => new Operation(operation));

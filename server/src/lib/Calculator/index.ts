@@ -1,9 +1,12 @@
+import ICalculatingAlgorithm from "./CalculatingAlgorithms/interface";
+import { evaluatingAlgorithm, errorsDescription } from "./config";
 import { Constant } from "./interfaces";
-import { evaluatingAlgorithm, CalculatingAlgorithm, Operation } from "./internal";
-export { default as Operation } from "./utils/Operation";
+import Operation from "./utils/Operation";
+
+export { errorsDescription };
 
 export default class Calculator {
-  private calculatingAlgorithm: CalculatingAlgorithm;
+  private calculatingAlgorithm: ICalculatingAlgorithm;
 
   constructor() {
     this.calculatingAlgorithm = new evaluatingAlgorithm();
@@ -15,7 +18,7 @@ export default class Calculator {
   }
 
   // strategy pattern
-  setCalculatingAlgorithm(calculatingAlgorithm: CalculatingAlgorithm) {
+  setCalculatingAlgorithm(calculatingAlgorithm: ICalculatingAlgorithm) {
     this.calculatingAlgorithm = calculatingAlgorithm;
   }
 
@@ -32,12 +35,10 @@ export default class Calculator {
   }
 
   getConstants(): Constant[] {
-    return this.calculatingAlgorithm.getConstants()
+    return this.calculatingAlgorithm.getConstants();
   }
 
   isExpressionValid(expression: string): boolean {
     return this.calculatingAlgorithm.isExpressionValid(expression);
   }
-
- 
 }
