@@ -1,6 +1,8 @@
-import { buttonValues, Actions } from "../config";
+import { buttonValues, Actions, MainOperations } from "../config";
 import CalculatorView from "..";
 import { btnClickHandler } from "./handlers";
+import { formatSymbols } from "./formatting";
+import { fetchSymbols } from "./services";
 
 interface ICreateExpressionInput {
   onSubmit?: (e: KeyboardEvent) => void;
@@ -8,7 +10,6 @@ interface ICreateExpressionInput {
 }
 export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionInput) {
   const wrapper = document.createElement("div");
-  wrapper.classList.add("col-md-12");
   const expressionInput = document.createElement("input");
   expressionInput.autofocus = true;
   expressionInput.classList.add("calculator-screen", "z-depth-1", "form-control");
@@ -22,17 +23,17 @@ export function createExpressionInput({ onSubmit, onChange }: ICreateExpressionI
   }
 
   wrapper.appendChild(expressionInput);
-  return {
-    wrapper,
-    input: expressionInput,
-  };
-}
+  // ? feedback in case server sends specific error code
+  // ? For example: "Invalid symbol *"
+  // const feedback = document.createElement("div");
+  // feedback.classList.add('invalid-feedback')
+  // feedback.innerHTML = 'Looks good!'
+  // wrapper.appendChild(feedback);
 
-export function createResultInput(): HTMLInputElement {
-  const resultInput = document.createElement("input");
-  resultInput.classList.add("result-screen", "z-depth-1", "fs-3");
-  resultInput.disabled = true;
-  return resultInput;
+  return {
+    input: expressionInput,
+    wrapper,
+  };
 }
 
 export const createButtonsContainer = (
@@ -56,25 +57,36 @@ export const createButtonsContainer = (
   return { buttons, buttonsContainer };
 };
 
-export function createAdditionalOperationsContainer(viewInstance: CalculatorView): {
+export function createAdditionalOperationsContainer(this: CalculatorView): {
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
 } {
-  // const additionalOperations: string[] = [
-  //   ...Object.values(Operations).filter((operation) => operation != Operations.DOT),
-  //   ...Object.keys(defaultConstants),
-  // ];
   const buttons: HTMLButtonElement[] = [];
 
-  // TODO server will be sending available operatins
   const buttonsContainer = document.createElement("div");
-  // buttonsContainer.classList.add("operations-keys");
-  // buttonsContainer.id = "operations-keys";
-  // additionalOperations.forEach((value) => {
-  //   const button = createButton(viewInstance, value);
-  //   buttons.push(button);
-  //   buttonsContainer.appendChild(button);
-  // });
+  buttonsContainer.classList.add("calculator-keys", "operations-keys");
+  buttonsContainer.style.display = "none";
+  buttonsContainer.id = "operations-keys";
+
+  fetchSymbols()
+    .then((result) => {
+      const symbols = result.flat();
+      const formattedSymbols = formatSymbols(symbols) as string[];
+      // save those operations
+
+      this.availableOperators = symbols;
+      formattedSymbols.forEach((symbol) => {
+        const button = createButton(this, symbol);
+        buttons.push(button);
+        buttonsContainer.appendChild(button);
+      });
+    })
+    .catch(() => {
+      document.body.innerHTML =
+        `<div class="alert alert-danger" role="alert">
+        Server is not responding. Please try again later.
+      </div>` + document.body.innerHTML;
+    });
 
   return { buttons, buttonsContainer };
 }
@@ -97,16 +109,17 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
 
     case Actions.CALCULATE:
       classList.push("calc-btn", "equal-sign", "operator", "btn", "btn-light");
+      button.disabled = true;
       break;
 
-    case Actions.MULTIPLICATION:
+    case MainOperations.MULTIPLICATION:
       innerHtml = "&times;";
-      value = Actions.MULTIPLICATION;
+      value = MainOperations.MULTIPLICATION;
       break;
 
-    case Actions.DIVISION:
+    case MainOperations.DIVISION:
       innerHtml = "&divide";
-      value = Actions.DIVISION;
+      value = MainOperations.DIVISION;
       break;
 
     case Actions.REMOVE_SYMBOL:
@@ -123,13 +136,34 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
 
   if (!isNaN(+btnValue)) button.classList.add("btn", "btn-light", "waves-effect");
 
-  button.onclick = btnClickHandler(btnValue, viewInstance);
+  button.onclick = btnClickHandler.call(viewInstance, btnValue);
   button.innerHTML = innerHtml ?? btnValue;
   button.value = value ?? btnValue;
   button.classList.add(...classList);
 
   return button;
 };
+
+export function createToggleScientificViewButton() {
+  const scientificView = document.createElement("button");
+  scientificView.innerHTML = "Scientific";
+  scientificView.style.marginLeft = "auto";
+  scientificView.classList.add("btn", "btn-info");
+  scientificView.style.marginRight = "auto";
+  scientificView.onclick = (e) => {
+    const container = document.querySelector("#operations-keys") as HTMLDivElement;
+    const currentStyle = container.style.display;
+    if (currentStyle === "none") {
+      container.style.display = "grid";
+      (e.target as HTMLButtonElement).innerHTML = "Regular";
+    } else {
+      container.style.display = "none";
+      (e.target as HTMLButtonElement).innerHTML = "Scientific";
+    }
+  };
+
+  return scientificView;
+}
 
 export const createCalculatorButtonsContainer = (
   buttonsContainer: HTMLDivElement,

@@ -4,6 +4,7 @@ import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
 import { buildUrl } from "../../utils/buildUrl";
+import { BASE_URL } from "../../config";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
@@ -33,17 +34,20 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return this.expression;
   }
 
-  isExpressionValid(expression: string) {
-    // return this.calculator.isExpressionValid(expression);
-  }
-
   async calculate(): Promise<number> {
-    const url = buildUrl("/calculate", "http://localhost:7890", {
+    const url = buildUrl("/evaluate", BASE_URL, {
       expression: this.getExpression(),
     });
+
     return fetch(url)
       .then((response) => response.json())
-      .then(({ result }) => result as number);
+
+      .then(({ data, error }) => {
+        if (!isNaN(data)) {
+          return data as number;
+        }
+        throw new Error(error);
+      });
   }
 
   //------ Observers

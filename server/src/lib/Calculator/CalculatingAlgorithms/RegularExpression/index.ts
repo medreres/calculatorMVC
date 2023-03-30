@@ -1,3 +1,4 @@
+import { Constant } from "../../interfaces";
 import ExpressionParser from "../../utils/ExpressionParser";
 import Operation from "../../utils/Operation";
 import ICalculatingAlgorithm from "../interface";
@@ -18,17 +19,19 @@ export default class RegularExpression implements ICalculatingAlgorithm {
     this.parser.addOperation(operation);
   }
 
+  getOperations(): Operation[] {
+    return this.parser.getAvailableOperations();
+  }
+
   addConstant(key: string, value: number) {
-    {
-      this.parser.addConstant(key, value);
-    }
+    this.parser.addConstant(key, value);
+  }
+
+  getConstants(): Constant[] {
+    return this.parser.getConstants();
   }
 
   evaluate(expression: string): number {
-    // if (!this.parser.isValidExpression(expression)) {
-    //   throw new SyntaxError("Expression is invalid. Please check for correctness");
-    // }
-
     expression = this.parser.replaceConstants(expression);
 
     // remove spaces

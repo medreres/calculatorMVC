@@ -1,9 +1,10 @@
 import { Operations } from "../../config";
-import { evaluateExpression, handleParenthesis, IParams, performResidualOperations } from "./services";
-import { Notation } from "../../utils/Operation/interfaces";
+import { Constant } from "../../interfaces";
+import ExpressionParser from "../../utils/ExpressionParser";
 import Operation from "../../utils/Operation";
 import ICalculatingAlgorithm from "../interface";
-import ExpressionParser from "../../utils/ExpressionParser";
+import { IParams } from "./interfaces";
+import { handleParenthesis, evaluateExpression, performResidualOperations } from "./services";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands
@@ -17,28 +18,25 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
 
   constructor() {
     this.parser = new ExpressionParser();
-    // initialize with some basics operations
-    const classOperations = [
-      new Operation(Operations.LEFT_PARENTHESIS, 0, Notation.POSTFIX, () => 0),
-      new Operation(Operations.RIGHT_PARENTHESIS, 0, Notation.PREFIX, () => 0),
-    ];
-
-    classOperations.forEach((operation) => this.parser.addOperation(operation));
   }
 
   addOperation(operation: Operation) {
     this.parser.addOperation(operation);
   }
 
+  getOperations(): Operation[] {
+    return this.parser.getAvailableOperations();
+  }
+
   addConstant(key: string, value: number) {
     this.parser.addConstant(key, value);
   }
 
-  evaluate(expression: string): number {
-    // if (!this.parser.isValidExpression(expression)) {
-    //   throw new SyntaxError("Expression is invalid. Please check for correctness");
-    // }
+  getConstants(): Constant[] {
+    return this.parser.getConstants();
+  }
 
+  evaluate(expression: string): number {
     expression = this.parser.replaceConstants(expression);
 
     const tokens = this.parser.getTokens(expression);
@@ -77,7 +75,7 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
     return (numberStack.pop() as number) ?? 0;
   }
 
-  isExpressionValid (expression: string) {
-    return this.parser.isValidExpression(expression)
+  isExpressionValid(expression: string) {
+    return this.parser.isValidExpression(expression);
   }
 }

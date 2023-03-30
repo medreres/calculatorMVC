@@ -1,3 +1,4 @@
+import { Constant } from "../interfaces";
 import Operation from "../utils/Operation";
 
 /**
@@ -8,8 +9,10 @@ export default interface ICalculatingAlgorithm {
   evaluate: (expression: string) => number;
 
   addOperation: (operation: Operation) => void;
+  getOperations(): Operation[];
 
   addConstant: (key: string, value: number) => void;
+  getConstants(): Constant[];
 
   isExpressionValid: (expression: string) => boolean;
 }

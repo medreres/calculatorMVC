@@ -1,8 +1,5 @@
-export { Operations, defaultConstants, defaultOperations } from "./dataManipulation";
-import { calculatorConfig } from "../../../config";
-import CalculatingAlgorithms from "../CalculatingAlgorithms";
-export { CalculatingAlgorithms };
-export * from "./regex";
-
-// TODO calculatorConfig?.evaluatingAlgorithm is undefined
-export const evaluatingAlgorithm = calculatorConfig?.evaluatingAlgorithm || CalculatingAlgorithms.RegularExpression;
+export * from "./algorithm.config";
+export * from "./constants.config";
+export * from "./errors.config";
+export * from "./operations.config";
+export * from "./regex.config";

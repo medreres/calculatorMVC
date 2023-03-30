@@ -1,1 +1,0 @@
-export { default as calculatorConfig } from "./calculator.config";

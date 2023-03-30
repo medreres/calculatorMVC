@@ -11,3 +11,10 @@ export enum Notation {
   PREFIX = "Prefix",
   INFIX = "INFIX",
 }
+
+export interface IConstructor {
+  symbol: string;
+  precedence: number;
+  notation: Notation;
+  evaluate: Function;
+}

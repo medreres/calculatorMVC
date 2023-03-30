@@ -4,7 +4,7 @@ import {
   createAdditionalOperationsContainer,
   createButtonsContainer,
   createExpressionInput,
-  createResultInput,
+  createToggleScientificViewButton,
 } from "./utils/elements";
 import Observer from "../../lib/Observer";
 import { IObserver } from "../../shared/interfaces";
@@ -14,16 +14,12 @@ import { expressionInputChangeHandler, expressionInputSubmitHandler } from "./ut
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles.css";
 
-// TODO better validation
-// TODO toggle sign button
 class CalculatorView implements ICalculatorView, IObserver {
   private observer: Observer = Observer.getInstance();
   protected container: HTMLDivElement;
   protected expressionInput: HTMLInputElement;
-  protected resultInput: HTMLInputElement;
   protected buttons: HTMLButtonElement[];
-  protected additionalOperationsButtons: HTMLButtonElement[];
-  protected additionalOperationsButtonsContainer: HTMLDivElement;
+  protected availableOperators: string[] = [];
 
   constructor() {
     // main wrapper
@@ -31,26 +27,20 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.container.classList.add("calculator", "card");
 
     // expression input
-    const { wrapper, input } = createExpressionInput({
+    const { input, wrapper } = createExpressionInput({
       onSubmit: expressionInputSubmitHandler.call(this),
       onChange: expressionInputChangeHandler.call(this),
     });
+
     this.expressionInput = input;
     this.container.appendChild(wrapper);
-
-    // result input
-    this.resultInput = createResultInput();
-    this.container.appendChild(this.resultInput);
 
     // main buttons
     const { buttons, buttonsContainer } = createButtonsContainer(this);
     this.buttons = buttons;
 
     // additional operations
-    const { buttons: operationButtons, buttonsContainer: additionalOperationsContainer } =
-      createAdditionalOperationsContainer(this);
-    this.additionalOperationsButtons = operationButtons;
-    this.additionalOperationsButtonsContainer = additionalOperationsContainer;
+    const { buttonsContainer: additionalOperationsContainer } = createAdditionalOperationsContainer.call(this);
 
     // wrapper for all buttons
     const calculatorButtonsContainer = createCalculatorButtonsContainer(
@@ -58,6 +48,9 @@ class CalculatorView implements ICalculatorView, IObserver {
       additionalOperationsContainer
     );
     this.container.appendChild(calculatorButtonsContainer);
+
+    const toggleButton = createToggleScientificViewButton();
+    this.container.appendChild(toggleButton);
 
     // set rest of the observers
     initializeObservers.call(this);
@@ -69,10 +62,6 @@ class CalculatorView implements ICalculatorView, IObserver {
 
   getExpression(): string {
     return this.expressionInput.value;
-  }
-
-  setResult(result: string) {
-    this.resultInput.value = result;
   }
 
   getView(): HTMLElement {

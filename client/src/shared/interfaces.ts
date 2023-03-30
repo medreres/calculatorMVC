@@ -6,6 +6,6 @@ export interface IObserver {
 }
 
 export interface IConstant {
-  name: string;
+  key: string;
   value: number;
 }
