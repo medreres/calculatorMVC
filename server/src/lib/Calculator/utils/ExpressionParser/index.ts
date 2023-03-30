@@ -1,5 +1,5 @@
 import { Constant } from "../../interfaces";
-import { defaultConstants, defaultOperations } from "../../internal";
+import { defaultConstants, defaultOperations, Operations } from "../../internal";
 import Operation from "../Operation";
 
 import {
@@ -45,7 +45,9 @@ export default class ExpressionParser {
   }
 
   getAvailableOperations(): Operation[] {
-    return Array.from(this.operationsRaw.values());
+    return Array.from(this.operationsRaw.values()).filter(
+      (operation) => operation.symbol != Operations.LEFT_PARENTHESIS && operation.symbol != Operations.RIGHT_PARENTHESIS
+    );
   }
 
   addOperation(...operations: Operation[]) {
