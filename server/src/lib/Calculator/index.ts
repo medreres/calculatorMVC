@@ -1,3 +1,4 @@
+import { Constant } from "./interfaces";
 import { evaluatingAlgorithm, CalculatingAlgorithm, Operation } from "./internal";
 export { default as Operation } from "./utils/Operation";
 
@@ -22,15 +23,21 @@ export default class Calculator {
     this.calculatingAlgorithm.addOperation(operation);
   }
 
+  getOperations(): Operation[] {
+    return this.calculatingAlgorithm.getOperations();
+  }
+
   addConstant(key: string, value: number) {
     this.calculatingAlgorithm.addConstant(key, value);
+  }
+
+  getConstants(): Constant[] {
+    return this.calculatingAlgorithm.getConstants()
   }
 
   isExpressionValid(expression: string): boolean {
     return this.calculatingAlgorithm.isExpressionValid(expression);
   }
 
-  getOperations(): Operation[] {
-    return this.calculatingAlgorithm.getOperations();
-  }
+ 
 }

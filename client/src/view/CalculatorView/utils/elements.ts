@@ -1,8 +1,8 @@
-import { buttonValues, Actions, MainOperations, AdditionalOperations } from "../config";
+import { buttonValues, Actions, MainOperations } from "../config";
 import CalculatorView from "..";
 import { btnClickHandler } from "./handlers";
-import { buildUrl } from "../../../utils/buildUrl";
-import { BASE_URL } from "../../../config";
+import { formatSymbols } from "./formatting";
+import { fetchSymbols } from "./services";
 
 interface ICreateExpressionInput {
   onSubmit?: (e: KeyboardEvent) => void;
@@ -55,7 +55,7 @@ export const createButtonsContainer = (
   return { buttons, buttonsContainer };
 };
 
-export function createAdditionalOperationsContainer(viewInstance: CalculatorView): {
+export function createAdditionalOperationsContainer(this: CalculatorView): {
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
 } {
@@ -66,25 +66,24 @@ export function createAdditionalOperationsContainer(viewInstance: CalculatorView
   buttonsContainer.style.display = "none";
   buttonsContainer.id = "operations-keys";
 
-  const url = buildUrl("/operations", BASE_URL);
+  fetchSymbols()
+    .then((result) => {
+      const symbols = result.flat();
+      const formattedSymbols = formatSymbols(symbols) as string[];
+      // save those operations
 
-  fetch(url)
-    .then((response) => response.json())
-    .then((response) => {
-      const operationSymbols = [
-        ...(Object.values(AdditionalOperations) as string[]),
-        ...(response.operations as string[]),
-      ];
-
-      const presentOperationSymbols: string[] = Object.values(MainOperations);
-
-      operationSymbols
-        .filter((symbol) => !presentOperationSymbols.includes(symbol))
-        .forEach((symbol) => {
-          const button = createButton(viewInstance, symbol);
-          buttons.push(button);
-          buttonsContainer.appendChild(button);
-        });
+      this.availableOperators = symbols;
+      formattedSymbols.forEach((symbol) => {
+        const button = createButton(this, symbol);
+        buttons.push(button);
+        buttonsContainer.appendChild(button);
+      });
+    })
+    .catch(() => {
+      document.body.innerHTML =
+        `<div class="alert alert-danger" role="alert">
+        Server is not responding. Please try again later.
+      </div>` + document.body.innerHTML;
     });
 
   return { buttons, buttonsContainer };
@@ -135,7 +134,7 @@ export const createButton = (viewInstance: CalculatorView, btnValue: string) => 
 
   if (!isNaN(+btnValue)) button.classList.add("btn", "btn-light", "waves-effect");
 
-  button.onclick = btnClickHandler(btnValue, viewInstance);
+  button.onclick = btnClickHandler.call(viewInstance, btnValue);
   button.innerHTML = innerHtml ?? btnValue;
   button.value = value ?? btnValue;
   button.classList.add(...classList);

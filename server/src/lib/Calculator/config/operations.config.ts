@@ -14,6 +14,8 @@ export enum Operations {
   SIN = "sin",
   TAN = "tan",
   MODULA = "%",
+  LN = "ln",
+  SQRT = "√",
 }
 
 export const operations: IOperation[] = [
@@ -70,6 +72,18 @@ export const operations: IOperation[] = [
     precedence: 3,
     notation: Notation.INFIX,
     evaluate: (a: number, b: number) => a % b,
+  },
+  {
+    symbol: Operations.SQRT,
+    precedence: 3,
+    notation: Notation.PREFIX,
+    evaluate: (a: number) => Math.sqrt(a),
+  },
+  {
+    symbol: Operations.LN,
+    precedence: 3,
+    notation: Notation.PREFIX,
+    evaluate: (a: number) => Math.log(a),
   },
   {
     symbol: Operations.FACTORIAL,

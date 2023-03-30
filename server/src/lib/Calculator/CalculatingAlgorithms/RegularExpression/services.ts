@@ -91,7 +91,7 @@ export function getLeastPrecedentOperation(
   this: RegularExpression,
   expression: string
 ): formattedOperation | undefined {
-  const operationSymbols = this.parser.getOperations(expression);
+  const operationSymbols = this.parser.parseOperations(expression);
 
   if (operationSymbols.length === 0) return undefined;
 

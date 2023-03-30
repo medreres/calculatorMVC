@@ -1,13 +1,11 @@
-import "../lib/Calculator"; // side effect import for circular imports resolve
-import { Router } from "express";
-import { calculatorConfig } from "../config";
-import Calculator from "../lib/Calculator";
-
-const router = Router();
+import "../../lib/Calculator"; // side effect import for circular imports resolve
+import { calculatorConfig } from "../../config";
+import Calculator from "../../lib/Calculator";
+import { Request, Response } from "express";
 
 const calculator = new Calculator();
 
-router.get("/evaluate", (req, res) => {
+const evaluate = (req: Request, res: Response) => {
   const expr = req.query.expression as string;
 
   if (!expr) {
@@ -27,15 +25,25 @@ router.get("/evaluate", (req, res) => {
   }
 
   res.status(200).json({ result });
-});
+};
 
-router.get("/operations", (req, res) => {
+const getOperations = (req: Request, res: Response) => {
   const operations = calculator.getOperations();
   const operationsSymbols = operations.map((operation) => operation.symbol);
 
   res.status(200).json({ operations: operationsSymbols });
-});
+};
 
-// TODO getConstants route
+// ? should we sent value of constants or just their names to provide
+// ?uniform interface between getOperations and getConstants
+const getConstants = (req: Request, res: Response) => {
+  const constants = calculator.getConstants();
 
-export { router as calculatorRoutes };
+  res.json({ constants: constants });
+};
+
+export default {
+  evaluate,
+  getOperations,
+  getConstants,
+};

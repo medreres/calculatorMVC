@@ -19,6 +19,7 @@ class CalculatorView implements ICalculatorView, IObserver {
   protected container: HTMLDivElement;
   protected expressionInput: HTMLInputElement;
   protected buttons: HTMLButtonElement[];
+  protected availableOperators: string[] = [];
 
   constructor() {
     // main wrapper
@@ -39,7 +40,7 @@ class CalculatorView implements ICalculatorView, IObserver {
     this.buttons = buttons;
 
     // additional operations
-    const { buttonsContainer: additionalOperationsContainer } = createAdditionalOperationsContainer(this);
+    const { buttonsContainer: additionalOperationsContainer } = createAdditionalOperationsContainer.call(this);
 
     // wrapper for all buttons
     const calculatorButtonsContainer = createCalculatorButtonsContainer(

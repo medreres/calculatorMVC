@@ -11,5 +11,5 @@ const errorsDescription = {
 export default {
   /**  Algorithm used for evaluating expression */
   errorsDescription,
-  evaluatingAlgorithm: CalculatingAlgorithms.RegularExpression,
+  evaluatingAlgorithm: CalculatingAlgorithms.ReversePolishNotation,
 };
