@@ -5,8 +5,9 @@ export enum Events {
   VIEW_CALCULATE = "viewCalculate",
   VIEW_SET_RESULT = "viewSetResult",
   VIEW_CHANGE_INPUT = "viewChangeInput",
-  VIEW_ADD_BUTTON = "viewAddButton",
+  VIEW_ADD_BUTTONS = "viewAddButtons",
   VIEW_INVALID_INPUT = "viewInvalidInput",
+  VIEW_HISTORY_FETCHED = "viewHistoryFetch",
 
   // Model events
   MODEL_CHANGE_INPUT = "changeModelInput",
@@ -14,7 +15,6 @@ export enum Events {
   MODEL_CALCULATED = "modelCalculated",
   MODEL_INVALID_INPUT = "modelInvalidInput",
 
-  // global events
-  ADD_NEW_OPERATION = "addNewOperation",
-  ADD_NEW_CONSTANT = "addNewConstant",
+  // General
+  CONNECTION_FAILED = "connectionFailed",
 }

@@ -5,6 +5,7 @@ import { HISTORY_SIZE } from "../../../config";
 
 const calculator = new Calculator();
 
+// TODO sqrt doesnt work
 export const evaluate = (req: Request, res: Response) => {
   const expression = req.query.expression as string;
 
@@ -21,11 +22,11 @@ export const evaluate = (req: Request, res: Response) => {
   try {
     result = calculator.evaluate(expression);
   } catch (error) {
+    console.log(error);
     return res.status(400).json({ error: errorsDescription.INVALID_EXPRESSION });
   }
 
   // TODO spaces between expressions
-  // TODO remove oldest expression if more than 5
 
   Expression.findMany({}).then((r) => {
     if (r.find((expr) => expr.expression === expression)) {
@@ -40,6 +41,7 @@ export const evaluate = (req: Request, res: Response) => {
     const document = new Expression({
       expression,
       result: result as number,
+      timestamp: new Date(),
     });
 
     document.save();
@@ -63,5 +65,7 @@ export const getConstants = (_req: Request, res: Response) => {
 
 // LIMIT as default search params
 export const getLastOperations = (_req: Request, res: Response) => {
-  Expression.findMany({}).then((result) => res.status(200).json({ data: result }));
+  Expression.findMany({} as any).then((result) =>
+    res.status(200).json({ data: result.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)) })
+  );
 };

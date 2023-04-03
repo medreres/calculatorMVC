@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { evaluate, getOperations, getConstants, getLastOperations } from "../controller";
-import "../../../model";
 
 const router = Router();
 

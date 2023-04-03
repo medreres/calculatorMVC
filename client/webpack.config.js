@@ -15,6 +15,10 @@ module.exports = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
+      {
+        test: /\.svg$/,
+        loader: "svg-inline-loader",
+      },
     ],
   },
   resolve: {
@@ -36,6 +40,6 @@ module.exports = {
       directory: path.join(__dirname, "public"),
     },
     compress: true,
-    port: 3411,
+    port: 3590,
   },
 };

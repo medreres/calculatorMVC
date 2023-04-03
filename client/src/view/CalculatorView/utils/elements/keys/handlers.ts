@@ -1,7 +1,8 @@
-import { Events } from "../../../shared/events";
-import { Actions } from "../config";
-import CalculatorView from "..";
-import { isInputValid, setInputValidity, toggleCalculateButton } from "./services";
+import CalculatorView from "../../..";
+import { Events } from "../../../../../shared/events";
+import { Actions } from "../../../config";
+import { isInputValid, setInputValidity } from "../input";
+import { toggleCalculateButton } from "./services";
 
 export function btnClickHandler(this: CalculatorView, btnValue: string): () => void {
   let handler;
@@ -39,6 +40,7 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
 
     default:
       handler = () => {
+        // TODO could be better
         const expression = `${this.getExpression()}${btnValue}`;
         this.setExpression(expression);
         setInputValidity(isInputValid(expression, this.availableOperators));
@@ -50,9 +52,11 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
   return handler;
 }
 
+// TODO could be better
 export function expressionInputChangeHandler(this: CalculatorView) {
   let handler = (e: Event) => {
-    if ((e.target as HTMLInputElement).value.length === 0) {
+    const value = (e.target as HTMLInputElement).value;
+    if (value.length === 0) {
       this.notify(Events.VIEW_INPUT_CHANGED, "");
       setInputValidity(true);
       toggleCalculateButton(true);
@@ -63,6 +67,7 @@ export function expressionInputChangeHandler(this: CalculatorView) {
       setInputValidity(isInputValid(inputValue, this.availableOperators));
 
       this.notify(Events.VIEW_INPUT_CHANGED, inputValue);
+      this.setExpression(value);
     }
   };
   return handler;

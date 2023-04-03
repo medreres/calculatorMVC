@@ -1,11 +1,24 @@
 import { Events } from "../../../shared/events";
 import CalculatorView from "..";
-import { simpleValidityRegex } from "./regex";
-import { AdditionalOperations } from "../config";
-import { BASE_URL } from "../../../config";
-import { IConstant } from "../../../shared/interfaces";
-import { buildUrl } from "../../../utils/buildUrl";
+import {
+  addHistory,
+  addOperationButton,
+  btnClickHandler,
+  createButton,
+  expressionInputChangeHandler,
+  getButtonClasses,
+  getInnerHtml,
+  ICreateButton,
+  setInputValidity,
+  toggleCalculateButton,
+} from "./elements";
+import { formatSymbols } from "./formatting";
+import { Actions } from "../config";
 
+interface IOperation {
+  result: string;
+  expression: string;
+}
 export function initializeObservers(this: CalculatorView) {
   this.on(Events.VIEW_SET_RESULT, (value: string) => {
     this.setExpression(value);
@@ -15,59 +28,51 @@ export function initializeObservers(this: CalculatorView) {
     setInputValidity(false);
     toggleCalculateButton(true);
   });
-}
 
-export function setInputValidity(isValid: boolean): void {
-  const input = document.querySelector(".calculator-screen") as HTMLInputElement;
-  if (isValid) {
-    input.classList.remove("is-invalid");
-  } else {
-    input.classList.add("is-invalid");
-  }
+  // TODO add to history on calculation
+  this.on(Events.VIEW_HISTORY_FETCHED, (history: IOperation[]) => {
+    const onClick = expressionInputChangeHandler.call(this);
+    history.forEach((operation) => {
+      const { expression, result } = operation;
 
-  toggleCalculateButton(!isValid);
-}
+      addHistory.call(this, {
+        expression,
+        result,
+        onClick,
+      });
+    });
+  });
 
-export function toggleCalculateButton(disabled: boolean) {
-  const calcBtn = document.querySelector(".equal-sign") as HTMLButtonElement;
-  calcBtn.disabled = disabled;
-}
+  this.on(Events.VIEW_ADD_BUTTONS, (symbols: string[]) => {
+    this.availableOperators = symbols;
 
-let validityRegex: RegExp;
-//? Potentially could be problem that symbols are not fetched yet, then fallback
-//? to simpleValidityRegex
-export const isInputValid = (expression: string, operators?: string[]) => {
-  // in case operators are undefined yet
-  if (!operators) {
-    return !simpleValidityRegex.test(expression);
-  }
+    const formattedSymbols = formatSymbols(symbols) as string[];
+    // save those operations
 
-  // if regex is already initialized, then use it in order not to create it each time
-  if (!validityRegex) {
-    // take all one symbol length operators make regex out of them
-    let operatorsRegexRaw = operators
-      .filter((operator) => operator.length === 1)
-      .map((operator) => `\\${operator}`)
-      .join("");
+    // TODO
+    formattedSymbols.forEach((value) => {
+      const onClick = btnClickHandler.call(this, value);
+      const classList = getButtonClasses(value);
+      const innerHtml = getInnerHtml(value);
+      const params: ICreateButton = {
+        onClick,
+        classList,
+        value,
+        innerHtml,
+        disabled: value === Actions.CALCULATE ? true : false,
+      };
+      const button = createButton(params);
+      // buttons.push(button);
+      // buttonsContainer.appendChild(button);
+      addOperationButton(button);
+    });
+  });
 
-    const { LEFT_PARENTHESES, RIGHT_PARENTHESES } = AdditionalOperations;
-    // initialize regex for future usage
-    validityRegex = new RegExp(`[^\\w\\s${LEFT_PARENTHESES}${RIGHT_PARENTHESES}${operatorsRegexRaw}]`);
-  }
-
-  return !validityRegex.test(expression);
-};
-
-export async function fetchSymbols() {
-  // make uniform interface for all symbols to work easier
-  return Promise.all([
-    fetch(buildUrl("/operations", BASE_URL))
-      .then((response) => response.json())
-      .then(({ data }) => data),
-
-    // we only need name of those constants
-    fetch(buildUrl("/constants", BASE_URL))
-      .then((response) => response.json())
-      .then(({ data }) => data.map((constant: IConstant) => constant.key)),
-  ]);
+  this.on(Events.CONNECTION_FAILED, () => {
+    // TODO handle err
+    // document.body.innerHTML =
+    //   `<div class="alert alert-danger" role="alert">
+    //             Server is not responding. Please try again later.
+    //           </div>` + document.body.innerHTML;
+  });
 }

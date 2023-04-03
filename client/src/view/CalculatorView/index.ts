@@ -1,19 +1,18 @@
 import ICalculatorView from "../interface";
-import {
-  createCalculatorButtonsContainer,
-  createAdditionalOperationsContainer,
-  createButtonsContainer,
-  createExpressionInput,
-  createToggleScientificViewButton,
-} from "./utils/elements";
 import Observer from "../../lib/Observer";
 import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./utils/services";
 import { Events } from "../../shared/events";
-import { expressionInputChangeHandler, expressionInputSubmitHandler } from "./utils/handlers";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { createExpressionInput, createToggleScientificViewButton } from "./utils/elements";
+import { expressionInputSubmitHandler, expressionInputChangeHandler } from "./utils/elements/keys/handlers";
+import {
+  createButtonsContainer,
+  createAdditionalOperationsContainer,
+  createCalculatorButtonsContainer,
+} from "./utils/elements/keys/services";
 import "./styles.css";
 
+// TODO . is invalid
 class CalculatorView implements ICalculatorView, IObserver {
   private observer: Observer = Observer.getInstance();
   protected container: HTMLDivElement;

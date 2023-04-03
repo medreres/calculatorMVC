@@ -9,6 +9,8 @@ import MongoDB from "./api/modules/calculator/libs/MongoDB/Mongo";
 const app = express();
 app.use(cors({ origin: "*" }));
 
+// TODO sorting filter
+
 app.use(calculatorRoutes);
 
 MongoDB.connect(process.env.DB_URL as string).then(() => {
