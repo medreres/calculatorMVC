@@ -60,3 +60,8 @@ export const getConstants = (_req: Request, res: Response) => {
 
   res.json({ data: constants });
 };
+
+// LIMIT as default search params
+export const getLastOperations = (_req: Request, res: Response) => {
+  Expression.findMany({}).then((result) => res.status(200).json({ data: result }));
+};
