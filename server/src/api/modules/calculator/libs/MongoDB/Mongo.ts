@@ -1,16 +1,7 @@
 import { MongoClient } from "mongodb";
 import { DB_NAME } from "./config";
 import { checkConnection } from "./services";
-import { InitialParams } from "./interfaces";
-
-export interface ISchema {
-  [key: string]: Types;
-}
-
-export enum Types {
-  String = "string",
-  Number = "number",
-}
+import { Id, InitialParams } from "./interfaces";
 
 //TODO close connection method
 export default class MongoDB {
@@ -79,6 +70,7 @@ export default class MongoDB {
   }
 
   static model<T>(name: string) {
+    type IModel = T & Id;
     class Document {
       static collectionRef: MongoDB = new MongoDB(`${name}s`);
 
@@ -90,19 +82,19 @@ export default class MongoDB {
         return Document.collectionRef.insertOne(this);
       }
 
-      static async findOne(params: Partial<T> & Partial<InitialParams>) {
-        return Document.collectionRef.findOne(params);
+      static async findOne(params: Partial<IModel>): Promise<IModel | null> {
+        return Document.collectionRef.findOne(params) as unknown as IModel | null;
       }
 
-      static async findMany(params: Partial<T> & Partial<InitialParams>) {
-        return Document.collectionRef.findMany(params);
+      static async findMany(params: Partial<IModel>): Promise<T[]> {
+        return Document.collectionRef.findMany(params) as unknown as T[];
       }
 
-      static async deleteOne(params: Partial<T> & Partial<InitialParams>) {
+      static async deleteOne(params: Partial<IModel> & Partial<Id>) {
         return Document.collectionRef.deleteOne(params);
       }
 
-      static async deleteMany(params: Partial<T> & Partial<InitialParams>) {
+      static async deleteMany(params: Partial<IModel>) {
         return Document.collectionRef.deleteMany(params);
       }
     }

@@ -1,4 +1,4 @@
-import Calculator from "../../../../Calculator";
+import Calculator from "../../..";
 import CalculatingAlgorithms from "../..";
 
 export const evaluator = (function () {

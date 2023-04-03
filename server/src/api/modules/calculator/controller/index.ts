@@ -1,8 +1,7 @@
-import Calculator, { errorsDescription } from "../../../../lib/Calculator";
+import Calculator, { errorsDescription } from "../libs/Calculator";
 import { Request, Response } from "express";
-import MongoDB, { Types } from "../MongoDB/Mongo";
 import Expression from "../model";
-// import Expression from "../../util/MongoDB/models/Expression";
+import { HISTORY_SIZE } from "../../../config";
 
 const calculator = new Calculator();
 
@@ -26,10 +25,17 @@ export const evaluate = (req: Request, res: Response) => {
   }
 
   // TODO spaces between expressions
+  // TODO remove oldest expression if more than 5
 
-  Expression.findOne({ expression }).then((r) => {
+  Expression.findMany({}).then((r) => {
+    if (r.find((expr) => expr.expression === expression)) {
+      return;
+    }
+
     // if there exist expression, do not add another one
-    if (r) return;
+    if (r.length >= HISTORY_SIZE) {
+      Expression.deleteOne({ expression: r[0]!.expression });
+    }
 
     const document = new Expression({
       expression,
