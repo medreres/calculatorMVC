@@ -1,26 +1,40 @@
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
 import { IObserver } from "../../shared/interfaces";
-import { initializeObservers } from "./services";
+import { initializeObservers, isInputValid } from "./services";
 import { Events } from "../../shared/events";
 import { buildUrl } from "../../utils/buildUrl";
 import { BASE_URL } from "../../config";
 import { removeSpaces } from "../../shared/utils";
+import { MainOperations } from "../../shared/operations";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
   private result: number | string;
   private observer: Observer = Observer.getInstance();
+  protected operations: string[];
 
   constructor() {
     this.expression = "";
     this.result = 0;
-    initializeObservers(this);
+
+    // listen to events
+    initializeObservers.call(this);
+
+    this.operations = Object.values(MainOperations);
   }
 
   //------ Interaction
   setExpression(expression: string) {
     this.expression = removeSpaces(expression);
+
+    const isValid = isInputValid(expression, this.operations);
+
+    if (isValid) {
+      this.notify(Events.MODEL_VALID_INPUT);
+    } else {
+      this.notify(Events.MODEL_INVALID_INPUT);
+    }
   }
 
   setResult(result: number | string) {

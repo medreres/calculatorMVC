@@ -43,7 +43,6 @@ export function addHistory(this: CalculatorView, { expression, result, onClick }
 
   const placeHolder = document.querySelector("#placeholder");
   if (placeHolder) {
-    console.log(placeHolder);
     historyContainer.removeChild(placeHolder);
   }
 

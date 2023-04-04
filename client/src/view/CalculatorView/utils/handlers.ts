@@ -1,7 +1,6 @@
 import CalculatorView from "..";
 import { Events } from "../../../shared/events";
 import { Actions } from "../config";
-import { isInputValid, setInputValidity } from "./elements/input";
 import { setCalculateButtonDisabled } from "./elements/keys/services";
 
 export function btnClickHandler(this: CalculatorView, btnValue: string): () => void {
@@ -10,7 +9,6 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
   const clearInput = () => {
     this.setExpression("");
     this.notify(Events.VIEW_INPUT_CHANGED, "");
-    setInputValidity(true);
     setCalculateButtonDisabled(true);
   };
 
@@ -53,7 +51,6 @@ export function expressionInputChangeHandler(this: CalculatorView) {
 
     if (value.length === 0) {
       inputChangeHandler.call(this, value);
-      setInputValidity(true);
       setCalculateButtonDisabled(true);
     } else {
       inputChangeHandler.call(this, value);
@@ -81,8 +78,6 @@ export function calculateHandler(this: CalculatorView) {
 }
 
 export function inputChangeHandler(this: CalculatorView, value: string) {
-  setInputValidity(isInputValid(value, this.availableOperators));
-
   this.notify(Events.VIEW_INPUT_CHANGED, value);
   this.setExpression(value);
 }
