@@ -1,15 +1,16 @@
-import ICalculatorView from "../interface";
-import Observer from "../../lib/Observer";
-import { IObserver } from "../../shared/interfaces";
-import { initializeObservers } from "./services";
-import { Events } from "../../shared/events";
-import { createExpressionInput, createToggleScientificViewButton } from "./utils/elements";
-import { expressionInputSubmitHandler, expressionInputChangeHandler } from "./utils/handlers";
 import {
+  createExpressionInput,
+  expressionInputSubmitHandler,
+  expressionInputChangeHandler,
   createButtonsContainer,
   createAdditionalOperationsContainer,
   createCalculatorButtonsContainer,
-} from "./utils/elements/keys/services";
+  createToggleScientificViewButton,
+} from "./utils";
+import Observer from "../../lib/Observer";
+import { IObserver, Events } from "../../shared";
+import ICalculatorView from "../interface";
+import { initializeObservers } from "./services";
 import "./styles.css";
 
 class CalculatorView implements ICalculatorView, IObserver {

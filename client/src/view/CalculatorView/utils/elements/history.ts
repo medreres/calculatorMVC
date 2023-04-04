@@ -2,7 +2,6 @@ import CalculatorView from "../..";
 import { Actions } from "../../config";
 import history from "../../../../public/history.svg";
 import { createButton } from "./keys";
-import { HISTORY_SIZE } from "../../../../config";
 import { removeSpaces } from "../../../../shared/utils";
 
 export function createHistoryDropdown() {

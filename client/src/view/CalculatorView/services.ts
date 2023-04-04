@@ -7,7 +7,7 @@ import {
   renderOperationsHandler,
   setResultHandler,
   validInputHandler,
-} from "./utils/handlers";
+} from "./utils";
 
 export function initializeObservers(this: CalculatorView) {
   this.on(Events.VIEW_SET_INPUT, setResultHandler.bind(this));
