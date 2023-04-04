@@ -13,7 +13,7 @@ export function initializeObservers(this: CalculatorController) {
 
   this.on(Events.MODEL_VALID_INPUT, () => this.notify(Events.VIEW_VALID_INPUT));
 
-  this.on(Events.MODEL_CALCULATED, (value: string) => this.notify(Events.VIEW_SET_RESULT, value));
+  this.on(Events.MODEL_CALCULATED, (value: string) => this.notify(Events.VIEW_SET_INPUT, value));
 
   this.on(Events.MODEL_RENDER_HISTORY, (value: IOperation[]) => this.notify(Events.VIEW_RENDER_HISTORY, value));
 

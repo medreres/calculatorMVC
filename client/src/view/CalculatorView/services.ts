@@ -10,7 +10,7 @@ import {
 } from "./utils/handlers";
 
 export function initializeObservers(this: CalculatorView) {
-  this.on(Events.VIEW_SET_RESULT, setResultHandler.bind(this));
+  this.on(Events.VIEW_SET_INPUT, setResultHandler.bind(this));
 
   this.on(Events.VIEW_INVALID_INPUT, invalidInputHandler);
 

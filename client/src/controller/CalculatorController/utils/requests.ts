@@ -23,3 +23,15 @@ export function fetchOperationsSymbols(): Promise<string[]> {
       .then(({ data }) => data.map((constant: IConstant) => constant.key)),
   ]).then((response) => response.flat());
 }
+
+export function fetchResult(expression: string) {
+  const url = buildUrl("/evaluate", BASE_URL, {
+    expression,
+  });
+
+  return fetch(url, {
+    method: "POST",
+  })
+    .then((response) => response.json())
+    .then(({ data, error }) => ({ data, error }));
+}
