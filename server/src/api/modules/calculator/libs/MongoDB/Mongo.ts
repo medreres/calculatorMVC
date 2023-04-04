@@ -15,6 +15,10 @@ export default class MongoDB {
   }
 
   static connect(uri: string) {
+    if (!uri) {
+      throw new Error("Db url is required");
+    }
+    
     const client = new MongoClient(uri);
 
     return client
