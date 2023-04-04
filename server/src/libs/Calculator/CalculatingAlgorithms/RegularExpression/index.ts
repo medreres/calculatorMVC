@@ -34,10 +34,8 @@ export default class RegularExpression implements ICalculatingAlgorithm {
   evaluate(expression: string): number {
     expression = this.parser.replaceConstants(expression);
 
-    // remove spaces
     expression = expression.replaceAll(" ", "");
 
-    // call recursion function
     const result = +calculate.call(this, expression);
 
     if (isNaN(result)) throw new Error(`Invalid expression`);

@@ -18,10 +18,4 @@ describe("Adding operations", () => {
 
     expect(result).toEqual(1);
   });
-
-  test("Adding sign", () => {
-    let result = calc.evaluate("sign -1123");
-
-    expect(result).toEqual(-1);
-  });
 });

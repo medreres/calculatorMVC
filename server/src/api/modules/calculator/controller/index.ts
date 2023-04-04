@@ -1,7 +1,7 @@
-import Calculator from "../libs/Calculator";
+import Calculator from "../../../../libs/Calculator";
 import { Request, Response } from "express";
 import Expression from "../model";
-import { Errors, HISTORY_SIZE } from "../../../config";
+import { Errors, HISTORY_SIZE } from "../../../../config";
 
 const calculator = new Calculator();
 

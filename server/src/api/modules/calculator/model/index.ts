@@ -1,4 +1,4 @@
-import MongoDB from "../libs/MongoDB/Mongo";
+import MongoDB from "../../../../libs/MongoDB/Mongo";
 
 type Expression = {
   expression: string;

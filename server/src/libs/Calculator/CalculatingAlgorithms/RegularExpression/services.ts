@@ -33,10 +33,9 @@ export function calculate(this: RegularExpression, expression: string): string {
   return expression;
 }
 
-export function performOperation(
-  this: RegularExpression,
-  { expression, operation, operationIndexInString }: IPerformOperation
-) {
+export function performOperation(this: RegularExpression, params: IPerformOperation) {
+  let { expression, operation, operationIndexInString } = params;
+
   // left and right hand sides of operation
   let leftPart: string | undefined;
   let rightPart: string | undefined;

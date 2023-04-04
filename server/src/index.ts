@@ -1,15 +1,12 @@
 import dotenv from "dotenv";
-dotenv.config();
-
 import cors from "cors";
 import express from "express";
 import { calculatorRoutes } from "./api/modules/calculator/router";
-import MongoDB from "./api/modules/calculator/libs/MongoDB/Mongo";
+import MongoDB from "./libs/MongoDB/Mongo";
 
 const app = express();
 app.use(cors({ origin: "*" }));
-
-// TODO sorting filter
+dotenv.config();
 
 app.use(calculatorRoutes);
 

@@ -37,7 +37,6 @@ const operations: IOperation[] = [
     notation: Notation.POSTFIX,
     evaluate: () => 0,
   },
-
   {
     symbol: Operations.ADDITION,
     precedence: 1,
