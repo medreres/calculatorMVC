@@ -2,7 +2,6 @@ import { MongoClient } from "mongodb";
 import { DB_NAME } from "./config";
 import { Id, InitialParams } from "./interfaces";
 
-//TODO close connection method
 export default class MongoDB {
   protected static client: MongoClient | null = null;
   protected collectionName: string;
@@ -29,17 +28,19 @@ export default class MongoDB {
       });
   }
 
-  // TODO decorators could be used
-  async insertOne(data: any) {
-    // checkConnection.call(this);
+  static disconnect() {
+    if (!MongoDB.client) {
+      return;
+    }
 
+    MongoDB.client.close();
+  }
+
+  async insertOne(data: any) {
     return this.getCollection().insertOne(data);
   }
 
-  // TODO decorators could be used
   async insertMany(data: object[]) {
-    // checkConnection.call(this);
-
     return this.getCollection().insertMany(data);
   }
 
@@ -51,11 +52,7 @@ export default class MongoDB {
     return this.getCollection().deleteMany(data);
   }
 
-  // TODO decorators could be used
-
   async findOne(data: Partial<InitialParams>) {
-    // checkConnection.call(this);
-
     return await this.getCollection()
       .findOne(data)
       .then((res) => res);
