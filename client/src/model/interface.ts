@@ -1,9 +1,11 @@
+import { IOperation } from "../shared/interfaces";
+
 export default interface ICalculatorModel {
   setExpression(expression: string): void;
   getExpression(): string;
 
-  setResult(result: number | string): void;
-  getResult(): number | string;
+  calculate(): void;
 
-  calculate(): Promise<number>;
+  addHistory(operation: IOperation): boolean;
+  getHistory(): IOperation[];
 }

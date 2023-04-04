@@ -1,6 +1,6 @@
-import { BASE_URL } from "../../config";
-import { IConstant, IOperation } from "../../shared/interfaces";
-import { buildUrl } from "../../utils/buildUrl";
+import { BASE_URL } from "../../../config";
+import { IConstant, IOperation } from "../../../shared/interfaces";
+import { buildUrl } from "../../../utils/buildUrl";
 
 export function fetchHistory(): Promise<IOperation[]> {
   const url = buildUrl("/last-operations", BASE_URL);

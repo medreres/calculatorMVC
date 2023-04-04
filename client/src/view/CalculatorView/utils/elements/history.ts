@@ -34,23 +34,9 @@ interface addHistory {
   onClick?: (e: MouseEvent) => void;
 }
 export function addHistory(this: CalculatorView, { expression, result, onClick }: addHistory) {
-  // if history already exists return immediately
-  if (Array.from(document.querySelectorAll(".history-btn")).some((btn) => btn.innerHTML === expression)) {
-    return;
-  }
-
   const historyContainer = getHistoryContainer();
 
-  const placeHolder = document.querySelector("#placeholder");
-  if (placeHolder) {
-    historyContainer.removeChild(placeHolder);
-  }
-
   const btn = createHistoryButton({ expression, result, onClick });
-
-  if (historyContainer.childNodes.length >= HISTORY_SIZE) {
-    historyContainer.removeChild(historyContainer.childNodes[historyContainer.childNodes.length - 1]);
-  }
 
   historyContainer.insertBefore(btn, historyContainer.firstChild);
 }

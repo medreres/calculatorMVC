@@ -5,14 +5,11 @@ export enum Events {
   VIEW_CALCULATE = "viewCalculate",
   VIEW_SET_RESULT = "viewSetResult",
   VIEW_CHANGE_INPUT = "viewChangeInput",
-  // TODO make use
-  VIEW_CLEAR_INPUT = "viewClearInput",
   VIEW_ADD_BUTTONS = "viewAddButtons",
   VIEW_INVALID_INPUT = "viewInvalidInput",
   VIEW_VALID_INPUT = "viewValidInput",
-  // TODO save in model
-  VIEW_HISTORY_FETCHED = "viewHistoryFetch",
   VIEW_RENDER_OPERATIONS = "viewRenderOperations",
+  VIEW_RENDER_HISTORY = "viewRenderHistory",
 
   // Model events
   MODEL_CHANGE_INPUT = "changeModelInput",
@@ -20,9 +17,11 @@ export enum Events {
   MODEL_CALCULATED = "modelCalculated",
   MODEL_INVALID_INPUT = "modelInvalidInput",
   MODEL_VALID_INPUT = "modelValidInput",
-  // TODO make use
-  MODEL_CLEAR_INPUT = "modelClearInput",
   MODEL_OPERATIONS_FETCHED = "modelOperationsFetched",
+  MODEL_HISTORY_FETCHED = "viewHistoryFetch",
+  MODEL_RENDER_HISTORY = "modelRendererHistory",
+  MODEL_ADD_HISTORY = "modelAddHistory",
+  MODEL_CALCULATE_REQUEST = "modelCalculateRequest",
 
   // General
   CONNECTION_FAILED = "connectionFailed",

@@ -1,7 +1,18 @@
 import CalculatorView from "..";
 import { Events } from "../../../shared/events";
+import { IOperation } from "../../../shared/interfaces";
 import { Actions } from "../config";
-import { setCalculateButtonDisabled } from "./elements/keys/services";
+import {
+  addHistory,
+  cleanHistory,
+  createButton,
+  getButtonClasses,
+  getInnerHtml,
+  ICreateButton,
+  setInputValidity,
+} from "./elements";
+import { addOperationButton, setCalculateButtonDisabled } from "./elements/keys/services";
+import { formatSymbols } from "./formatting";
 
 export function btnClickHandler(this: CalculatorView, btnValue: string): () => void {
   let handler;
@@ -80,4 +91,69 @@ export function calculateHandler(this: CalculatorView) {
 export function inputChangeHandler(this: CalculatorView, value: string) {
   this.notify(Events.VIEW_INPUT_CHANGED, value);
   this.setExpression(value);
+}
+
+export function setResultHandler(this: CalculatorView, value: string) {
+  this.setExpression(value);
+
+  setCalculateButtonDisabled(true);
+}
+
+export function invalidInputHandler() {
+  setInputValidity(false);
+  setCalculateButtonDisabled(true);
+}
+
+export function validInputHandler() {
+  setInputValidity(true);
+  setCalculateButtonDisabled(false);
+}
+
+export function renderHistoryHandler(this: CalculatorView, history: IOperation[]) {
+  if (history.length === 0) {
+    return;
+  }
+
+  const onClick = expressionInputChangeHandler.call(this);
+
+  cleanHistory();
+
+  history.forEach((operation) => {
+    const { expression, result } = operation;
+
+    addHistory.call(this, {
+      expression,
+      result,
+      onClick,
+    });
+  });
+}
+
+export function renderOperationsHandler(this: CalculatorView, symbols: string[]) {
+  this.availableOperators = symbols;
+
+  const formattedSymbols = formatSymbols(symbols) as string[];
+  // save those operations
+
+  formattedSymbols.forEach((value) => {
+    const onClick = btnClickHandler.call(this, value);
+    const classList = getButtonClasses(value);
+    const innerHtml = getInnerHtml(value);
+    const params: ICreateButton = {
+      onClick,
+      classList,
+      value,
+      innerHtml,
+      disabled: value === Actions.CALCULATE ? true : false,
+    };
+    const button = createButton(params);
+    addOperationButton(button);
+  });
+}
+
+export function connectionFailedHandler() {
+  document.body.innerHTML =
+    `<div class="alert alert-danger" role="alert">
+              Server is not responding. Please try again later.
+            </div>` + document.body.innerHTML;
 }

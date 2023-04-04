@@ -1,4 +1,4 @@
-import { AdditionalOperations, MainOperations } from "../../shared/operations";
+import { AdditionalOperations, MainOperations } from "../../../shared/operations";
 
 /**
  * \w allows letters to be present

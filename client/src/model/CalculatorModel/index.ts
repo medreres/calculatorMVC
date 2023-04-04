@@ -1,27 +1,27 @@
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
-import { IObserver } from "../../shared/interfaces";
-import { initializeObservers, isInputValid } from "./services";
+import { IObserver, IOperation } from "../../shared/interfaces";
+import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
-import { buildUrl } from "../../utils/buildUrl";
-import { BASE_URL } from "../../config";
 import { removeSpaces } from "../../shared/utils";
 import { MainOperations } from "../../shared/operations";
+import { HISTORY_SIZE } from "../../config";
+import { isInputValid } from "./utils";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
-  private result: number | string;
   private observer: Observer = Observer.getInstance();
   protected operations: string[];
+  protected operationsHistory: IOperation[];
 
   constructor() {
     this.expression = "";
-    this.result = 0;
 
     // listen to events
     initializeObservers.call(this);
 
     this.operations = Object.values(MainOperations);
+    this.operationsHistory = [];
   }
 
   //------ Interaction
@@ -37,34 +37,30 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     }
   }
 
-  setResult(result: number | string) {
-    this.result = result;
-  }
-
-  getResult(): number | string {
-    return this.result;
-  }
-
   getExpression(): string {
     return this.expression;
   }
 
-  calculate(): Promise<number> {
-    const url = buildUrl("/evaluate", BASE_URL, {
-      expression: this.getExpression(),
-    });
+  getHistory(): IOperation[] {
+    return this.operationsHistory;
+  }
 
-    return fetch(url, {
-      method: "POST",
-    })
-      .then((response) => response.json())
+  addHistory(operation: IOperation): boolean {
+    if (this.operationsHistory.some((history) => history.expression === operation.expression)) {
+      return false;
+    }
 
-      .then(({ data, error }) => {
-        if (!isNaN(data)) {
-          return data as number;
-        }
-        throw new Error(error);
-      });
+    if (this.operationsHistory.length >= HISTORY_SIZE) {
+      this.operationsHistory.shift();
+    }
+
+    this.operationsHistory.push(operation);
+
+    return true;
+  }
+
+  calculate() {
+    this.notify(Events.MODEL_CALCULATE_REQUEST, this.expression);
   }
 
   //------ Observers
