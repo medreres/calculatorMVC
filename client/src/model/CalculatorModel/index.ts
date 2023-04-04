@@ -5,6 +5,7 @@ import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
 import { buildUrl } from "../../utils/buildUrl";
 import { BASE_URL } from "../../config";
+import { removeSpaces } from "../../shared/utils";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
@@ -19,7 +20,7 @@ class CalculatorModel implements ICalculatorModel, IObserver {
 
   //------ Interaction
   setExpression(expression: string) {
-    this.expression = expression;
+    this.expression = removeSpaces(expression);
   }
 
   setResult(result: number | string) {

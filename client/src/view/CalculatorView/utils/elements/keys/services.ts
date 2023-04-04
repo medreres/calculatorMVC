@@ -1,15 +1,14 @@
 import { getButtonClasses, getInnerHtml, createButton } from ".";
 import CalculatorView from "../../..";
 import { buttonValues, Actions } from "../../../config";
-import { btnClickHandler } from "./handlers";
+import { btnClickHandler } from "../../handlers";
 import { ICreateButton } from "./interface";
 
-export const createButtonsContainer = (
-  viewInstance: CalculatorView
-): {
+interface ButtonsContainer {
   buttons: HTMLButtonElement[];
   buttonsContainer: HTMLDivElement;
-} => {
+}
+export const createButtonsContainer = (viewInstance: CalculatorView): ButtonsContainer => {
   const buttons: HTMLButtonElement[] = [];
   const buttonsContainer = document.createElement("div");
   buttonsContainer.classList.add("calculator-keys");
@@ -35,7 +34,7 @@ export const createButtonsContainer = (
   return { buttons, buttonsContainer };
 };
 
-export function toggleCalculateButton(disabled: boolean) {
+export function setCalculateButtonDisabled(disabled: boolean) {
   const calcBtn = document.querySelector(".equal-sign") as HTMLButtonElement;
   calcBtn.disabled = disabled;
 }
@@ -52,11 +51,7 @@ export const createCalculatorButtonsContainer = (
   return calculatorButtonsContainer;
 };
 
-// TODO remove inline
-export function createAdditionalOperationsContainer(this: CalculatorView): {
-  buttons: HTMLButtonElement[];
-  buttonsContainer: HTMLDivElement;
-} {
+export function createAdditionalOperationsContainer(this: CalculatorView): ButtonsContainer {
   const buttons: HTMLButtonElement[] = [];
 
   const buttonsContainer = document.createElement("div");

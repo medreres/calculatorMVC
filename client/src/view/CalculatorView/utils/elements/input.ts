@@ -1,7 +1,7 @@
 import { AdditionalOperations } from "../../config";
 import { simpleValidityRegex } from "../regex";
 import { createHistoryDropdown } from "./history";
-import { toggleCalculateButton } from "./keys";
+import { setCalculateButtonDisabled } from "./keys";
 
 interface ICreateExpressionInput {
   onSubmit?: (e: KeyboardEvent) => void;
@@ -41,7 +41,7 @@ export function setInputValidity(isValid: boolean): void {
     input.classList.add("is-invalid");
   }
 
-  toggleCalculateButton(!isValid);
+  setCalculateButtonDisabled(!isValid);
 }
 
 let validityRegex: RegExp;
@@ -50,6 +50,9 @@ export const isInputValid = (expression: string, operators?: string[]) => {
   if (!operators) {
     return !simpleValidityRegex.test(expression);
   }
+
+  // if empty then not valid
+  if (!expression) return false;
 
   // if regex is already initialized, then use it in order not to create it each time
   if (!validityRegex) {

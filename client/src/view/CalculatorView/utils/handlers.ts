@@ -1,8 +1,8 @@
-import CalculatorView from "../../..";
-import { Events } from "../../../../../shared/events";
-import { Actions } from "../../../config";
-import { isInputValid, setInputValidity } from "../input";
-import { toggleCalculateButton } from "./services";
+import CalculatorView from "..";
+import { Events } from "../../../shared/events";
+import { Actions } from "../config";
+import { isInputValid, setInputValidity } from "./elements/input";
+import { setCalculateButtonDisabled } from "./elements/keys/services";
 
 export function btnClickHandler(this: CalculatorView, btnValue: string): () => void {
   let handler;
@@ -11,7 +11,7 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
     this.setExpression("");
     this.notify(Events.VIEW_INPUT_CHANGED, "");
     setInputValidity(true);
-    toggleCalculateButton(true);
+    setCalculateButtonDisabled(true);
   };
 
   switch (btnValue) {
@@ -56,17 +56,14 @@ export function expressionInputChangeHandler(this: CalculatorView) {
     const value = (e.target as HTMLInputElement).value;
 
     if (value.length === 0) {
-      this.notify(Events.VIEW_INPUT_CHANGED, "");
+      inputChangeHandler.call(this, value);
       setInputValidity(true);
-      toggleCalculateButton(true);
+      setCalculateButtonDisabled(true);
+      // this.notify(Events.VIEW_INPUT_CHANGED, "");
     } else {
       const inputValue = (e?.target as HTMLInputElement).value;
-      // send request to model to check if expression is valid
 
-      setInputValidity(isInputValid(inputValue, this.availableOperators));
-
-      this.notify(Events.VIEW_INPUT_CHANGED, inputValue);
-      this.setExpression(value);
+      inputChangeHandler.call(this, inputValue);
     }
   };
   return handler;
@@ -88,4 +85,11 @@ export function expressionInputSubmitHandler(this: CalculatorView) {
 
 export function calculateHandler(this: CalculatorView) {
   this.notify(Events.VIEW_CALCULATE);
+}
+
+export function inputChangeHandler(this: CalculatorView, value: string) {
+  setInputValidity(isInputValid(value, this.availableOperators));
+
+  this.notify(Events.VIEW_INPUT_CHANGED, value);
+  this.setExpression(value);
 }

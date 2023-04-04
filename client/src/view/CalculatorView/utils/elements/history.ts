@@ -3,6 +3,7 @@ import { Actions } from "../../config";
 import history from "../../../../public/history.svg";
 import { createButton } from "./keys";
 import { HISTORY_SIZE } from "../../../../config";
+import { removeSpaces } from "../../../../shared/utils";
 
 export function createHistoryDropdown() {
   const svg = document.createElement("div");
@@ -52,15 +53,16 @@ export function createHistoryButton(params: ICreateHistoryButton) {
   const { expression, result, onClick } = params;
 
   const classList = ["btn", "h-25", "btn-outline-secondary", "m-1", "history-btn"];
+
   const exprBtn = createButton({
-    value: expression,
+    value: removeSpaces(expression),
     innerHtml: expression,
     classList,
     onClick,
   });
 
   const resultBtn = createButton({
-    value: result,
+    value: removeSpaces(result),
     innerHtml: result,
     classList,
     onClick,

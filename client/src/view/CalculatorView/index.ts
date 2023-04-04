@@ -4,7 +4,7 @@ import { IObserver } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
 import { createExpressionInput, createToggleScientificViewButton } from "./utils/elements";
-import { expressionInputSubmitHandler, expressionInputChangeHandler } from "./utils/elements/keys/handlers";
+import { expressionInputSubmitHandler, expressionInputChangeHandler } from "./utils/handlers";
 import {
   createButtonsContainer,
   createAdditionalOperationsContainer,

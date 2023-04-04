@@ -35,7 +35,7 @@ export const evaluate = (req: Request, res: Response) => {
       }
 
       // if there exist expression, do not add another one
-      if (r.length >= HISTORY_SIZE) {
+      if (r.length > HISTORY_SIZE) {
         Expression.deleteOne({ expression: r[0]!.expression });
       }
 

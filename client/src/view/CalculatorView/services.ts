@@ -10,7 +10,7 @@ import {
   getInnerHtml,
   ICreateButton,
   setInputValidity,
-  toggleCalculateButton,
+  setCalculateButtonDisabled,
 } from "./utils/elements";
 import { formatSymbols } from "./utils/formatting";
 import { Actions } from "./config";
@@ -21,7 +21,6 @@ interface IOperation {
 }
 export function initializeObservers(this: CalculatorView) {
   this.on(Events.VIEW_SET_RESULT, (value: string) => {
-    
     addHistory.call(this, {
       expression: this.getExpression(),
       result: value,
@@ -29,11 +28,13 @@ export function initializeObservers(this: CalculatorView) {
     });
 
     this.setExpression(value);
+
+    setCalculateButtonDisabled(true);
   });
 
   this.on(Events.VIEW_INVALID_INPUT, () => {
     setInputValidity(false);
-    toggleCalculateButton(true);
+    setCalculateButtonDisabled(true);
   });
 
   // TODO add to history on calculation
@@ -56,7 +57,6 @@ export function initializeObservers(this: CalculatorView) {
     const formattedSymbols = formatSymbols(symbols) as string[];
     // save those operations
 
-    // TODO
     formattedSymbols.forEach((value) => {
       const onClick = btnClickHandler.call(this, value);
       const classList = getButtonClasses(value);
@@ -69,8 +69,6 @@ export function initializeObservers(this: CalculatorView) {
         disabled: value === Actions.CALCULATE ? true : false,
       };
       const button = createButton(params);
-      // buttons.push(button);
-      // buttonsContainer.appendChild(button);
       addOperationButton(button);
     });
   });

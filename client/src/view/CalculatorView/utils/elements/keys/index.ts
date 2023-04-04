@@ -1,7 +1,7 @@
 import { MainOperations, Actions } from "../../../config";
 import { ICreateButton } from "./interface";
 
-export * from "./handlers";
+export * from "../../handlers";
 export * from "./interface";
 export * from "./services";
 
@@ -21,7 +21,6 @@ export const createButton = (params: ICreateButton) => {
     button.addEventListener("click", onClick);
   }
 
-  // console.log(innerHtml)
   if (innerHtml != null) {
     button.innerHTML = innerHtml;
   }
