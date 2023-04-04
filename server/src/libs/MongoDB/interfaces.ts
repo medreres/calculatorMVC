@@ -4,10 +4,19 @@ export type Id = {
   _id: ObjectId;
 };
 
-export type queryParams = {
-
-}
+export type Types = number | string | Date;
 
 export type Attributes = Id;
 
-// TODO $in, gt, lt, or
+export type queryParams<T> = {
+  $in?: T[];
+  $gt?: T;
+  $lt?: T;
+};
+
+// allows to search using logical OR statement
+export type Or<T> = {
+  $or?: Partial<GenericInterface<T>>[];
+};
+
+export type GenericInterface<T> = T | queryParams<T>;

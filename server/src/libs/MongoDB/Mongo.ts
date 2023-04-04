@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { DB_NAME } from "./config";
-import { Id, Attributes } from "./interfaces";
+import { Id, Attributes, Or } from "./interfaces";
 
 export default class MongoDB {
   protected static client: MongoClient | null = null;
@@ -18,7 +18,7 @@ export default class MongoDB {
     if (!uri) {
       throw new Error("Db url is required");
     }
-    
+
     const client = new MongoClient(uri);
 
     return client
@@ -40,23 +40,23 @@ export default class MongoDB {
     MongoDB.client.close();
   }
 
-  insertOne(data: any) {
+  private insertOne(data: any) {
     return this.getCollection().insertOne(data);
   }
 
-  insertMany(data: object[]) {
+  private insertMany(data: object[]) {
     return this.getCollection().insertMany(data);
   }
 
-  deleteOne(data: object) {
+  private deleteOne(data: object) {
     return this.getCollection().deleteOne(data);
   }
 
-  deleteMany(data: object) {
+  private deleteMany(data: object) {
     return this.getCollection().deleteMany(data);
   }
 
-  findOne(data: Partial<Attributes>) {
+  private findOne(data: Partial<Attributes>) {
     return this.getCollection().findOne(data);
   }
 
@@ -65,7 +65,7 @@ export default class MongoDB {
   }
 
   static model<T>(name: string) {
-    type IModel = T & Id;
+    type IModel = T & Id & Or<T>;
 
     class Document {
       static collectionRef: MongoDB = new MongoDB(`${name}s`);
@@ -76,6 +76,14 @@ export default class MongoDB {
 
       save() {
         return Document.collectionRef.insertOne(this);
+      }
+
+      static insertOne(data: T) {
+        return Document.collectionRef.insertOne(data) as Promise<T>;
+      }
+
+      static insertMany(data: T[]) {
+        return Document.collectionRef.insertMany(data as object[]);
       }
 
       static findOne(params: Partial<IModel>) {
