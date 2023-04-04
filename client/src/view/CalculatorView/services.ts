@@ -16,11 +16,8 @@ import {
 import { formatSymbols } from "./utils/formatting";
 import { Actions } from "./config";
 import { removeSpaces } from "../../shared/utils";
+import { IOperation } from "../../shared/interfaces";
 
-interface IOperation {
-  result: string;
-  expression: string;
-}
 export function initializeObservers(this: CalculatorView) {
   this.on(Events.VIEW_SET_RESULT, (value: string) => {
     addHistory.call(this, {

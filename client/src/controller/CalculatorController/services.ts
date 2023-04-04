@@ -1,8 +1,6 @@
 import CalculatorController from ".";
-import { BASE_URL } from "../../config";
 import { Events } from "../../shared/events";
-import { IConstant } from "../../shared/interfaces";
-import { buildUrl } from "../../utils/buildUrl";
+import { fetchHistory, fetchOperationsSymbols } from "./requests";
 
 export const initializeObservers = (controllerInstance: CalculatorController) => {
   // listen for input changes from view
@@ -25,35 +23,19 @@ export const initializeObservers = (controllerInstance: CalculatorController) =>
     controllerInstance.notify(Events.VIEW_SET_RESULT, value);
   });
 
-  fetchHistory.call(controllerInstance);
-
-  fetchOperationsSymbols().then((symbols) => {
-    controllerInstance.notify(Events.VIEW_ADD_BUTTONS, symbols.flat());
-  });
-};
-
-export function fetchHistory(this: CalculatorController) {
-  const url = buildUrl("/last-operations", BASE_URL);
-  fetch(url)
-    .then((response) => response.json())
-    .then(({ data }) => {
-      this.notify(Events.VIEW_HISTORY_FETCHED, data);
+  fetchHistory()
+    .then((data) => {
+      controllerInstance.notify(Events.VIEW_HISTORY_FETCHED, data);
     })
     .catch(() => {
-      this.notify(Events.CONNECTION_FAILED);
+      controllerInstance.notify(Events.CONNECTION_FAILED);
     });
-}
 
-export async function fetchOperationsSymbols() {
-  // make uniform interface for all symbols to work easier
-  return Promise.all([
-    fetch(buildUrl("/operations", BASE_URL))
-      .then((response) => response.json())
-      .then(({ data }) => data),
-
-    // we only need name of those constants
-    fetch(buildUrl("/constants", BASE_URL))
-      .then((response) => response.json())
-      .then(({ data }) => data.map((constant: IConstant) => constant.key)),
-  ]);
-}
+  fetchOperationsSymbols()
+    .then((symbols) => {
+      controllerInstance.notify(Events.VIEW_ADD_BUTTONS, symbols);
+    })
+    .catch(() => {
+      controllerInstance.notify(Events.CONNECTION_FAILED);
+    });
+};

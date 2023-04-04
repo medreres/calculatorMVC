@@ -35,7 +35,7 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return this.expression;
   }
 
-  async calculate(): Promise<number> {
+  calculate(): Promise<number> {
     const url = buildUrl("/evaluate", BASE_URL, {
       expression: this.getExpression(),
     });

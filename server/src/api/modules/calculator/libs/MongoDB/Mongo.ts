@@ -14,10 +14,10 @@ export default class MongoDB {
     return MongoDB.client!.db(DB_NAME).collection(this.collectionName);
   }
 
-  static async connect(uri: string) {
+  static connect(uri: string) {
     const client = new MongoClient(uri);
 
-    await client
+    return client
       .connect()
       .then((client) => {
         MongoDB.client = client;
@@ -36,29 +36,27 @@ export default class MongoDB {
     MongoDB.client.close();
   }
 
-  async insertOne(data: any) {
+  insertOne(data: any) {
     return this.getCollection().insertOne(data);
   }
 
-  async insertMany(data: object[]) {
+  insertMany(data: object[]) {
     return this.getCollection().insertMany(data);
   }
 
-  async deleteOne(data: object) {
+  deleteOne(data: object) {
     return this.getCollection().deleteOne(data);
   }
 
-  async deleteMany(data: object) {
+  deleteMany(data: object) {
     return this.getCollection().deleteMany(data);
   }
 
-  async findOne(data: Partial<Attributes>) {
-    return await this.getCollection()
-      .findOne(data)
-      .then((res) => res);
+  findOne(data: Partial<Attributes>) {
+    return this.getCollection().findOne(data);
   }
 
-  private async findMany(params: Partial<Attributes>) {
+  private findMany(params: Partial<Attributes>) {
     return this.getCollection().find(params).toArray();
   }
 
@@ -72,23 +70,23 @@ export default class MongoDB {
         Object.assign(this, params);
       }
 
-      async save() {
+      save() {
         return Document.collectionRef.insertOne(this);
       }
 
-      static async findOne(params: Partial<IModel>): Promise<IModel | null> {
-        return Document.collectionRef.findOne(params) as unknown as IModel | null;
+      static findOne(params: Partial<IModel>) {
+        return Document.collectionRef.findOne(params) as Promise<IModel | null>;
       }
 
-      static async findMany(params: Partial<IModel>): Promise<IModel[]> {
-        return Document.collectionRef.findMany(params) as unknown as IModel[];
+      static findMany(params: Partial<IModel>) {
+        return Document.collectionRef.findMany(params) as Promise<IModel[]>;
       }
 
-      static async deleteOne(params: Partial<IModel>) {
+      static deleteOne(params: Partial<IModel>) {
         return Document.collectionRef.deleteOne(params);
       }
 
-      static async deleteMany(params: Partial<IModel>) {
+      static deleteMany(params: Partial<IModel>) {
         return Document.collectionRef.deleteMany(params);
       }
     }
