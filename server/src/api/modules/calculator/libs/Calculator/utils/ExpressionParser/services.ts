@@ -74,7 +74,9 @@ export function updateRegex(this: ExpressionParser) {
     .join("");
 
   /** (?<=[0-9]|[${unaryOperations}]|\\s) - lookbehind ensures that previous symbol can be either
-   * one of unary operations or number, for example -1 + 5, 2! + 3
+   * one of unary operations or number, for example
+   * -1 + 5
+   * 2! + 3
    *
    * [${operationRegexRaw}] - all operations of length 1
    */
@@ -143,7 +145,7 @@ export function parseFunctions(this: ExpressionParser, expression: string): Pars
    * for example sin|cos
    */
   const functionRegexRaw = `${this.getAvailableOperations()
-    .filter((operation) => /\w/.test(operation.symbol))
+    .filter((operation) => operation.notation === Notation.PREFIX && operation.symbol !== Operations.LEFT_PARENTHESIS)
     .map((operation) => `${operation.symbol}`)
     .join("|")}`;
 

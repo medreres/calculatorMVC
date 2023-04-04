@@ -12,7 +12,7 @@ export const evaluate = (req: Request, res: Response) => {
   if (!expression) {
     return res.status(400).json({ error: Errors.MISSING_EXPRESSION });
   }
-  // trim all whitespaces
+  // trim all whitespace
   expression = expression.replaceAll(" ", "");
 
   let result: number | undefined;
