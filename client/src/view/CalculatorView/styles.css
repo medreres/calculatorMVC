@@ -53,6 +53,11 @@ button {
   transform: translate(0%, 10%);
 }
 
+.history-btn {
+  width: max-content;
+  max-width: 300px;
+}
+
 .form-control.is-invalid {
   background-position: 100% 5% !important;
   background-size: 5%;

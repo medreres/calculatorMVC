@@ -1,4 +1,3 @@
-import { Errors } from "./config";
 import MongoDB from "./Mongo";
 
 export function checkConnection(this: MongoDB) {

@@ -1,9 +1,7 @@
 import ICalculatingAlgorithm from "./CalculatingAlgorithms/interface";
-import { evaluatingAlgorithm, errorsDescription } from "./config";
+import { evaluatingAlgorithm } from "./config";
 import { Constant } from "./interfaces";
 import Operation from "./utils/Operation";
-
-export { errorsDescription };
 
 export default class Calculator {
   private calculatingAlgorithm: ICalculatingAlgorithm;

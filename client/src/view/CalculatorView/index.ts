@@ -1,7 +1,7 @@
 import ICalculatorView from "../interface";
 import Observer from "../../lib/Observer";
 import { IObserver } from "../../shared/interfaces";
-import { initializeObservers } from "./utils/services";
+import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
 import { createExpressionInput, createToggleScientificViewButton } from "./utils/elements";
 import { expressionInputSubmitHandler, expressionInputChangeHandler } from "./utils/elements/keys/handlers";

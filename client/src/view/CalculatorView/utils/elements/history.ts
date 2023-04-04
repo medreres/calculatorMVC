@@ -2,6 +2,7 @@ import CalculatorView from "../..";
 import { Actions } from "../../config";
 import history from "../../../../public/history.svg";
 import { createButton } from "./keys";
+import { HISTORY_SIZE } from "../../../../config";
 
 export function createHistoryDropdown() {
   const svg = document.createElement("div");
@@ -26,8 +27,20 @@ interface addHistory {
   onClick?: (e: MouseEvent) => void;
 }
 export function addHistory(this: CalculatorView, { expression, result, onClick }: addHistory) {
+  // if history already exists return immediately
+  if (Array.from(document.querySelectorAll(".history-btn")).some((btn) => btn.innerHTML === expression)) {
+    return;
+  }
+
   const btn = createHistoryButton({ expression, result, onClick });
-  document.querySelector(".dropdown-menu")?.appendChild(btn);
+
+  const historyContainer = document.querySelector(".dropdown-menu")!;
+
+  if (historyContainer.childNodes.length >= HISTORY_SIZE) {
+    historyContainer.removeChild(historyContainer.childNodes[historyContainer.childNodes.length - 1]);
+  }
+
+  historyContainer.insertBefore(btn, historyContainer.firstChild);
 }
 
 interface ICreateHistoryButton {
@@ -38,15 +51,17 @@ interface ICreateHistoryButton {
 export function createHistoryButton(params: ICreateHistoryButton) {
   const { expression, result, onClick } = params;
 
-  const classList = ["btn", "h-25", "btn-outline-secondary", "m-1"];
+  const classList = ["btn", "h-25", "btn-outline-secondary", "m-1", "history-btn"];
   const exprBtn = createButton({
     value: expression,
+    innerHtml: expression,
     classList,
     onClick,
   });
 
   const resultBtn = createButton({
     value: result,
+    innerHtml: result,
     classList,
     onClick,
   });

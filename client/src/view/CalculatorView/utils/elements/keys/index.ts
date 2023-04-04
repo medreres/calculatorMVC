@@ -10,7 +10,7 @@ export const createButton = (params: ICreateButton) => {
 
   const { classList, disabled, innerHtml, onClick, value } = params;
 
-  if (value) {
+  if (value != null) {
     button.value = value;
   }
 
@@ -20,10 +20,10 @@ export const createButton = (params: ICreateButton) => {
   if (onClick) {
     button.addEventListener("click", onClick);
   }
-  if (innerHtml) {
+
+  // console.log(innerHtml)
+  if (innerHtml != null) {
     button.innerHTML = innerHtml;
-  } else {
-    button.innerHTML = value || "";
   }
 
   if (disabled) {

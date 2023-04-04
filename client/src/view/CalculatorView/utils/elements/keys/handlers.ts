@@ -16,9 +16,7 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
 
   switch (btnValue) {
     case Actions.CALCULATE:
-      handler = () => {
-        this.notify(Events.VIEW_CALCULATE);
-      };
+      handler = calculateHandler.bind(this);
       break;
 
     case Actions.CLEAR_INPUT:
@@ -56,6 +54,7 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
 export function expressionInputChangeHandler(this: CalculatorView) {
   let handler = (e: Event) => {
     const value = (e.target as HTMLInputElement).value;
+
     if (value.length === 0) {
       this.notify(Events.VIEW_INPUT_CHANGED, "");
       setInputValidity(true);
@@ -82,7 +81,11 @@ export function expressionInputSubmitHandler(this: CalculatorView) {
         return;
       }
 
-      this.notify(Events.VIEW_CALCULATE);
+      calculateHandler.call(this);
     }
   };
+}
+
+export function calculateHandler(this: CalculatorView) {
+  this.notify(Events.VIEW_CALCULATE);
 }

@@ -38,6 +38,9 @@ export function fetchHistory(this: CalculatorController) {
     .then((response) => response.json())
     .then(({ data }) => {
       this.notify(Events.VIEW_HISTORY_FETCHED, data);
+    })
+    .catch(() => {
+      this.notify(Events.CONNECTION_FAILED);
     });
 }
 

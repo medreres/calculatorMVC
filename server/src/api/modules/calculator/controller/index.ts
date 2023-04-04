@@ -1,7 +1,7 @@
-import Calculator, { errorsDescription } from "../libs/Calculator";
+import Calculator from "../libs/Calculator";
 import { Request, Response } from "express";
 import Expression from "../model";
-import { HISTORY_SIZE } from "../../../config";
+import { Errors, HISTORY_SIZE } from "../../../config";
 
 const calculator = new Calculator();
 
@@ -10,42 +10,46 @@ export const evaluate = (req: Request, res: Response) => {
   const expression = req.query.expression as string;
 
   if (!expression) {
-    return res.status(400).json({ error: errorsDescription.MISSING_EXPRESSION });
+    return res.status(400).json({ error: Errors.MISSING_EXPRESSION });
   }
 
   let result: number | undefined;
 
   if (!calculator.isExpressionValid(expression)) {
-    return res.status(400).json({ error: errorsDescription.INVALID_EXPRESSION });
+    return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
   }
 
   try {
     result = calculator.evaluate(expression);
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ error: errorsDescription.INVALID_EXPRESSION });
+    return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
   }
 
   // TODO spaces between expressions
 
-  Expression.findMany({}).then((r) => {
-    if (r.find((expr) => expr.expression === expression)) {
-      return;
-    }
+  try {
+    Expression.findMany({}).then((r) => {
+      if (r.find((expr) => expr.expression === expression)) {
+        return;
+      }
 
-    // if there exist expression, do not add another one
-    if (r.length >= HISTORY_SIZE) {
-      Expression.deleteOne({ expression: r[0]!.expression });
-    }
+      // if there exist expression, do not add another one
+      if (r.length >= HISTORY_SIZE) {
+        Expression.deleteOne({ expression: r[0]!.expression });
+      }
 
-    const document = new Expression({
-      expression,
-      result: result as number,
-      timestamp: new Date(),
+      const document = new Expression({
+        expression,
+        result: result as number,
+        timestamp: new Date(),
+      });
+
+      document.save();
     });
-
-    document.save();
-  });
+  } catch (error) {
+    console.log(error);
+  }
 
   return res.status(200).json({ data: result });
 };
@@ -65,7 +69,10 @@ export const getConstants = (_req: Request, res: Response) => {
 
 // LIMIT as default search params
 export const getLastOperations = (_req: Request, res: Response) => {
-  Expression.findMany({} as any).then((result) =>
-    res.status(200).json({ data: result.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1)) })
-  );
+  try {
+    Expression.findMany({} as any).then((result) => res.status(200).json({ data: result }));
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500).json({ error: Errors.NO_CONNECTION });
+  }
 };

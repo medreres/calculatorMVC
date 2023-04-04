@@ -1,5 +1,5 @@
-import { Events } from "../../../shared/events";
-import CalculatorView from "..";
+import { Events } from "../../shared/events";
+import CalculatorView from ".";
 import {
   addHistory,
   addOperationButton,
@@ -11,9 +11,9 @@ import {
   ICreateButton,
   setInputValidity,
   toggleCalculateButton,
-} from "./elements";
-import { formatSymbols } from "./formatting";
-import { Actions } from "../config";
+} from "./utils/elements";
+import { formatSymbols } from "./utils/formatting";
+import { Actions } from "./config";
 
 interface IOperation {
   result: string;
@@ -21,6 +21,13 @@ interface IOperation {
 }
 export function initializeObservers(this: CalculatorView) {
   this.on(Events.VIEW_SET_RESULT, (value: string) => {
+    
+    addHistory.call(this, {
+      expression: this.getExpression(),
+      result: value,
+      onClick: () => {},
+    });
+
     this.setExpression(value);
   });
 
@@ -69,10 +76,9 @@ export function initializeObservers(this: CalculatorView) {
   });
 
   this.on(Events.CONNECTION_FAILED, () => {
-    // TODO handle err
-    // document.body.innerHTML =
-    //   `<div class="alert alert-danger" role="alert">
-    //             Server is not responding. Please try again later.
-    //           </div>` + document.body.innerHTML;
+    document.body.innerHTML =
+      `<div class="alert alert-danger" role="alert">
+                Server is not responding. Please try again later.
+              </div>` + document.body.innerHTML;
   });
 }
