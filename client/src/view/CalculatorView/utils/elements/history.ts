@@ -17,6 +17,12 @@ export function createHistoryDropdown() {
 
   const container = document.createElement("ul");
   container.classList.add("dropdown-menu", "px-2");
+
+  const placeHolder = document.createElement("span");
+  placeHolder.id = "placeholder";
+  placeHolder.innerHTML = "History is empty";
+  container.appendChild(placeHolder);
+
   svg.appendChild(container);
 
   return svg;
@@ -33,15 +39,29 @@ export function addHistory(this: CalculatorView, { expression, result, onClick }
     return;
   }
 
-  const btn = createHistoryButton({ expression, result, onClick });
+  const historyContainer = getHistoryContainer();
 
-  const historyContainer = document.querySelector(".dropdown-menu")!;
+  const placeHolder = document.querySelector("#placeholder");
+  if (placeHolder) {
+    console.log(placeHolder);
+    historyContainer.removeChild(placeHolder);
+  }
+
+  const btn = createHistoryButton({ expression, result, onClick });
 
   if (historyContainer.childNodes.length >= HISTORY_SIZE) {
     historyContainer.removeChild(historyContainer.childNodes[historyContainer.childNodes.length - 1]);
   }
 
   historyContainer.insertBefore(btn, historyContainer.firstChild);
+}
+
+export function getHistoryContainer() {
+  return document.querySelector(".dropdown-menu")!;
+}
+
+export function cleanHistory() {
+  getHistoryContainer().innerHTML = "";
 }
 
 interface ICreateHistoryButton {

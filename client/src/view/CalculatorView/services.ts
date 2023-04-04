@@ -11,9 +11,11 @@ import {
   ICreateButton,
   setInputValidity,
   setCalculateButtonDisabled,
+  cleanHistory,
 } from "./utils/elements";
 import { formatSymbols } from "./utils/formatting";
 import { Actions } from "./config";
+import { removeSpaces } from "../../shared/utils";
 
 interface IOperation {
   result: string;
@@ -22,7 +24,7 @@ interface IOperation {
 export function initializeObservers(this: CalculatorView) {
   this.on(Events.VIEW_SET_RESULT, (value: string) => {
     addHistory.call(this, {
-      expression: this.getExpression(),
+      expression: removeSpaces(this.getExpression()),
       result: value,
       onClick: () => {},
     });
@@ -37,9 +39,15 @@ export function initializeObservers(this: CalculatorView) {
     setCalculateButtonDisabled(true);
   });
 
-  // TODO add to history on calculation
   this.on(Events.VIEW_HISTORY_FETCHED, (history: IOperation[]) => {
+    if (history.length === 0) {
+      return;
+    }
+
     const onClick = expressionInputChangeHandler.call(this);
+
+    cleanHistory();
+
     history.forEach((operation) => {
       const { expression, result } = operation;
 

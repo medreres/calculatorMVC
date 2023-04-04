@@ -16,6 +16,7 @@ app.use(calculatorRoutes);
 MongoDB.connect(process.env.DB_URL as string).then(() => {
   console.log("db connected");
 });
+
 const port = process.env.SERVER_PORT || 7890;
 app.listen(port, () => {
   console.log(`Server listening on ${port}`);

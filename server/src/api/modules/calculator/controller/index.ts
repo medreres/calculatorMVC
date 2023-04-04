@@ -5,13 +5,15 @@ import { Errors, HISTORY_SIZE } from "../../../config";
 
 const calculator = new Calculator();
 
-// TODO sqrt doesnt work
+// TODO sqrt doesn't work
 export const evaluate = (req: Request, res: Response) => {
-  const expression = req.query.expression as string;
+  let expression = req.query.expression as string;
 
   if (!expression) {
     return res.status(400).json({ error: Errors.MISSING_EXPRESSION });
   }
+  // trim all whitespaces
+  expression = expression.replaceAll(" ", "");
 
   let result: number | undefined;
 
@@ -26,8 +28,6 @@ export const evaluate = (req: Request, res: Response) => {
     return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
   }
 
-  // TODO spaces between expressions
-
   try {
     Expression.findMany({}).then((r) => {
       if (r.find((expr) => expr.expression === expression)) {
@@ -35,7 +35,7 @@ export const evaluate = (req: Request, res: Response) => {
       }
 
       // if there exist expression, do not add another one
-      if (r.length > HISTORY_SIZE) {
+      if (r.length >= HISTORY_SIZE) {
         Expression.deleteOne({ expression: r[0]!.expression });
       }
 
