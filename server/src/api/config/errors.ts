@@ -1,9 +1,9 @@
 export enum Errors {
-  // DB errors
+  // db errors
   NO_CONNECTION = "No connection to db established",
 
 
-  // Calculator errors
+  // calculator errors
   MISSING_EXPRESSION = "Please provide expression to calculate",
   INVALID_EXPRESSION = "Expression is not valid",
 }

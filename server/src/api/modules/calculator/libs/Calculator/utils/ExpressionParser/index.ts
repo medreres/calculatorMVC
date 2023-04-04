@@ -1,4 +1,4 @@
-import { defaultConstants, defaultOperations, Operations } from "../../config";
+import { defaultConstants, defaultOperations } from "../../config";
 import { Constant } from "../../interfaces";
 import Operation from "../Operation";
 

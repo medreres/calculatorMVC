@@ -3,7 +3,7 @@ import { evaluate, getOperations, getConstants, getLastOperations } from "../con
 
 const router = Router();
 
-router.get("/evaluate", evaluate);
+router.post("/evaluate", evaluate);
 
 router.get("/operations", getOperations);
 

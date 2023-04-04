@@ -6,7 +6,7 @@ export interface IPerformOperation {
   operationIndexInString: number;
 }
 
-export interface formattedOperation {
+export interface IFormattedOperation {
   operation: Operation;
   index: number;
 }

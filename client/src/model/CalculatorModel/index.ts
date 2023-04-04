@@ -40,7 +40,9 @@ class CalculatorModel implements ICalculatorModel, IObserver {
       expression: this.getExpression(),
     });
 
-    return fetch(url)
+    return fetch(url, {
+      method: "POST",
+    })
       .then((response) => response.json())
 
       .then(({ data, error }) => {

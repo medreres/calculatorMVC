@@ -1,7 +1,7 @@
 import RegularExpression from ".";
 import { parenthesesGroupRegex } from "../../config";
 import Operation, { Notation } from "../../utils/Operation";
-import { formattedOperation, IPerformOperation } from "./interfaces";
+import { IFormattedOperation, IPerformOperation } from "./interfaces";
 
 export function evaluateParenthesesGroup(this: RegularExpression, expression: string) {
   let group: RegExpMatchArray | null;
@@ -84,13 +84,13 @@ export function performOperation(
 export function getLeastPrecedentOperation(
   this: RegularExpression,
   expression: string
-): formattedOperation | undefined {
+): IFormattedOperation | undefined {
   const operationSymbols = this.parser.parseOperations(expression);
 
   if (operationSymbols.length === 0) return undefined;
 
   // set initial value
-  let leastPrecedentOperation: formattedOperation = {
+  let leastPrecedentOperation: IFormattedOperation = {
     operation: this.parser.getOperation(operationSymbols[0].operationSymbol) as Operation,
     index: 0,
   };

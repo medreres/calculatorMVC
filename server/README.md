@@ -16,9 +16,9 @@ Response object:
 }
 ```
 
-## GET evaluate
+## POST evaluate
 
-`GET /evaluate?expression=<string>` - evaluates math expression given via expression param
+`POST /evaluate?expression=<string>` - evaluates math expression given via expression param
 
 Response object:
 
@@ -30,7 +30,7 @@ Response object:
 
 ## GET constants
 
-`GET /constants` - evaluates math expression given via expression param
+`GET /constants` - returns a list of available constants
 
 Response object:
 

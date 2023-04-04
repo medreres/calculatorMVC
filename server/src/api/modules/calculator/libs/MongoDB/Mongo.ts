@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { DB_NAME } from "./config";
-import { Id, InitialParams } from "./interfaces";
+import { Id, Attributes } from "./interfaces";
 
 export default class MongoDB {
   protected static client: MongoClient | null = null;
@@ -52,18 +52,19 @@ export default class MongoDB {
     return this.getCollection().deleteMany(data);
   }
 
-  async findOne(data: Partial<InitialParams>) {
+  async findOne(data: Partial<Attributes>) {
     return await this.getCollection()
       .findOne(data)
       .then((res) => res);
   }
 
-  private async findMany(params: Partial<InitialParams>) {
+  private async findMany(params: Partial<Attributes>) {
     return this.getCollection().find(params).toArray();
   }
 
   static model<T>(name: string) {
     type IModel = T & Id;
+
     class Document {
       static collectionRef: MongoDB = new MongoDB(`${name}s`);
 
@@ -79,11 +80,11 @@ export default class MongoDB {
         return Document.collectionRef.findOne(params) as unknown as IModel | null;
       }
 
-      static async findMany(params: Partial<IModel>): Promise<T[]> {
-        return Document.collectionRef.findMany(params) as unknown as T[];
+      static async findMany(params: Partial<IModel>): Promise<IModel[]> {
+        return Document.collectionRef.findMany(params) as unknown as IModel[];
       }
 
-      static async deleteOne(params: Partial<IModel> & Partial<Id>) {
+      static async deleteOne(params: Partial<IModel>) {
         return Document.collectionRef.deleteOne(params);
       }
 

@@ -169,7 +169,7 @@ export function parseSimpleOperations(this: ExpressionParser, expression: string
   let result: ParsedOperation[] = [];
   const simpleOperationsRegex = getRegex.call(this);
 
-  let match: any;
+  let match: RegExpExecArray | null = null;
 
   while ((match = simpleOperationsRegex.exec(expression)) != null) {
     result.push({
