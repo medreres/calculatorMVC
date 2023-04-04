@@ -1,4 +1,4 @@
-import { MainOperations } from "../config";
+import { MainOperations } from "../../../shared/operations";
 
 export const formatSymbols = (operations: string[]) => {
   const operationSymbols = operations as string[];

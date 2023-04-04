@@ -1,21 +1,10 @@
+import { MainOperations } from "../../shared/operations";
+
 export enum Actions {
   CLEAR_INPUT = "AC",
   CALCULATE = "=",
   REMOVE_SYMBOL = "⌫",
   DOT = ".",
-}
-
-export enum MainOperations {
-  ADDITION = "+",
-  SUBTRACTION = "-",
-  MULTIPLICATION = "*",
-  DIVISION = "/",
-  MODULA = "%",
-}
-
-export enum AdditionalOperations {
-  LEFT_PARENTHESES = "(",
-  RIGHT_PARENTHESES = ")",
 }
 
 export const buttonValues = [

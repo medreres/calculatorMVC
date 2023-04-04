@@ -3,7 +3,7 @@ import ICalculatorModel from "../../model/interface";
 import ICalculatorView from "../../view/interface";
 import ICalculatorController from "../interface";
 import { IObserver } from "../../shared/interfaces";
-import { initializeObservers } from "./services";
+import { initializeHistory, initializeObservers, initializeOperations } from "./services";
 
 class CalculatorController implements ICalculatorController, IObserver {
   model: ICalculatorModel;
@@ -13,7 +13,10 @@ class CalculatorController implements ICalculatorController, IObserver {
   constructor(model: ICalculatorModel, view: ICalculatorView) {
     this.model = model;
     this.view = view;
-    initializeObservers(this);
+
+    initializeObservers.call(this);
+    initializeHistory.call(this);
+    initializeOperations.call(this);
   }
 
   on(event: string, callback: Function): void {

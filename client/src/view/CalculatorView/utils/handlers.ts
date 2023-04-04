@@ -1,7 +1,18 @@
-import { Events } from "../../../shared/events";
-import { Actions } from "../config";
 import CalculatorView from "..";
-import { isInputValid, setInputValidity, toggleCalculateButton } from "./services";
+import { Events } from "../../../shared/events";
+import { IOperation } from "../../../shared/interfaces";
+import { Actions } from "../config";
+import {
+  addHistory,
+  cleanHistory,
+  createButton,
+  getButtonClasses,
+  getInnerHtml,
+  ICreateButton,
+  setInputValidity,
+} from "./elements";
+import { addOperationButton, setCalculateButtonDisabled } from "./elements/keys/services";
+import { formatSymbols } from "./formatting";
 
 export function btnClickHandler(this: CalculatorView, btnValue: string): () => void {
   let handler;
@@ -9,15 +20,12 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
   const clearInput = () => {
     this.setExpression("");
     this.notify(Events.VIEW_INPUT_CHANGED, "");
-    setInputValidity(true);
-    toggleCalculateButton(true);
+    setCalculateButtonDisabled(true);
   };
 
   switch (btnValue) {
     case Actions.CALCULATE:
-      handler = () => {
-        this.notify(Events.VIEW_CALCULATE);
-      };
+      handler = calculateHandler.bind(this);
       break;
 
     case Actions.CLEAR_INPUT:
@@ -40,9 +48,7 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
     default:
       handler = () => {
         const expression = `${this.getExpression()}${btnValue}`;
-        this.setExpression(expression);
-        setInputValidity(isInputValid(expression, this.availableOperators));
-        this.notify(Events.VIEW_INPUT_CHANGED, expression);
+        inputChangeHandler.call(this, expression);
       };
       break;
   }
@@ -52,17 +58,13 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
 
 export function expressionInputChangeHandler(this: CalculatorView) {
   let handler = (e: Event) => {
-    if ((e.target as HTMLInputElement).value.length === 0) {
-      this.notify(Events.VIEW_INPUT_CHANGED, "");
-      setInputValidity(true);
-      toggleCalculateButton(true);
+    const value = (e.target as HTMLInputElement).value;
+
+    if (value.length === 0) {
+      inputChangeHandler.call(this, value);
+      setCalculateButtonDisabled(true);
     } else {
-      const inputValue = (e?.target as HTMLInputElement).value;
-      // send request to model to check if expression is valid
-
-      setInputValidity(isInputValid(inputValue, this.availableOperators));
-
-      this.notify(Events.VIEW_INPUT_CHANGED, inputValue);
+      inputChangeHandler.call(this, value);
     }
   };
   return handler;
@@ -77,7 +79,81 @@ export function expressionInputSubmitHandler(this: CalculatorView) {
         return;
       }
 
-      this.notify(Events.VIEW_CALCULATE);
+      calculateHandler.call(this);
     }
   };
+}
+
+export function calculateHandler(this: CalculatorView) {
+  this.notify(Events.VIEW_CALCULATE);
+}
+
+export function inputChangeHandler(this: CalculatorView, value: string) {
+  this.notify(Events.VIEW_INPUT_CHANGED, value);
+  this.setExpression(value);
+}
+
+export function setResultHandler(this: CalculatorView, value: string) {
+  this.setExpression(value);
+
+  setCalculateButtonDisabled(true);
+}
+
+export function invalidInputHandler() {
+  setInputValidity(false);
+  setCalculateButtonDisabled(true);
+}
+
+export function validInputHandler() {
+  setInputValidity(true);
+  setCalculateButtonDisabled(false);
+}
+
+export function renderHistoryHandler(this: CalculatorView, history: IOperation[]) {
+  if (history.length === 0) {
+    return;
+  }
+
+  const onClick = expressionInputChangeHandler.call(this);
+
+  cleanHistory();
+
+  history.forEach((operation) => {
+    const { expression, result } = operation;
+
+    addHistory.call(this, {
+      expression,
+      result,
+      onClick,
+    });
+  });
+}
+
+export function renderOperationsHandler(this: CalculatorView, symbols: string[]) {
+  this.availableOperators = symbols;
+
+  const formattedSymbols = formatSymbols(symbols) as string[];
+  // save those operations
+
+  formattedSymbols.forEach((value) => {
+    const onClick = btnClickHandler.call(this, value);
+    const classList = getButtonClasses(value);
+    const innerHtml = getInnerHtml(value);
+    const params: ICreateButton = {
+      onClick,
+      classList,
+      value,
+      innerHtml,
+      disabled: value === Actions.CALCULATE ? true : false,
+    };
+    const button = createButton(params);
+    addOperationButton(button);
+  });
+}
+
+export function connectionFailedHandler() {
+  document.body.innerHTML =
+    `<div class="alert alert-danger" role="alert">
+              Server is not responding. Please try again later.
+            </div>` + document.body.innerHTML;
 }
