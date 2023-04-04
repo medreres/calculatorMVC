@@ -5,7 +5,6 @@ import { Errors, HISTORY_SIZE } from "../../../config";
 
 const calculator = new Calculator();
 
-// TODO sqrt doesn't work
 export const evaluate = (req: Request, res: Response) => {
   let expression = req.query.expression as string;
 

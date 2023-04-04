@@ -1,6 +1,5 @@
 import { MongoClient } from "mongodb";
 import { DB_NAME } from "./config";
-import { checkConnection } from "./services";
 import { Id, InitialParams } from "./interfaces";
 
 //TODO close connection method
@@ -32,14 +31,14 @@ export default class MongoDB {
 
   // TODO decorators could be used
   async insertOne(data: any) {
-    checkConnection.call(this);
+    // checkConnection.call(this);
 
     return this.getCollection().insertOne(data);
   }
 
   // TODO decorators could be used
   async insertMany(data: object[]) {
-    checkConnection.call(this);
+    // checkConnection.call(this);
 
     return this.getCollection().insertMany(data);
   }
@@ -55,17 +54,14 @@ export default class MongoDB {
   // TODO decorators could be used
 
   async findOne(data: Partial<InitialParams>) {
-    checkConnection.call(this);
+    // checkConnection.call(this);
 
     return await this.getCollection()
       .findOne(data)
       .then((res) => res);
   }
 
-  // TODO decorators could be used
   private async findMany(params: Partial<InitialParams>) {
-    checkConnection.call(this);
-
     return this.getCollection().find(params).toArray();
   }
 
