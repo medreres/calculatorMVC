@@ -64,7 +64,7 @@ export const isInputValid = (expression: string, operators?: string[]) => {
 
     const { LEFT_PARENTHESES, RIGHT_PARENTHESES } = AdditionalOperations;
     // initialize regex for future usage
-    validityRegex = new RegExp(`[^\\w\\s${LEFT_PARENTHESES}${RIGHT_PARENTHESES}${operatorsRegexRaw}]`);
+    validityRegex = new RegExp(`[^\\.\\w\\s${LEFT_PARENTHESES}${RIGHT_PARENTHESES}${operatorsRegexRaw}]`);
   }
 
   return !validityRegex.test(expression);

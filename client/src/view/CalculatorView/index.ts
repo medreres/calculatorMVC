@@ -12,7 +12,6 @@ import {
 } from "./utils/elements/keys/services";
 import "./styles.css";
 
-// TODO . is invalid
 class CalculatorView implements ICalculatorView, IObserver {
   private observer: Observer = Observer.getInstance();
   protected container: HTMLDivElement;

@@ -38,11 +38,8 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
 
     default:
       handler = () => {
-        // TODO could be better
         const expression = `${this.getExpression()}${btnValue}`;
-        this.setExpression(expression);
-        setInputValidity(isInputValid(expression, this.availableOperators));
-        this.notify(Events.VIEW_INPUT_CHANGED, expression);
+        inputChangeHandler.call(this, expression);
       };
       break;
   }
@@ -50,7 +47,6 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
   return handler;
 }
 
-// TODO could be better
 export function expressionInputChangeHandler(this: CalculatorView) {
   let handler = (e: Event) => {
     const value = (e.target as HTMLInputElement).value;
@@ -59,11 +55,8 @@ export function expressionInputChangeHandler(this: CalculatorView) {
       inputChangeHandler.call(this, value);
       setInputValidity(true);
       setCalculateButtonDisabled(true);
-      // this.notify(Events.VIEW_INPUT_CHANGED, "");
     } else {
-      const inputValue = (e?.target as HTMLInputElement).value;
-
-      inputChangeHandler.call(this, inputValue);
+      inputChangeHandler.call(this, value);
     }
   };
   return handler;
