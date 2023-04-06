@@ -75,7 +75,9 @@ export function expressionInputSubmitHandler(this: CalculatorView) {
     if (event.key === "Enter") {
       // if button is disabled do nothing
       const target = event.target as HTMLInputElement;
-      if (target.classList.contains("is-invalid") || target.value.length === 0) {
+      const calcBtn = document.querySelector(".equal-sign") as HTMLButtonElement;
+
+      if (calcBtn.disabled || target.value.length === 0) {
         return;
       }
 
@@ -85,6 +87,7 @@ export function expressionInputSubmitHandler(this: CalculatorView) {
 }
 
 export function calculateHandler(this: CalculatorView) {
+  setCalculateButtonDisabled(true);
   this.notify(Events.VIEW_CALCULATE);
 }
 

@@ -5,6 +5,8 @@ import { Errors, HISTORY_SIZE } from "../../../../config";
 
 const calculator = new Calculator();
 
+// TODO debounce or find a way to prevent from saving expression twice
+// TODO don't save single value expressions
 export const evaluate = (req: Request, res: Response) => {
   let expression = req.query.expression as string;
 
@@ -14,43 +16,50 @@ export const evaluate = (req: Request, res: Response) => {
   // trim all whitespace
   expression = expression.replaceAll(" ", "");
 
-  let result: number | undefined;
+  // find this expression in db, if exists - return result
+  Expression.findOne({ expression }).then((history) => {
+    if (history) {
+      return res.status(200).json({ data: history.result });
+    }
 
-  if (!calculator.isExpressionValid(expression)) {
-    return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
-  }
+    let result: number | undefined;
 
-  try {
-    result = calculator.evaluate(expression);
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
-  }
+    if (!calculator.isExpressionValid(expression)) {
+      return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
+    }
 
-  try {
-    Expression.findMany({}).then((r) => {
-      if (r.find((expr) => expr.expression === expression)) {
-        return;
-      }
+    try {
+      result = calculator.evaluate(expression);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
+    }
 
-      // if there exist expression, do not add another one
-      if (r.length >= HISTORY_SIZE) {
-        Expression.deleteOne({ expression: r[0]!.expression });
-      }
+    try {
+      Expression.findMany({}).then((r) => {
+        if (r.find((expr) => expr.expression === expression)) {
+          return;
+        }
 
-      const document = new Expression({
-        expression,
-        result: result as number,
-        timestamp: new Date(),
+        // if there exist expression, do not add another one
+        if (r.length >= HISTORY_SIZE) {
+          Expression.deleteOne({ expression: r[0]!.expression });
+        }
+
+        const document = new Expression({
+          expression,
+          result: result as number,
+          timestamp: new Date(),
+        });
+
+        document.save();
       });
+    } catch (error) {
+      console.log(error);
+    }
 
-      document.save();
-    });
-  } catch (error) {
-    console.log(error);
-  }
-
-  return res.status(200).json({ data: result });
+    return res.status(200).json({ data: result });
+  });
 };
 
 export const getOperations = (_req: Request, res: Response) => {
