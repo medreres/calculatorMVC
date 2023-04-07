@@ -12,3 +12,5 @@ const { LEFT_PARENTHESES, RIGHT_PARENTHESES } = AdditionalOperations;
 const { ADDITION, MULTIPLICATION, DIVISION, MODULA, SUBTRACTION } = MainOperations;
 const simpleValidityRegexRaw = `[^\\w\\s.${LEFT_PARENTHESES}${RIGHT_PARENTHESES}${ADDITION}${MULTIPLICATION}\\${DIVISION}${MODULA}${SUBTRACTION}]`;
 export const simpleValidityRegex = new RegExp(simpleValidityRegexRaw);
+
+// Others regex could be found at 'validation.ts'

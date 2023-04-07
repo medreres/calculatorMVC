@@ -6,7 +6,7 @@ import { Events } from "../../shared/events";
 import { removeSpaces } from "../../shared/utils";
 import { MainOperations } from "../../shared/operations";
 import { HISTORY_SIZE } from "../../config";
-import { isInputValid } from "./utils";
+import { containsOperations, isInputValid } from "./utils";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
@@ -65,9 +65,12 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     return true;
   }
 
-  // TODO validate if expressions contains operations
   calculate() {
-    this.notify(Events.MODEL_CALCULATE_REQUEST, this.expression);
+    if (containsOperations.call(this, this.expression)) {
+      this.notify(Events.MODEL_CALCULATE_REQUEST, this.expression);
+    } else {
+      this.notify(Events.MODEL_INVALID_INPUT);
+    }
   }
 
   //------ Observers

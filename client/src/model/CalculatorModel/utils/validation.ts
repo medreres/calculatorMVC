@@ -1,3 +1,4 @@
+import CalculatorModel from "..";
 import { AdditionalOperations } from "../../../shared/operations";
 import { simpleValidityRegex } from "./regex";
 
@@ -23,3 +24,18 @@ export const isInputValid = (expression: string, operators?: string[]): boolean 
 
   return !validityRegex.test(expression);
 };
+
+export function containsOperations(this: CalculatorModel, expression: string): boolean {
+  const regexRaw = this.operations
+    .map((operation) => {
+      if (operation.length > 1) {
+        return operation;
+      } else {
+        return `\\${operation}`;
+      }
+    })
+    .join("|");
+
+  const regex = new RegExp(regexRaw);
+  return regex.test(expression);
+}
