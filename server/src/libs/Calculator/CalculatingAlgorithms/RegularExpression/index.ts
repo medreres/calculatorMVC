@@ -32,13 +32,17 @@ export default class RegularExpression implements ICalculatingAlgorithm {
   }
 
   evaluate(expression: string): number {
+    if (!this.isExpressionValid(expression)) {
+      throw new Error("Invalid expression. No operators found");
+    }
+
     expression = this.parser.replaceConstants(expression);
 
     expression = expression.replaceAll(" ", "");
 
     const result = +calculate.call(this, expression);
 
-    if (isNaN(result)) throw new Error(`Invalid expression`);
+    if (isNaN(result)) throw new Error("Invalid expression");
 
     return result;
   }

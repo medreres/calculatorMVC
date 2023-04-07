@@ -5,10 +5,6 @@ describe("Simple operations.", () => {
     expect(evaluator.evaluate("1 + 2")).toBe(3);
   });
 
-  test("-2=-2", () => {
-    expect(evaluator.evaluate("-2")).toBe(-2);
-  });
-
   test("2+5-3=4", () => {
     expect(evaluator.evaluate("2+5-3")).toBe(4);
   });

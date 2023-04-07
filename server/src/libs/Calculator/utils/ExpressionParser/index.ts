@@ -105,6 +105,11 @@ export default class ExpressionParser {
       this.isValidityRegexUpdated = true;
     }
 
+    // if there no tokens, then expression is invalid
+    if (this.parseOperations(expression).length == 0) {
+      return false;
+    }
+
     return this.expressionValidityRegex.test(expression);
   }
 }

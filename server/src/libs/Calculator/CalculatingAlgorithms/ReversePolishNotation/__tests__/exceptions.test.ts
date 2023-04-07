@@ -50,9 +50,9 @@ describe("testing evaluating algorithm for exceptions", () => {
     });
 
     test("()", () => {
-      const result = evaluator.evaluate("()");
+      const foo = () => evaluator.evaluate("()");
 
-      expect(result).toEqual(0);
+      expect(foo).toThrowError();
     });
 
     test("lg ( 1 + 2", () => {

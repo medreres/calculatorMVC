@@ -4,6 +4,8 @@ import express from "express";
 import { calculatorRoutes } from "./api/modules/calculator/router";
 import MongoDB from "./libs/MongoDB/Mongo";
 
+//TODO cache should not be cleared
+//TODO history implementation
 const app = express();
 app.use(cors({ origin: "*" }));
 dotenv.config();

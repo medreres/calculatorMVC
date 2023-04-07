@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { DB_NAME } from "./config";
-import { Id, Attributes, Or } from "./interfaces";
+import { Attributes, Or } from "./interfaces";
 
 export default class MongoDB {
   protected static client: MongoClient | null = null;
@@ -44,7 +44,7 @@ export default class MongoDB {
     return this.getCollection().insertOne(data);
   }
 
-  private insertMany(data: object[]) {
+  private insertMany(data: any[]) {
     return this.getCollection().insertMany(data);
   }
 
@@ -60,12 +60,22 @@ export default class MongoDB {
     return this.getCollection().findOne(data);
   }
 
+  // TODO better
+  // TODO ommit somehow all the query properties like $limit
   private findMany(params: Partial<Attributes>) {
-    return this.getCollection().find(params).toArray();
+    // console.log(keyof QueryParams);
+
+    let result = this.getCollection().find(params);
+
+    // if (params.$limit) {
+    //   result = result.limit(params.$limit);
+    // }
+    return result.toArray();
   }
 
+  // TODO extends
   static model<T>(name: string) {
-    type IModel = T & Id & Or<T>;
+    type IModel = T & Attributes & Or<T>;
 
     class Document {
       static collectionRef: MongoDB = new MongoDB(`${name}s`);
@@ -83,7 +93,7 @@ export default class MongoDB {
       }
 
       static insertMany(data: T[]) {
-        return Document.collectionRef.insertMany(data as object[]);
+        return Document.collectionRef.insertMany(data as T[]);
       }
 
       static findOne(params: Partial<IModel>) {

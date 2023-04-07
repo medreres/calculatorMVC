@@ -37,6 +37,10 @@ export default class ReversePolishNotation implements ICalculatingAlgorithm {
   }
 
   evaluate(expression: string): number {
+    if (!this.isExpressionValid(expression)) {
+      throw new Error("Invalid expression. No operators found");
+    }
+
     expression = this.parser.replaceConstants(expression);
 
     const tokens = this.parser.getTokens(expression);
