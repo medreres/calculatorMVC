@@ -46,14 +46,20 @@ class CalculatorModel implements ICalculatorModel, IObserver {
   }
 
   addHistory(operation: IOperation): boolean {
-    if (this.operationsHistory.some((history) => history.expression === operation.expression)) {
+    const history = this.operationsHistory.find((history) => history.expression === operation.expression);
+
+    // if operation is present in history, then move it to the top
+    if (history) {
+      this.operationsHistory = [
+        operation,
+        ...this.operationsHistory.filter((history) => history.expression != operation.expression),
+      ];
       return false;
     }
 
     if (this.operationsHistory.length >= HISTORY_SIZE) {
       this.operationsHistory.shift();
     }
-
     this.operationsHistory.push(operation);
 
     return true;

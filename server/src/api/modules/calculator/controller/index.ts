@@ -1,13 +1,14 @@
 import Calculator from "../../../../libs/Calculator";
 import { Request, Response } from "express";
 import Expression from "../model";
-import { Errors } from "../../../../config";
+import { Errors, HISTORY_SIZE } from "../../../../config";
 
 const calculator = new Calculator();
 
 // TODo 1000000000000!
 // TODO handle infinity in algorithms
 // TODO event loop could possibly be blocked
+// TODO update of expressions is handled at db level
 export const evaluate = (req: Request, res: Response) => {
   let expression = req.body.expression as string;
 
@@ -21,6 +22,16 @@ export const evaluate = (req: Request, res: Response) => {
   //TODO if infinity result is send as null
   Expression.findOne({ expression }).then((history) => {
     if (history) {
+      Expression.updateOne(
+        {
+          _id: history._id,
+        },
+        {
+          $set: {
+            updatedAt: new Date(),
+          },
+        }
+      );
       return res.status(200).json({ data: history.result.toString() });
     }
 
@@ -39,8 +50,9 @@ export const evaluate = (req: Request, res: Response) => {
 
     const document = new Expression({
       expression,
-      result: result,
-      timestamp: new Date(),
+      result,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     document.save();
@@ -67,15 +79,22 @@ export const getConstants = (_req: Request, res: Response) => {
 //TODO LIMIT as default search params
 //TODO rename endpoint expressions with params like limit offset
 export const getLastExpressions = (_req: Request, res: Response) => {
+  // TODO exposed toArray method from mongoDB
   try {
-    Expression.findMany().then((result) => {
-      const dataSerialized = result.map((result) => ({
-        ...result,
-        result: result.result.toString(),
-      }));
+    Expression.findMany()
+      .sort({
+        updatedAt: -1,
+      })
+      .limit(HISTORY_SIZE)
+      .toArray()
+      .then((result) => {
+        const dataSerialized = result.map((result) => ({
+          ...result,
+          result: result.result.toString(),
+        }));
 
-      return res.status(200).json({ data: dataSerialized });
-    });
+        return res.status(200).json({ data: dataSerialized });
+      });
   } catch (error) {
     console.error(error);
     res.sendStatus(500).json({ error: Errors.NO_CONNECTION });

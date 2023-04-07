@@ -37,7 +37,7 @@ export function addHistory(this: CalculatorView, { expression, result, onClick }
 
   const btn = createHistoryButton({ expression, result, onClick });
 
-  historyContainer.insertBefore(btn, historyContainer.firstChild);
+  historyContainer.appendChild(btn);
 }
 
 export function getHistoryContainer() {

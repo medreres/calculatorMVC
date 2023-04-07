@@ -4,7 +4,8 @@ import MongoDB from "../../../../libs/MongoDB/MongoDB";
 type ExpressionAttributes = {
   expression: GenericInterface<string>;
   result: GenericInterface<number>;
-  timestamp: GenericInterface<Date>;
+  createdAt: GenericInterface<Date>;
+  updatedAt: GenericInterface<Date>;
 };
 
 const Expression = MongoDB.model<ExpressionAttributes>("Expression");

@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import { DB_NAME } from "./config";
-import { Attributes, Or } from "./interfaces";
+import { Attributes, Id, Or } from "./interfaces";
 
 export default class MongoDB {
   protected static client: MongoClient | null = null;
@@ -44,6 +44,11 @@ export default class MongoDB {
     return this.getCollection().insertOne(data);
   }
 
+  // TODO $set method
+  private updateOne(data: any, newData: any) {
+    return this.getCollection().updateOne(data, newData);
+  }
+
   private insertMany(data: any[]) {
     return this.getCollection().insertMany(data);
   }
@@ -62,10 +67,10 @@ export default class MongoDB {
 
   // TODO better
   // TODO ommit somehow all the query properties like $limit
-  private findMany(params : Partial<Attributes> = {}) {
+  private findMany(params: Partial<Attributes> = {}) {
     let result = this.getCollection().find(params);
 
-    return result.toArray();
+    return result;
   }
 
   // TODO extends
@@ -74,6 +79,7 @@ export default class MongoDB {
   //Do you really need type assertions here?
   //Please add more precise types instead of ‘object’
   //It would be better to name files files and classes inside the same
+  // TODO make craetead at and updatedAt as default params
   static model<T>(name: string) {
     type IModel = T & Attributes & Or<T>;
 
@@ -94,6 +100,11 @@ export default class MongoDB {
 
       static insertMany(data: T[]) {
         return Document.collectionRef.insertMany(data);
+      }
+
+      // TODo separate query params from standart parameters
+      static updateOne(data: Partial<T & Id>, replaceData: any) {
+        return Document.collectionRef.updateOne(data, replaceData);
       }
 
       static findOne(params: Partial<IModel>) {
