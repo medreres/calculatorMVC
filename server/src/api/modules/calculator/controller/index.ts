@@ -6,10 +6,6 @@ import { QUERY_LIMIT } from "../../../../libs/MongoDB/config";
 
 const calculator = new Calculator();
 
-// TODo 1000000000000!
-// TODO handle infinity in algorithms
-// TODO event loop could possibly be blocked by laaaarge computations
-// TODO? update of expressions is handled at db level?
 export const evaluate = (req: Request, res: Response) => {
   let expression = req.body.expression as string;
 

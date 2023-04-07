@@ -109,6 +109,11 @@ const operations: IOperation[] = [
     notation: Notation.POSTFIX,
     evaluate: (a: number) => {
       let acc = 1;
+
+      if (a > 1000) {
+        return Infinity;
+      }
+
       for (let i = 1; i <= a; i++) {
         acc *= i;
       }

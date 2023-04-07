@@ -125,7 +125,6 @@ export default class MongoDB {
         return newDocument;
       }
 
-      // TODO insert with default properties
       static insertOne(data: IModel) {
         return Document.collectionRef.insertOne(data);
       }
