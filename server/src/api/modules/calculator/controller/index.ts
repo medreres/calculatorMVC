@@ -2,13 +2,14 @@ import Calculator from "../../../../libs/Calculator";
 import { Request, Response } from "express";
 import Expression from "../model";
 import { Errors, HISTORY_SIZE } from "../../../../config";
+import { QUERY_LIMIT } from "../../../../libs/MongoDB/config";
 
 const calculator = new Calculator();
 
 // TODo 1000000000000!
 // TODO handle infinity in algorithms
-// TODO event loop could possibly be blocked
-// TODO update of expressions is handled at db level
+// TODO event loop could possibly be blocked by laaaarge computations
+// TODO? update of expressions is handled at db level?
 export const evaluate = (req: Request, res: Response) => {
   let expression = req.body.expression as string;
 
@@ -19,7 +20,6 @@ export const evaluate = (req: Request, res: Response) => {
   expression = expression.replaceAll(" ", "");
 
   // find this expression in db, if exists - return result
-  //TODO if infinity result is send as null
   Expression.findOne({ expression }).then((history) => {
     if (history) {
       Expression.updateOne(
@@ -32,6 +32,7 @@ export const evaluate = (req: Request, res: Response) => {
           },
         }
       );
+
       return res.status(200).json({ data: history.result.toString() });
     }
 
@@ -48,16 +49,11 @@ export const evaluate = (req: Request, res: Response) => {
       return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
     }
 
-    const document = new Expression({
+    // save to db
+    Expression.create({
       expression,
       result,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
-
-    document.save();
-
-    // TODO serialize method for Models
 
     return res.status(200).json({ data: result.toString() });
   });
@@ -76,25 +72,30 @@ export const getConstants = (_req: Request, res: Response) => {
   res.json({ data: constants });
 };
 
-//TODO LIMIT as default search params
-//TODO rename endpoint expressions with params like limit offset
-export const getLastExpressions = (_req: Request, res: Response) => {
-  // TODO exposed toArray method from mongoDB
-  try {
-    Expression.findMany()
-      .sort({
-        updatedAt: -1,
-      })
-      .limit(HISTORY_SIZE)
-      .toArray()
-      .then((result) => {
-        const dataSerialized = result.map((result) => ({
-          ...result,
-          result: result.result.toString(),
-        }));
+export const getLastExpressions = (req: Request, res: Response) => {
+  const { limit } = req.query;
 
-        return res.status(200).json({ data: dataSerialized });
-      });
+  if (limit && (+limit < 0 || +limit > QUERY_LIMIT)) {
+    return res.status(400).json({ error: Errors.INVALID_LIMIT });
+  }
+
+  try {
+    Expression.findMany(
+      {},
+      {
+        $sort: {
+          updatedAt: -1,
+        },
+        $limit: +(limit || HISTORY_SIZE),
+      }
+    ).then((result) => {
+      const dataSerialized = result.map((result) => ({
+        ...result,
+        result: result.result.toString(),
+      }));
+
+      return res.status(200).json({ data: dataSerialized });
+    });
   } catch (error) {
     console.error(error);
     res.sendStatus(500).json({ error: Errors.NO_CONNECTION });

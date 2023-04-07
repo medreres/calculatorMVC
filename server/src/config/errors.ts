@@ -5,4 +5,7 @@ export enum Errors {
   // calculator errors
   MISSING_EXPRESSION = "Please provide expression to calculate",
   INVALID_EXPRESSION = "Expression is not valid",
+
+  // validation errors
+  INVALID_LIMIT = "Please provide valid limit for expressions(1-50)",
 }

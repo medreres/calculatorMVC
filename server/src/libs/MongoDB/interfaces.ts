@@ -1,12 +1,15 @@
 import { ObjectId } from "mongodb";
+import { CREATED_AT, UPDATED_AT } from "./config";
 
-export type Id = {
-  _id: ObjectId;
+// default properties for abstract model
+export type DefaultProperties = {
+  _id?: ObjectId;
+
+  [CREATED_AT]: Date;
+  [UPDATED_AT]: Date;
 };
 
-// export type Types = number | string | Date;
-
-export type Attributes = Id;
+export type DefaultQueryProperties = Partial<DefaultProperties>;
 
 export type queryParams<T> = {
   $in?: T[];
@@ -20,3 +23,20 @@ export type Or<T> = {
 };
 
 export type GenericInterface<T> = T | queryParams<T>;
+
+export const LIMIT_ATTRIBUTE = "$limit";
+export const SORT_ATTRIBUTE = "$sort";
+export const SKIP_ATTRIBUTE = "$skip";
+export type AggregationAttributes<T> = {
+  [LIMIT_ATTRIBUTE]?: number;
+  [SORT_ATTRIBUTE]?: {
+    [Property in keyof T]?: 1 | -1;
+  };
+  [SKIP_ATTRIBUTE]?: number;
+};
+
+export type ReplaceAttributes<T> = {
+  $set: Partial<T>;
+};
+
+export type QueryAttributes<T> = Partial<T & DefaultProperties & Or<T>>;

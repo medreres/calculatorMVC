@@ -1,9 +1,12 @@
+import { HISTORY_SIZE } from "../../../config";
 import { IConstant, IOperation } from "../../../shared/interfaces";
 import { buildUrl } from "../../../utils/buildUrl";
 
 //TODO declare interface for environment variables
-export function fetchHistory(): Promise<IOperation[]> {
-  const url = buildUrl("/expressions", process.env.BASE_URL!);
+export function fetchHistory(limit?: number): Promise<IOperation[]> {
+  const url = buildUrl("/expressions", process.env.BASE_URL!, {
+    limit: (limit || HISTORY_SIZE).toString(),
+  });
 
   return fetch(url)
     .then((response) => response.json())

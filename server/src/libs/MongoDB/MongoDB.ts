@@ -1,6 +1,15 @@
 import { MongoClient } from "mongodb";
-import { DB_NAME } from "./config";
-import { Attributes, Id, Or } from "./interfaces";
+import { CREATED_AT, DB_NAME, QUERY_LIMIT, UPDATED_AT } from "./config";
+import {
+  AggregationAttributes,
+  DefaultProperties,
+  DefaultQueryProperties,
+  LIMIT_ATTRIBUTE,
+  QueryAttributes,
+  ReplaceAttributes,
+  SKIP_ATTRIBUTE,
+  SORT_ATTRIBUTE,
+} from "./interfaces";
 
 export default class MongoDB {
   protected static client: MongoClient | null = null;
@@ -40,53 +49,69 @@ export default class MongoDB {
     MongoDB.client.close();
   }
 
-  private insertOne(data: any) {
+  private insertOne(data: Partial<DefaultProperties>) {
     return this.getCollection().insertOne(data);
   }
 
-  // TODO $set method
-  private updateOne(data: any, newData: any) {
+  private updateOne(data: DefaultQueryProperties, newData: ReplaceAttributes<DefaultProperties>) {
     return this.getCollection().updateOne(data, newData);
   }
 
-  private insertMany(data: any[]) {
+  private insertMany(data: Partial<DefaultProperties>[]) {
     return this.getCollection().insertMany(data);
   }
 
-  private deleteOne(data: object) {
+  private deleteOne(data: Partial<DefaultProperties>) {
     return this.getCollection().deleteOne(data);
   }
 
-  private deleteMany(data: object) {
+  private deleteMany(data: Partial<DefaultProperties>) {
     return this.getCollection().deleteMany(data);
   }
 
-  private findOne(data: Partial<Attributes>) {
+  private findOne(data: Partial<DefaultProperties>) {
     return this.getCollection().findOne(data);
   }
 
-  // TODO better
-  // TODO ommit somehow all the query properties like $limit
-  private findMany(params: Partial<Attributes> = {}) {
+  private findMany(
+    params: Partial<DefaultProperties> = {},
+    aggregationAttributes?: AggregationAttributes<DefaultProperties>
+  ) {
     let result = this.getCollection().find(params);
 
-    return result;
+    if (aggregationAttributes) {
+      Object.keys(aggregationAttributes).forEach((key) => {
+        if (key === LIMIT_ATTRIBUTE) {
+          result = result.limit(aggregationAttributes[key]!);
+        } else if (key === SKIP_ATTRIBUTE) {
+          result = result.skip(aggregationAttributes[key]!);
+        } else if (key === SORT_ATTRIBUTE) {
+          result = result.sort(aggregationAttributes[key]!);
+        }
+      });
+    } else {
+      result.limit(QUERY_LIMIT);
+    }
+
+    return result.toArray();
   }
 
-  // TODO extends
-
-  // TODO Line 86: Use ‘extends’ to avoid ‘as’
-  //Do you really need type assertions here?
-  //Please add more precise types instead of ‘object’
-  //It would be better to name files files and classes inside the same
-  // TODO make craetead at and updatedAt as default params
+  // TODO how to avoid type assertions
   static model<T>(name: string) {
-    type IModel = T & Attributes & Or<T>;
+    // interface for property access
+    type IModel = T & DefaultProperties;
+    // interface for querying model
+    // type QueryParams = Partial<T & DefaultProperties & Or<T>>;
 
     class Document {
       static collectionRef: MongoDB = new MongoDB(`${name}s`);
+      [CREATED_AT]: Date;
+      [UPDATED_AT]: Date;
 
       constructor(params: T) {
+        this[CREATED_AT] = new Date();
+        this[UPDATED_AT] = new Date();
+
         Object.assign(this, params);
       }
 
@@ -94,32 +119,38 @@ export default class MongoDB {
         return Document.collectionRef.insertOne(this);
       }
 
-      static insertOne(data: T) {
+      static create(params: T): Document {
+        const newDocument = new Document(params);
+        newDocument.save();
+        return newDocument;
+      }
+
+      // TODO insert with default properties
+      static insertOne(data: IModel) {
         return Document.collectionRef.insertOne(data);
       }
 
-      static insertMany(data: T[]) {
+      static insertMany(data: IModel[]) {
         return Document.collectionRef.insertMany(data);
       }
 
-      // TODo separate query params from standart parameters
-      static updateOne(data: Partial<T & Id>, replaceData: any) {
+      static updateOne(data: QueryAttributes<IModel>, replaceData: ReplaceAttributes<IModel>) {
         return Document.collectionRef.updateOne(data, replaceData);
       }
 
-      static findOne(params: Partial<IModel>) {
+      static findOne(params: QueryAttributes<IModel>) {
         return Document.collectionRef.findOne(params) as Promise<IModel | null>;
       }
 
-      static findMany(params?: Partial<IModel>) {
-        return Document.collectionRef.findMany(params);
+      static findMany(params?: QueryAttributes<IModel>, aggregationAttributes?: AggregationAttributes<IModel>) {
+        return Document.collectionRef.findMany(params, aggregationAttributes) as Promise<IModel[]>;
       }
 
-      static deleteOne(params: Partial<IModel>) {
+      static deleteOne(params: QueryAttributes<IModel>) {
         return Document.collectionRef.deleteOne(params);
       }
 
-      static deleteMany(params: Partial<IModel>) {
+      static deleteMany(params: QueryAttributes<IModel>) {
         return Document.collectionRef.deleteMany(params);
       }
     }

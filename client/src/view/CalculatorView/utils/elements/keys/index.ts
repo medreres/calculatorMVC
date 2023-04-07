@@ -11,6 +11,10 @@ export const createButton = (params: ICreateButton) => {
 
   const { classList, disabled, innerHtml, onClick, value } = params;
 
+  // TODO temprorary, remove when calculator is able to deal with Inf
+  if (value?.includes("Infinity")) {
+    button.disabled = true;
+  }
   if (value != null) {
     button.value = value;
   }

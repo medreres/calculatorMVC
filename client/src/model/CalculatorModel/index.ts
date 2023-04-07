@@ -58,13 +58,14 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     }
 
     if (this.operationsHistory.length >= HISTORY_SIZE) {
-      this.operationsHistory.shift();
+      this.operationsHistory.pop();
     }
-    this.operationsHistory.push(operation);
+    this.operationsHistory.unshift(operation);
 
     return true;
   }
 
+  // TODO validate if expressions contains operations
   calculate() {
     this.notify(Events.MODEL_CALCULATE_REQUEST, this.expression);
   }
