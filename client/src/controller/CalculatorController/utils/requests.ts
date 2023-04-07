@@ -3,7 +3,7 @@ import { buildUrl } from "../../../utils/buildUrl";
 
 //TODO declare interface for environment variables
 export function fetchHistory(): Promise<IOperation[]> {
-  const url = buildUrl("/last-operations", process.env.BASE_URL!);
+  const url = buildUrl("/expressions", process.env.BASE_URL!);
 
   return fetch(url)
     .then((response) => response.json())

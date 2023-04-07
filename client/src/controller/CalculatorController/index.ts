@@ -3,7 +3,7 @@ import ICalculatorModel from "../../model/interface";
 import ICalculatorView from "../../view/interface";
 import ICalculatorController from "../interface";
 import { IObserver } from "../../shared/interfaces";
-import { initializeHistory, initializeObservers, initializeOperations } from "./services";
+import { initializeHistory, initializeObservers, initializeExpressions } from "./services";
 
 class CalculatorController implements ICalculatorController, IObserver {
   model: ICalculatorModel;
@@ -16,7 +16,7 @@ class CalculatorController implements ICalculatorController, IObserver {
 
     initializeObservers.call(this);
     initializeHistory.call(this);
-    initializeOperations.call(this);
+    initializeExpressions.call(this);
   }
 
   on(event: string, callback: Function): void {

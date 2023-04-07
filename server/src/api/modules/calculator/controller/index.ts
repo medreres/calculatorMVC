@@ -5,6 +5,9 @@ import { Errors } from "../../../../config";
 
 const calculator = new Calculator();
 
+// TODo 1000000000000!
+// TODO handle infinity in algorithms
+// TODO event loop could possibly be blocked
 export const evaluate = (req: Request, res: Response) => {
   let expression = req.body.expression as string;
 
@@ -15,9 +18,10 @@ export const evaluate = (req: Request, res: Response) => {
   expression = expression.replaceAll(" ", "");
 
   // find this expression in db, if exists - return result
+  //TODO if infinity result is send as null
   Expression.findOne({ expression }).then((history) => {
     if (history) {
-      return res.status(200).json({ data: history.result });
+      return res.status(200).json({ data: history.result.toString() });
     }
 
     let result: number;
@@ -41,7 +45,9 @@ export const evaluate = (req: Request, res: Response) => {
 
     document.save();
 
-    return res.status(200).json({ data: result });
+    // TODO serialize method for Models
+
+    return res.status(200).json({ data: result.toString() });
   });
 };
 
@@ -60,9 +66,16 @@ export const getConstants = (_req: Request, res: Response) => {
 
 //TODO LIMIT as default search params
 //TODO rename endpoint expressions with params like limit offset
-export const getLastOperations = (_req: Request, res: Response) => {
+export const getLastExpressions = (_req: Request, res: Response) => {
   try {
-    Expression.findMany().then((result) => res.status(200).json({ data: result }));
+    Expression.findMany().then((result) => {
+      const dataSerialized = result.map((result) => ({
+        ...result,
+        result: result.result.toString(),
+      }));
+
+      return res.status(200).json({ data: dataSerialized });
+    });
   } catch (error) {
     console.error(error);
     res.sendStatus(500).json({ error: Errors.NO_CONNECTION });

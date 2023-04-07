@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { evaluate, getOperations, getConstants, getLastOperations } from "../controller";
+import { evaluate, getOperations, getConstants, getLastExpressions } from "../controller";
 
 const router = Router();
 
@@ -9,6 +9,6 @@ router.get("/operations", getOperations);
 
 router.get("/constants", getConstants);
 
-router.get("/last-operations", getLastOperations);
+router.get("/expressions", getLastExpressions);
 
 export { router as calculatorRoutes };

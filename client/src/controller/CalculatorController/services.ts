@@ -30,7 +30,7 @@ export function initializeHistory(this: CalculatorController) {
     });
 }
 
-export function initializeOperations(this: CalculatorController) {
+export function initializeExpressions(this: CalculatorController) {
   fetchOperationsSymbols()
     .then((symbols) => {
       this.notify(Events.MODEL_OPERATIONS_FETCHED, symbols);
