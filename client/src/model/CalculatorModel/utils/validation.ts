@@ -2,7 +2,7 @@ import { AdditionalOperations } from "../../../shared/operations";
 import { simpleValidityRegex } from "./regex";
 
 let validityRegex: RegExp;
-export const isInputValid = (expression: string, operators?: string[]) => {
+export const isInputValid = (expression: string, operators?: string[]): boolean => {
   // in case operators are undefined yet
   if (!operators) {
     return !simpleValidityRegex.test(expression);

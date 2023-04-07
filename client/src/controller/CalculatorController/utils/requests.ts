@@ -25,12 +25,11 @@ export function fetchOperationsSymbols(): Promise<string[]> {
 }
 
 export function fetchResult(expression: string) {
-  const url = buildUrl("/evaluate", process.env.BASE_URL!, {
-    expression,
-  });
-
+  const url = buildUrl("/evaluate", process.env.BASE_URL!);
   return fetch(url, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ expression }),
   })
     .then((response) => response.json())
     .then(({ data, error }) => ({ data, error }));

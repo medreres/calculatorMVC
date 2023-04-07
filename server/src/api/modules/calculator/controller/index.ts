@@ -6,7 +6,7 @@ import { Errors } from "../../../../config";
 const calculator = new Calculator();
 
 export const evaluate = (req: Request, res: Response) => {
-  let expression = req.query.expression as string;
+  let expression = req.body.expression as string;
 
   if (!expression) {
     return res.status(400).json({ error: Errors.MISSING_EXPRESSION });
@@ -20,7 +20,7 @@ export const evaluate = (req: Request, res: Response) => {
       return res.status(200).json({ data: history.result });
     }
 
-    let result: number | undefined;
+    let result: number;
 
     if (!calculator.isExpressionValid(expression)) {
       return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
@@ -29,36 +29,13 @@ export const evaluate = (req: Request, res: Response) => {
     try {
       result = calculator.evaluate(expression);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
     }
 
-    // try {
-    //   Expression.findMany({}).then((r) => {
-    //     if (r.find((expr) => expr.expression === expression)) {
-    //       return;
-    //     }
-
-    //     // if there exist expression, do not add another one
-    //     if (r.length >= HISTORY_SIZE) {
-    //       Expression.deleteOne({ expression: r[0]!.expression });
-    //     }
-
-    //     const document = new Expression({
-    //       expression,
-    //       result: result as number,
-    //       timestamp: new Date(),
-    //     });
-
-    //     document.save();
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
     const document = new Expression({
       expression,
-      result: result as number,
+      result: result,
       timestamp: new Date(),
     });
 
@@ -81,12 +58,13 @@ export const getConstants = (_req: Request, res: Response) => {
   res.json({ data: constants });
 };
 
-// LIMIT as default search params
+//TODO LIMIT as default search params
+//TODO rename endpoint expressions with params like limit offset
 export const getLastOperations = (_req: Request, res: Response) => {
   try {
-    Expression.findMany({ }).then((result) => res.status(200).json({ data: result }));
+    Expression.findMany().then((result) => res.status(200).json({ data: result }));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.sendStatus(500).json({ error: Errors.NO_CONNECTION });
   }
 };

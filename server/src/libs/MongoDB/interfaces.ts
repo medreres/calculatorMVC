@@ -4,7 +4,7 @@ export type Id = {
   _id: ObjectId;
 };
 
-export type Types = number | string | Date;
+// export type Types = number | string | Date;
 
 export type Attributes = Id;
 

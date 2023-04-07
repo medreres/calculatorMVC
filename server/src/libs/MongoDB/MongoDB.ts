@@ -62,18 +62,18 @@ export default class MongoDB {
 
   // TODO better
   // TODO ommit somehow all the query properties like $limit
-  private findMany(params: Partial<Attributes>) {
-    // console.log(keyof QueryParams);
-
+  private findMany(params : Partial<Attributes> = {}) {
     let result = this.getCollection().find(params);
 
-    // if (params.$limit) {
-    //   result = result.limit(params.$limit);
-    // }
     return result.toArray();
   }
 
   // TODO extends
+
+  // TODO Line 86: Use ‘extends’ to avoid ‘as’
+  //Do you really need type assertions here?
+  //Please add more precise types instead of ‘object’
+  //It would be better to name files files and classes inside the same
   static model<T>(name: string) {
     type IModel = T & Attributes & Or<T>;
 
@@ -89,19 +89,19 @@ export default class MongoDB {
       }
 
       static insertOne(data: T) {
-        return Document.collectionRef.insertOne(data) as Promise<T>;
+        return Document.collectionRef.insertOne(data);
       }
 
       static insertMany(data: T[]) {
-        return Document.collectionRef.insertMany(data as T[]);
+        return Document.collectionRef.insertMany(data);
       }
 
       static findOne(params: Partial<IModel>) {
         return Document.collectionRef.findOne(params) as Promise<IModel | null>;
       }
 
-      static findMany(params: Partial<IModel>) {
-        return Document.collectionRef.findMany(params) as Promise<IModel[]>;
+      static findMany(params?: Partial<IModel>) {
+        return Document.collectionRef.findMany(params);
       }
 
       static deleteOne(params: Partial<IModel>) {

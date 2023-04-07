@@ -2,11 +2,12 @@ import dotenv from "dotenv";
 import cors from "cors";
 import express from "express";
 import { calculatorRoutes } from "./api/modules/calculator/router";
-import MongoDB from "./libs/MongoDB/Mongo";
+import MongoDB from "./libs/MongoDB/MongoDB";
 
 //TODO cache should not be cleared
 //TODO history implementation
 const app = express();
+app.use(express.json()); // to support JSON-encoded bodies
 app.use(cors({ origin: "*" }));
 dotenv.config();
 
