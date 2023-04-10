@@ -19,7 +19,9 @@ You may need to create .env file, example of which is stored in `.env.example`
 
 ## Running client
 
-Go to `client` directory and run
+Go to `client/config` and declare `BASE_URL` variable with port on which server is running,
+
+then, in `client` directory run
 
 ```
 npm i && npm run dev
