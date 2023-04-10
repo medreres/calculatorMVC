@@ -1,30 +1,36 @@
 # Description:
 
-REST API for calculating math expression. Support two ways of evaluating expressions
+REST API for calculating math expression. Support two ways of evaluating expressions.
 
 # Endpoints
 
-## GET getOperations
+## GET operations
 
-`GET /getOperations` - returns a list of available operations
+`GET /operations` - returns a list of available operations
 
 Response object:
 
 ```ts
 {
-  operations: ["+", "-"];
+  data: ["+", "-"];
 }
 ```
 
 ## POST evaluate
 
-`POST /evaluate?expression=<string>` - evaluates math expression given via expression param
+`POST /evaluate` - evaluates math expression given via expression param
+
+```ts
+body: {
+    expression=<string>
+}
+```
 
 Response object:
 
 ```ts
 {
-    result: <number>
+    data: <number>
 }
 ```
 
@@ -36,15 +42,36 @@ Response object:
 
 ```ts
 {
-    "constants": [
-        {
-            "key": "PI",
-            "value": 3.141592653589793
-        }
-    ]
+  data: [
+    {
+      key: "PI",
+      value: 3.141592653589793,
+    },
+  ];
+}
+```
+
+## GET expressions
+
+`GET /expressions?limit=<number>` - returns a list of available operations with optional limit,
+that specifies max number of expressions to be returned
+
+Response object:
+
+```ts
+{
+  data: [
+    {
+      _id: "6433c20a9db5dd90e7a95bad",
+      createdAt: "2023-04-10T08:00:10.242Z",
+      updatedAt: "2023-04-10T08:00:10.242Z",
+      expression: "1262-123",
+      result: "1139",
+    },
+  ];
 }
 ```
 
 # Config
 
-You may want to change algorithm used for evaluating, to do so go to `./src/lib/Calculator/config/algorithm.config.ts` and chose one of available algorithms in `CalculatingAlgorithms` object.
+You may want to change algorithm used for evaluating, to do so go to `./src/libs/Calculator/config/algorithm.ts` and chose one of available algorithms in `CalculatingAlgorithms` object.
