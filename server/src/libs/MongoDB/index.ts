@@ -1,15 +1,18 @@
 import { MongoClient } from "mongodb";
-import { CREATED_AT, DB_NAME, QUERY_LIMIT, UPDATED_AT } from "./config";
+import { DB_NAME, QUERY_LIMIT, CREATED_AT, UPDATED_AT, ID } from "./config";
 import {
-  AggregationAttributes,
   DefaultProperties,
-  DefaultQueryProperties,
-  LIMIT_ATTRIBUTE,
-  QueryAttributes,
   ReplaceAttributes,
+  AggregationAttributes,
+  LIMIT_ATTRIBUTE,
   SKIP_ATTRIBUTE,
   SORT_ATTRIBUTE,
+  QueryAttributes,
+  DefaultPropertiesWithoutId,
 } from "./interfaces";
+
+export * from "./interfaces";
+export * from "./config";
 
 export default class MongoDB {
   protected static client: MongoClient | null = null;
@@ -49,19 +52,19 @@ export default class MongoDB {
     MongoDB.client.close();
   }
 
-  private insertOne(data: Partial<DefaultProperties>) {
+  private insertOne(data: Partial<DefaultPropertiesWithoutId>) {
     return this.getCollection().insertOne(data);
   }
 
-  private updateOne(data: DefaultQueryProperties, newData: ReplaceAttributes<DefaultProperties>) {
+  private updateOne(data: Partial<DefaultProperties>, newData: ReplaceAttributes<DefaultPropertiesWithoutId>) {
     return this.getCollection().updateOne(data, newData);
   }
 
-  private insertMany(data: Partial<DefaultProperties>[]) {
+  private insertMany(data: Partial<DefaultPropertiesWithoutId>[]) {
     return this.getCollection().insertMany(data);
   }
 
-  private deleteOne(data: Partial<DefaultProperties>) {
+  private deleteOne(data: Partial<DefaultPropertiesWithoutId>) {
     return this.getCollection().deleteOne(data);
   }
 
@@ -80,31 +83,35 @@ export default class MongoDB {
     let result = this.getCollection().find(params);
 
     if (aggregationAttributes) {
-      Object.keys(aggregationAttributes).forEach((key) => {
-        if (key === LIMIT_ATTRIBUTE) {
-          result = result.limit(aggregationAttributes[key]!);
-        } else if (key === SKIP_ATTRIBUTE) {
-          result = result.skip(aggregationAttributes[key]!);
-        } else if (key === SORT_ATTRIBUTE) {
-          result = result.sort(aggregationAttributes[key]!);
-        }
-      });
-    } else {
+      if (LIMIT_ATTRIBUTE in aggregationAttributes) {
+        result = result.limit(aggregationAttributes[LIMIT_ATTRIBUTE]!);
+      }
+
+      if (SKIP_ATTRIBUTE in aggregationAttributes) {
+        result = result.skip(aggregationAttributes[SKIP_ATTRIBUTE]!);
+      }
+
+      if (SORT_ATTRIBUTE in aggregationAttributes) {
+        result = result.sort(aggregationAttributes[SORT_ATTRIBUTE]!);
+      }
+    }
+
+    // if query limit has not been set, set to default
+    if (!aggregationAttributes || !(LIMIT_ATTRIBUTE in aggregationAttributes)) {
       result.limit(QUERY_LIMIT);
     }
 
     return result.toArray();
   }
 
-  // TODO how to avoid type assertions
   static model<T>(name: string) {
-    // interface for property access
-    type IModel = T & DefaultProperties;
-    // interface for querying model
-    // type QueryParams = Partial<T & DefaultProperties & Or<T>>;
+    // interfaces for property access
+    type IModelWithId = DefaultProperties & T;
+    type IModelWithoutId = T & Omit<DefaultProperties, typeof ID>;
 
     class Document {
       static collectionRef: MongoDB = new MongoDB(`${name}s`);
+      // default fields createdAt and updatedAt
       [CREATED_AT]: Date;
       [UPDATED_AT]: Date;
 
@@ -119,37 +126,40 @@ export default class MongoDB {
         return Document.collectionRef.insertOne(this);
       }
 
-      static create(params: T): Document {
+      static create(params: IModelWithoutId) {
         const newDocument = new Document(params);
         newDocument.save();
         return newDocument;
       }
 
-      static insertOne(data: IModel) {
+      static insertOne(data: IModelWithoutId) {
         return Document.collectionRef.insertOne(data);
       }
 
-      static insertMany(data: IModel[]) {
+      static insertMany(data: IModelWithoutId[]) {
         return Document.collectionRef.insertMany(data);
       }
 
-      static updateOne(data: QueryAttributes<IModel>, replaceData: ReplaceAttributes<IModel>) {
+      static updateOne(data: QueryAttributes<IModelWithId>, replaceData: ReplaceAttributes<IModelWithoutId>) {
         return Document.collectionRef.updateOne(data, replaceData);
       }
 
-      static findOne(params: QueryAttributes<IModel>) {
-        return Document.collectionRef.findOne(params) as Promise<IModel | null>;
+      static findOne(params: QueryAttributes<IModelWithId>) {
+        return Document.collectionRef.findOne(params);
       }
 
-      static findMany(params?: QueryAttributes<IModel>, aggregationAttributes?: AggregationAttributes<IModel>) {
-        return Document.collectionRef.findMany(params, aggregationAttributes) as Promise<IModel[]>;
+      static findMany(
+        params?: QueryAttributes<IModelWithId>,
+        aggregationAttributes?: AggregationAttributes<IModelWithId>
+      ) {
+        return Document.collectionRef.findMany(params, aggregationAttributes);
       }
 
-      static deleteOne(params: QueryAttributes<IModel>) {
+      static deleteOne(params: QueryAttributes<IModelWithId>) {
         return Document.collectionRef.deleteOne(params);
       }
 
-      static deleteMany(params: QueryAttributes<IModel>) {
+      static deleteMany(params: QueryAttributes<IModelWithId>) {
         return Document.collectionRef.deleteMany(params);
       }
     }

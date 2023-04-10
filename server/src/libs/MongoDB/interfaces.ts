@@ -1,15 +1,15 @@
 import { ObjectId } from "mongodb";
-import { CREATED_AT, UPDATED_AT } from "./config";
+import { CREATED_AT, ID, UPDATED_AT } from "./config";
 
 // default properties for abstract model
 export type DefaultProperties = {
-  _id?: ObjectId;
+  [ID]: ObjectId;
 
   [CREATED_AT]: Date;
   [UPDATED_AT]: Date;
 };
 
-export type DefaultQueryProperties = Partial<DefaultProperties>;
+export type DefaultPropertiesWithoutId = Omit<DefaultProperties, typeof ID>;
 
 export type QueryParams<T> = {
   $in?: T[];
@@ -17,14 +17,15 @@ export type QueryParams<T> = {
   $lt?: T;
 };
 
+// interface for declaring schema for model
+export type GenericInterface<T> = T | QueryParams<T>;
+
 // allows to search using logical OR statement
 export type Or<T> = {
   $or?: Partial<GenericInterface<T>>[];
 };
 
-// interface for declaring schema for model
-export type GenericInterface<T> = T | QueryParams<T>;
-
+// properties for aggregation
 export const LIMIT_ATTRIBUTE = "$limit";
 export const SORT_ATTRIBUTE = "$sort";
 export const SKIP_ATTRIBUTE = "$skip";
@@ -34,6 +35,7 @@ export const SKIP_ATTRIBUTE = "$skip";
 export type AggregationAttributes<T> = {
   [LIMIT_ATTRIBUTE]?: number;
 
+  // -1|1 ensures that sorting occurs either ascending or descending
   [SORT_ATTRIBUTE]?: { [Property in keyof T]?: 1 | -1 };
 
   [SKIP_ATTRIBUTE]?: number;

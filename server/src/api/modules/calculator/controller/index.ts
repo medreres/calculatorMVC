@@ -2,7 +2,7 @@ import Calculator from "../../../../libs/Calculator";
 import { Request, Response } from "express";
 import Expression from "../model";
 import { Errors, HISTORY_SIZE } from "../../../../config";
-import { QUERY_LIMIT } from "../../../../libs/MongoDB/config";
+import { QUERY_LIMIT } from "../../../../libs/MongoDB";
 
 const calculator = new Calculator();
 
@@ -44,12 +44,6 @@ export const evaluate = (req: Request, res: Response) => {
       console.error(error);
       return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
     }
-
-    // save to db
-    Expression.create({
-      expression,
-      result,
-    });
 
     return res.status(200).json({ data: result.toString() });
   });
