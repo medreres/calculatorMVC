@@ -3,6 +3,10 @@ import { evaluatingAlgorithm } from "./config";
 import { Constant } from "./interfaces";
 import Operation from "./utils/Operation";
 
+/**
+ * @description Class that allows to add custom defined operations and evaluates expressions
+ * @throws {Error} Can't operate on abstract values as Infinity
+ */
 export default class Calculator {
   private calculatingAlgorithm: ICalculatingAlgorithm;
 

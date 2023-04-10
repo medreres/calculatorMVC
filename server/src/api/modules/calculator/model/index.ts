@@ -7,9 +7,4 @@ type ExpressionAttributes = {
 
 const Expression = MongoDB.model<ExpressionAttributes>("Expression");
 
-// new Expression({
-//   expression: "1",
-//   result: 1,
-// }).
-
 export default Expression;

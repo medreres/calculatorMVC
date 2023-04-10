@@ -45,6 +45,12 @@ export const evaluate = (req: Request, res: Response) => {
       return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
     }
 
+    // save expression to db
+    Expression.create({
+      expression,
+      result,
+    });
+
     return res.status(200).json({ data: result.toString() });
   });
 };

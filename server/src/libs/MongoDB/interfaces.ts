@@ -5,8 +5,8 @@ import { CREATED_AT, ID, UPDATED_AT } from "./config";
 export type DefaultProperties = {
   [ID]: ObjectId;
 
-  [CREATED_AT]: Date;
-  [UPDATED_AT]: Date;
+  [CREATED_AT]?: Date;
+  [UPDATED_AT]?: Date;
 };
 
 export type DefaultPropertiesWithoutId = Omit<DefaultProperties, typeof ID>;

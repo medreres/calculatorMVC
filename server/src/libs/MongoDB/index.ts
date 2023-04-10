@@ -110,7 +110,7 @@ export default class MongoDB {
     type IModelWithoutId = T & Omit<DefaultProperties, typeof ID>;
 
     class Document {
-      static collectionRef: MongoDB = new MongoDB(`${name}s`);
+      private static collectionRef: MongoDB = new MongoDB(`${name}s`);
       // default fields createdAt and updatedAt
       [CREATED_AT]: Date;
       [UPDATED_AT]: Date;
