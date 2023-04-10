@@ -10,8 +10,8 @@ import {
   getInnerHtml,
   ICreateButton,
   setInputValidity,
-} from "./elements";
-import { addOperationButton, setCalculateButtonDisabled } from "./elements/keys/services";
+} from "../elements";
+import { addOperationButton, setCalculateButtonDisabled } from "../elements/keys/services";
 import { formatSymbols } from "./formatting";
 
 export function btnClickHandler(this: CalculatorView, btnValue: string): () => void {

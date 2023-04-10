@@ -1,8 +1,8 @@
-import CalculatorView from "../..";
-import { Actions } from "../../config";
-import history from "../../../../public/history.svg";
+import CalculatorView from "..";
+import { Actions } from "../config";
+import history from "../../../public/history.svg"; //? better to move this icon here?
 import { createButton } from "./keys";
-import { removeSpaces } from "../../../../shared/utils";
+import { removeSpaces } from "../../../shared/utils";
 
 export function createHistoryDropdown() {
   const svg = document.createElement("div");

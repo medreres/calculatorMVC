@@ -1,6 +1,5 @@
 import { HISTORY_SIZE } from "../../../config";
 import { IConstant, IOperation } from "../../../shared/interfaces";
-import { buildUrl } from "../../../utils/buildUrl";
 
 export function fetchHistory(limit?: number): Promise<IOperation[]> {
   const url = buildUrl("/expressions", process.env.BASE_URL, {
@@ -35,4 +34,20 @@ export function fetchResult(expression: string) {
   })
     .then((response) => response.json())
     .then(({ data, error }) => ({ data, error }));
+}
+
+interface IParams {
+  [key: string]: string;
+}
+export function buildUrl(url: string, base: string, params?: IParams): URL {
+  const buildUrl = new URL(url, base);
+  if (params)
+    Object.entries(params).forEach(([key, value]: [string, string | string[]]) => {
+      if (!value) return;
+
+      if (Array.isArray(value)) return buildUrl.searchParams.append(key, value.join(","));
+
+      buildUrl.searchParams.append(key, value.toString());
+    });
+  return buildUrl;
 }

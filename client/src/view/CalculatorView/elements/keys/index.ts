@@ -1,8 +1,8 @@
-import { MainOperations } from "../../../../../shared/operations";
-import { Actions } from "../../../config";
+import { MainOperations } from "../../../../shared/operations";
+import { Actions } from "../../config";
 import { ICreateButton } from "./interface";
 
-export * from "../../handlers";
+export * from "../../utils/handlers";
 export * from "./interface";
 export * from "./services";
 
