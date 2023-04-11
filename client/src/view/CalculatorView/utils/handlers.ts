@@ -155,8 +155,10 @@ export function renderOperationsHandler(this: CalculatorView, symbols: string[])
 }
 
 export function connectionFailedHandler() {
-  document.body.innerHTML =
-    `<div class="alert alert-danger" role="alert">
+  if (!document.body.querySelector(".alert")) {
+    document.body.innerHTML =
+      `<div class="alert alert-danger" role="alert">
               Server is not responding. Please try again later.
             </div>` + document.body.innerHTML;
+  }
 }
