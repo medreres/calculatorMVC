@@ -8,7 +8,7 @@ export function createHistoryDropdown() {
   const svg = document.createElement("div");
   svg.classList.add("history-icon", "dropdown");
   svg.innerHTML = `
-    <button class="btn text-white bg-dark pe-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <button id='history-dropdown' class="btn text-white bg-dark pe-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
       ${history}
     </button>
     

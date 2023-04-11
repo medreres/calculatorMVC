@@ -1,7 +1,7 @@
 import express from "express";
-import MongoDB from "../../../../libs/MongoDB";
-import Expression from "../model";
-import { calculatorRoutes } from "../router";
+import Expression from "../src/api/modules/calculator/model";
+import { calculatorRoutes } from "../src/api/modules/calculator/router";
+import MongoDB from "../src/libs/MongoDB";
 
 export async function initializeDb() {
   await MongoDB.connect("mongodb+srv://admin:admin@cluster0.kym1fnu.mongodb.net/?retryWrites=true&w=majority");

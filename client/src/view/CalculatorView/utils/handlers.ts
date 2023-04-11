@@ -162,3 +162,7 @@ export function connectionFailedHandler() {
             </div>` + document.body.innerHTML;
   }
 }
+
+export function renderHandler(this: CalculatorView) {
+  this.render();
+}

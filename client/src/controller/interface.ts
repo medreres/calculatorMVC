@@ -5,5 +5,5 @@ export default interface ICalculatorController {
   model: ICalculatorModel;
   view: ICalculatorView;
 
-  getView(): HTMLElement;
+  render(): void;
 }

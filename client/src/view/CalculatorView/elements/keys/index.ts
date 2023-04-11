@@ -68,19 +68,19 @@ export function getButtonClasses(btnValue: string) {
       break;
 
     case Actions.CALCULATE:
-      classList.push("calc-btn", "equal-sign", "operator", "btn", "btn-light");
+      classList.push("calc-btn", "equal-sign", "btn", "btn-light");
       break;
 
     case Actions.REMOVE_SYMBOL:
-      classList.push("calc-btn", "operator", "btn", "btn-info", "remove-btn");
+      classList.push("calc-btn", "btn", "btn-info", "remove-btn");
       break;
 
     case "0":
-      classList.push("calc-btn", "operator", "btn", "btn-info", "zero-btn");
+      classList.push("calc-btn", "btn", "btn-info", "zero-btn");
       break;
   }
 
-  if (classList.length === 0) classList.push("calc-btn", "operator", "btn", "btn-info");
+  if (classList.length === 0) classList.push("calc-btn", "btn", "btn-info");
 
   if (!isNaN(+btnValue)) classList.push("btn", "btn-light", "waves-effect");
 

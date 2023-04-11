@@ -4,6 +4,7 @@ import ICalculatorView from "../../view/interface";
 import ICalculatorController from "../interface";
 import { IObserver } from "../../shared/interfaces";
 import { initializeHistory, initializeObservers, initializeExpressions } from "./services";
+import { Events } from "../../shared";
 
 class CalculatorController implements ICalculatorController, IObserver {
   model: ICalculatorModel;
@@ -27,8 +28,8 @@ class CalculatorController implements ICalculatorController, IObserver {
     this.observer.notify(event, data);
   }
 
-  getView(): HTMLElement {
-    return this.view.getView();
+  render() {
+    this.observer.notify(Events.VIEW_RENDER);
   }
 }
 
