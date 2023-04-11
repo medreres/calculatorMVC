@@ -54,11 +54,11 @@ export const evaluate = (req: Request, res: Response) => {
     Expression.create({
       expression,
       result,
+    }).then(() => {
+      logger.info(`Result: ${result}`);
+
+      return res.status(200).json({ data: result.toString() });
     });
-
-    logger.info(`Result: ${result}`);
-
-    return res.status(200).json({ data: result.toString() });
   });
 };
 

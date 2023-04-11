@@ -130,8 +130,7 @@ export default class MongoDB {
 
       static create(params: IModelWithoutId) {
         const newDocument = new Document(params);
-        newDocument.save();
-        return newDocument;
+        return newDocument.save();
       }
 
       // static insertOne(data: IModelWithoutId) {
