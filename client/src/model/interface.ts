@@ -1,4 +1,4 @@
-import { IOperation } from "../shared/interfaces";
+import { IOperation } from "@/shared";
 
 export default interface ICalculatorModel {
   setExpression(expression: string): void;

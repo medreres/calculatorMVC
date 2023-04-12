@@ -1,4 +1,4 @@
-import { Events } from "../../shared/events";
+import { Events } from "@/shared";
 import CalculatorView from ".";
 import {
   connectionFailedHandler,

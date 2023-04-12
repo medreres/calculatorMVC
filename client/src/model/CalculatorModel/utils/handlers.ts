@@ -1,6 +1,5 @@
+import { IOperation, Events } from "@/shared";
 import CalculatorModel from "..";
-import { Events } from "../../../shared/events";
-import { IOperation } from "../../../shared/interfaces";
 
 export function modelCalculatedHandler(this: CalculatorModel, data: string) {
   const history: IOperation = {

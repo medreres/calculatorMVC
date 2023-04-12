@@ -1,8 +1,6 @@
+import { Events, IOperation } from "@/shared";
 import CalculatorController from ".";
-import { Events } from "../../shared/events";
-import { IOperation } from "../../shared/interfaces";
-import { calculateRequestHandler } from "./utils/handlers";
-import { fetchHistory, fetchOperationsSymbols } from "./utils/requests";
+import { calculateRequestHandler, fetchHistory, fetchOperationsSymbols } from "./utils";
 
 export function initializeObservers(this: CalculatorController) {
   this.on(Events.VIEW_INPUT_CHANGED, (inputValue: string) => this.notify(Events.MODEL_CHANGE_INPUT, inputValue));

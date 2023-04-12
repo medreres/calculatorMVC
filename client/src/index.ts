@@ -1,6 +1,6 @@
-import CalculatorController from "./controller/CalculatorController";
-import CalculatorModel from "./model/CalculatorModel";
-import CalculatorView from "./view/CalculatorView";
+import { CalculatorController } from "./controller";
+import { CalculatorModel } from "./model";
+import { CalculatorView } from "./view";
 
 const model = new CalculatorModel();
 const view = new CalculatorView();

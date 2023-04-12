@@ -1,5 +1,5 @@
-import ICalculatorModel from "../model/interface";
-import ICalculatorView from "../view/interface";
+import ICalculatorModel from "@/model/interface";
+import ICalculatorView from "@/view/interface";
 
 export default interface ICalculatorController {
   model: ICalculatorModel;

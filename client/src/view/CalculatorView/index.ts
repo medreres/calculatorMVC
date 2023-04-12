@@ -1,3 +1,6 @@
+import Observer from "@/lib/Observer";
+import { IObserver, Events } from "@/shared";
+import ICalculatorView from "../interface";
 import {
   createExpressionInput,
   expressionInputSubmitHandler,
@@ -6,10 +9,7 @@ import {
   createAdditionalButtons,
   createButtonsContainer,
   createScientificViewButton,
-} from "./utils";
-import Observer from "../../lib/Observer";
-import { IObserver, Events } from "../../shared";
-import ICalculatorView from "../interface";
+} from "./elements";
 import { initializeObservers } from "./services";
 import "./styles.css";
 

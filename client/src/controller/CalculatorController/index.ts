@@ -1,10 +1,9 @@
-import Observer from "../../lib/Observer";
-import ICalculatorModel from "../../model/interface";
-import ICalculatorView from "../../view/interface";
+import Observer from "@/lib/Observer";
+import ICalculatorModel from "@/model/interface";
+import { Events, IObserver } from "@/shared";
+import ICalculatorView from "@/view/interface";
 import ICalculatorController from "../interface";
-import { IObserver } from "../../shared/interfaces";
 import { initializeHistory, initializeObservers, initializeExpressions } from "./services";
-import { Events } from "../../shared";
 
 class CalculatorController implements ICalculatorController, IObserver {
   model: ICalculatorModel;

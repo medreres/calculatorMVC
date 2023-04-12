@@ -1,8 +1,8 @@
+import { CalculatorController } from "@/controller";
+import { CalculatorModel } from "@/model";
+import { Events } from "@/shared";
+import { CalculatorView } from "@/view";
 import * as requests from "../../src/controller/CalculatorController/utils/requests";
-import CalculatorController from "../../src/controller/CalculatorController";
-import CalculatorModel from "../../src/model/CalculatorModel";
-import CalculatorView from "../../src/view/CalculatorView";
-import { Events } from "../../src/shared";
 
 export const mockGetHistory = jest.spyOn(requests, "fetchHistory").mockImplementation(() => {
   return Promise.resolve([
@@ -18,7 +18,6 @@ export const mockGetOperations = jest.spyOn(requests, "fetchOperationsSymbols").
 });
 
 export const mockFetchResult = jest.spyOn(requests, "fetchResult").mockImplementation(() => {
-  console.log("mocking");
   return Promise.resolve({
     data: 10,
     error: undefined,

@@ -1,4 +1,4 @@
-import { MainOperations } from "../../shared/operations";
+import { MainOperations } from "@/shared";
 
 export enum Actions {
   CLEAR_INPUT = "AC",

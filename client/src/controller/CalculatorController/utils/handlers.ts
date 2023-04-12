@@ -1,5 +1,5 @@
+import { Events } from "@/shared";
 import CalculatorController from "..";
-import { Events } from "../../../shared/events";
 import { fetchResult } from "./requests";
 
 export function calculateRequestHandler(this: CalculatorController, value: string) {
