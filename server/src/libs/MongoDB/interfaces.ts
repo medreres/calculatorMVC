@@ -2,14 +2,14 @@ import { ObjectId } from "mongodb";
 import { CREATED_AT, ID, UPDATED_AT } from "./config";
 
 // default properties for abstract model
-export type DefaultProperties = {
+export type DefaultPropertiesWithId = {
   [ID]: ObjectId;
 
   [CREATED_AT]?: Date;
   [UPDATED_AT]?: Date;
 };
 
-export type DefaultPropertiesWithoutId = Omit<DefaultProperties, typeof ID>;
+export type DefaultPropertiesWithoutId = Omit<DefaultPropertiesWithId, typeof ID>;
 
 export type QueryParams<T> = {
   $in?: T[];
@@ -48,4 +48,4 @@ export type ReplaceAttributes<T> = {
 
 // interface for querying db
 // allows use of $or, $in, $gt and etc.
-export type QueryAttributes<T> = Partial<T & DefaultProperties & Or<T>>;
+export type QueryAttributes<T> = Partial<T & DefaultPropertiesWithId & Or<T>>;

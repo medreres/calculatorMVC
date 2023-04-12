@@ -4,4 +4,5 @@ export interface ICreateButton {
   classList?: string[];
   disabled?: boolean;
   innerHtml?: string;
+  id?: string;
 }

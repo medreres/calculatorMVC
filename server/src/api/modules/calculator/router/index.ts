@@ -16,7 +16,7 @@ router.get("/operations", getOperations);
 router.get("/constants", getConstants);
 
 /**
- * @description returns last operations from history
+ * @description returns last expressions from history
  * @param limit - sets the max number of operations to return
  *  */
 router.get("/expressions", getLastExpressions);

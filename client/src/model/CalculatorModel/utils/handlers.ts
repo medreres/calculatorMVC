@@ -6,7 +6,6 @@ export function modelCalculatedHandler(this: CalculatorModel, data: string) {
   const history: IOperation = {
     expression: this.getExpression(),
     result: data,
-    timestamp: new Date(),
   };
 
   this.notify(Events.MODEL_ADD_HISTORY, history);

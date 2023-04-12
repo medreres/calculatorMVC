@@ -9,4 +9,5 @@ export enum ViewEvents {
 
   VIEW_RENDER_OPERATIONS = "viewRenderOperations",
   VIEW_RENDER_HISTORY = "viewRenderHistory",
+  VIEW_RENDER = "viewRender",
 }

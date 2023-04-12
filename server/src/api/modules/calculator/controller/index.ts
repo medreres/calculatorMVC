@@ -3,13 +3,16 @@ import { Request, Response } from "express";
 import Expression from "../model";
 import { Errors, HISTORY_SIZE } from "../../../../config";
 import { QUERY_LIMIT } from "../../../../libs/MongoDB";
+import logger from "../../../../logger";
 
 const calculator = new Calculator();
 
 export const evaluate = (req: Request, res: Response) => {
   let expression = req.body.expression as string;
+  logger.info("Expression: " + expression);
 
   if (!expression) {
+    logger.error("Missing expression");
     return res.status(400).json({ error: Errors.MISSING_EXPRESSION });
   }
   // trim all whitespace
@@ -18,6 +21,7 @@ export const evaluate = (req: Request, res: Response) => {
   // find this expression in db, if exists - return result
   Expression.findOne({ expression }).then((history) => {
     if (history) {
+      logger.info("Fetched expression from db\n" + JSON.stringify(history));
       Expression.updateOne(
         {
           _id: history._id,
@@ -35,13 +39,14 @@ export const evaluate = (req: Request, res: Response) => {
     let result: number;
 
     if (!calculator.isExpressionValid(expression)) {
+      logger.error("Invalid expression" + expression);
       return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
     }
 
     try {
       result = calculator.evaluate(expression);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return res.status(400).json({ error: Errors.INVALID_EXPRESSION });
     }
 
@@ -49,9 +54,11 @@ export const evaluate = (req: Request, res: Response) => {
     Expression.create({
       expression,
       result,
-    });
+    }).then(() => {
+      logger.info(`Result: ${result}`);
 
-    return res.status(200).json({ data: result.toString() });
+      return res.status(200).json({ data: result.toString() });
+    });
   });
 };
 
@@ -93,7 +100,7 @@ export const getLastExpressions = (req: Request, res: Response) => {
       return res.status(200).json({ data: dataSerialized });
     });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     res.sendStatus(500).json({ error: Errors.NO_CONNECTION });
   }
 };

@@ -1,15 +1,15 @@
-import { MainOperations } from "../../../../../shared/operations";
-import { Actions } from "../../../config";
+import { MainOperations } from "../../../../shared/operations";
+import { Actions } from "../../config";
 import { ICreateButton } from "./interface";
 
-export * from "../../handlers";
+export * from "../../utils/handlers";
 export * from "./interface";
 export * from "./services";
 
 export const createButton = (params: ICreateButton) => {
   const button = document.createElement("button");
 
-  const { classList, disabled, innerHtml, onClick, value } = params;
+  const { classList, disabled, innerHtml, onClick, value, id } = params;
 
   // calculator can't deal with infinity, so disable it
   if (value?.includes(Infinity.toString()) || innerHtml?.includes(Infinity.toString())) {
@@ -33,6 +33,10 @@ export const createButton = (params: ICreateButton) => {
 
   if (disabled) {
     button.disabled = disabled;
+  }
+
+  if (id) {
+    button.id = id;
   }
 
   return button;
@@ -68,32 +72,27 @@ export function getButtonClasses(btnValue: string) {
       break;
 
     case Actions.CALCULATE:
-      classList.push("calc-btn", "equal-sign", "operator", "btn", "btn-light");
+      classList.push("calc-btn", "equal-sign", "btn", "btn-light");
       break;
 
     case Actions.REMOVE_SYMBOL:
-      classList.push("calc-btn", "operator", "btn", "btn-info", "remove-btn");
+      classList.push("calc-btn", "btn", "btn-info", "remove-btn");
       break;
 
     case "0":
-      classList.push("calc-btn", "operator", "btn", "btn-info", "zero-btn");
+      classList.push("calc-btn", "btn", "btn-info", "zero-btn");
       break;
   }
 
-  if (classList.length === 0) classList.push("calc-btn", "operator", "btn", "btn-info");
+  if (classList.length === 0) classList.push("calc-btn", "btn", "btn-info");
 
   if (!isNaN(+btnValue)) classList.push("btn", "btn-light", "waves-effect");
 
   return classList;
 }
 
-export function createToggleScientificViewButton() {
-  const scientificView = document.createElement("button");
-  scientificView.innerHTML = "Scientific";
-  scientificView.style.marginLeft = "auto";
-  scientificView.classList.add("btn", "btn-info");
-  scientificView.style.marginRight = "auto";
-  scientificView.onclick = (e) => {
+export function createScientificViewButton() {
+  const onClick = (e: Event) => {
     const container = document.querySelector("#operations-keys") as HTMLDivElement;
     const currentStyle = container.style.display;
     if (currentStyle === "none") {
@@ -104,6 +103,13 @@ export function createToggleScientificViewButton() {
       (e.target as HTMLButtonElement).innerHTML = "Scientific";
     }
   };
+
+  const scientificView = createButton({
+    onClick,
+    classList: ["btn", "btn-info", "mx-auto"],
+    innerHtml: "Scientific",
+    id: "scientificView",
+  });
 
   return scientificView;
 }

@@ -10,8 +10,8 @@ import {
   getInnerHtml,
   ICreateButton,
   setInputValidity,
-} from "./elements";
-import { addOperationButton, setCalculateButtonDisabled } from "./elements/keys/services";
+} from "../elements";
+import { addOperationButton, setCalculateButtonDisabled } from "../elements/keys/services";
 import { formatSymbols } from "./formatting";
 
 export function btnClickHandler(this: CalculatorView, btnValue: string): () => void {
@@ -155,8 +155,14 @@ export function renderOperationsHandler(this: CalculatorView, symbols: string[])
 }
 
 export function connectionFailedHandler() {
-  document.body.innerHTML =
-    `<div class="alert alert-danger" role="alert">
+  if (!document.body.querySelector(".alert")) {
+    document.body.innerHTML =
+      `<div class="alert alert-danger" role="alert">
               Server is not responding. Please try again later.
             </div>` + document.body.innerHTML;
+  }
+}
+
+export function renderHandler(this: CalculatorView) {
+  this.render();
 }

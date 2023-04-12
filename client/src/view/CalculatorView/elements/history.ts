@@ -1,14 +1,14 @@
-import CalculatorView from "../..";
-import { Actions } from "../../config";
-import history from "../../../../public/history.svg";
+import CalculatorView from "..";
+import { Actions } from "../config";
+import history from "../../../public/history.svg"; //? better to move this icon here?
 import { createButton } from "./keys";
-import { removeSpaces } from "../../../../shared/utils";
+import { removeSpaces } from "../../../shared/utils";
 
 export function createHistoryDropdown() {
   const svg = document.createElement("div");
   svg.classList.add("history-icon", "dropdown");
   svg.innerHTML = `
-    <button class="btn text-white bg-dark pe-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <button id='history-dropdown' class="btn text-white bg-dark pe-2 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
       ${history}
     </button>
     

@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import { DB_NAME, QUERY_LIMIT, CREATED_AT, UPDATED_AT, ID } from "./config";
 import {
-  DefaultProperties,
+  DefaultPropertiesWithId,
   ReplaceAttributes,
   AggregationAttributes,
   LIMIT_ATTRIBUTE,
@@ -52,33 +52,33 @@ export default class MongoDB {
     MongoDB.client.close();
   }
 
-  private insertOne(data: Partial<DefaultPropertiesWithoutId>) {
+  private insertOne(data: DefaultPropertiesWithoutId) {
     return this.getCollection().insertOne(data);
   }
 
-  private updateOne(data: Partial<DefaultProperties>, newData: ReplaceAttributes<DefaultPropertiesWithoutId>) {
+  // private insertMany(data: DefaultPropertiesWithoutId[]) {
+  //   return this.getCollection().insertMany(data);
+  // }
+
+  private updateOne(data: Partial<DefaultPropertiesWithId>, newData: ReplaceAttributes<DefaultPropertiesWithoutId>) {
     return this.getCollection().updateOne(data, newData);
   }
 
-  private insertMany(data: Partial<DefaultPropertiesWithoutId>[]) {
-    return this.getCollection().insertMany(data);
-  }
-
-  private deleteOne(data: Partial<DefaultPropertiesWithoutId>) {
+  private deleteOne(data: Partial<DefaultPropertiesWithId>) {
     return this.getCollection().deleteOne(data);
   }
 
-  private deleteMany(data: Partial<DefaultProperties>) {
+  private deleteMany(data: Partial<DefaultPropertiesWithId>) {
     return this.getCollection().deleteMany(data);
   }
 
-  private findOne(data: Partial<DefaultProperties>) {
+  private findOne(data: Partial<DefaultPropertiesWithId>) {
     return this.getCollection().findOne(data);
   }
 
   private findMany(
-    params: Partial<DefaultProperties> = {},
-    aggregationAttributes?: AggregationAttributes<DefaultProperties>
+    params: Partial<DefaultPropertiesWithId> = {},
+    aggregationAttributes?: AggregationAttributes<DefaultPropertiesWithId>
   ) {
     let result = this.getCollection().find(params);
 
@@ -106,12 +106,14 @@ export default class MongoDB {
 
   static model<T>(name: string) {
     // interfaces for property access
-    type IModelWithId = DefaultProperties & T;
-    type IModelWithoutId = T & Omit<DefaultProperties, typeof ID>;
+    type IModelWithId = DefaultPropertiesWithId & T;
+    type IModelWithoutId = T & Omit<DefaultPropertiesWithId, typeof ID>;
 
     class Document {
+      // save ref to the collection
       private static collectionRef: MongoDB = new MongoDB(`${name}s`);
-      // default fields createdAt and updatedAt
+
+      // default timestamp fields
       [CREATED_AT]: Date;
       [UPDATED_AT]: Date;
 
@@ -128,17 +130,18 @@ export default class MongoDB {
 
       static create(params: IModelWithoutId) {
         const newDocument = new Document(params);
-        newDocument.save();
-        return newDocument;
+        return newDocument.save();
       }
 
-      static insertOne(data: IModelWithoutId) {
-        return Document.collectionRef.insertOne(data);
-      }
+      // static insertOne(data: IModelWithoutId) {
+      //   const document = new Document(data);
+      //   return document.save();
+      // }
 
-      static insertMany(data: IModelWithoutId[]) {
-        return Document.collectionRef.insertMany(data);
-      }
+      // ? if updatedAt and createdAt are not passed, they will be undefined
+      // static insertMany(data: IModelWithoutId[]) {
+      //   return Document.collectionRef.insertMany(data);
+      // }
 
       static updateOne(data: QueryAttributes<IModelWithId>, replaceData: ReplaceAttributes<IModelWithoutId>) {
         return Document.collectionRef.updateOne(data, replaceData);

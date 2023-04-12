@@ -3,6 +3,7 @@ import CalculatorView from ".";
 import {
   connectionFailedHandler,
   invalidInputHandler,
+  renderHandler,
   renderHistoryHandler,
   renderOperationsHandler,
   setResultHandler,
@@ -21,4 +22,6 @@ export function initializeObservers(this: CalculatorView) {
   this.on(Events.VIEW_RENDER_OPERATIONS, renderOperationsHandler.bind(this));
 
   this.on(Events.CONNECTION_FAILED, connectionFailedHandler);
+
+  this.on(Events.VIEW_RENDER, renderHandler.bind(this));
 }
