@@ -13,5 +13,4 @@ export interface IConstant {
 export interface IOperation {
   result: string;
   expression: string;
-  timestamp: Date;
 }
