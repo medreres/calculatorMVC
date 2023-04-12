@@ -1,53 +1,76 @@
 import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
-import { IObserver } from "../../shared/interfaces";
+import { IObserver, IOperation } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
 import { Events } from "../../shared/events";
-import { buildUrl } from "../../utils/buildUrl";
-import { BASE_URL } from "../../config";
+import { removeSpaces } from "../../shared/utils";
+import { MainOperations } from "../../shared/operations";
+import { HISTORY_SIZE } from "../../config";
+import { containsOperations, isInputValid } from "./utils";
 
 class CalculatorModel implements ICalculatorModel, IObserver {
   private expression: string;
-  private result: number | string;
   private observer: Observer = Observer.getInstance();
+  protected operations: string[];
+  protected operationsHistory: IOperation[];
 
   constructor() {
     this.expression = "";
-    this.result = 0;
-    initializeObservers(this);
+
+    // listen to events
+    initializeObservers.call(this);
+
+    this.operations = Object.values(MainOperations);
+    this.operationsHistory = [];
   }
 
   //------ Interaction
   setExpression(expression: string) {
-    this.expression = expression;
-  }
+    this.expression = removeSpaces(expression);
 
-  setResult(result: number | string) {
-    this.result = result;
-  }
+    const isValid = isInputValid(expression, this.operations);
 
-  getResult(): number | string {
-    return this.result;
+    if (isValid) {
+      this.notify(Events.MODEL_VALID_INPUT);
+    } else {
+      this.notify(Events.MODEL_INVALID_INPUT);
+    }
   }
 
   getExpression(): string {
     return this.expression;
   }
 
-  async calculate(): Promise<number> {
-    const url = buildUrl("/evaluate", BASE_URL, {
-      expression: this.getExpression(),
-    });
+  getHistory(): IOperation[] {
+    return this.operationsHistory;
+  }
 
-    return fetch(url)
-      .then((response) => response.json())
+  addHistory(operation: IOperation): boolean {
+    const history = this.operationsHistory.find((history) => history.expression === operation.expression);
 
-      .then(({ data, error }) => {
-        if (!isNaN(data)) {
-          return data as number;
-        }
-        throw new Error(error);
-      });
+    // if operation is present in history, then move it to the top
+    if (history) {
+      this.operationsHistory = [
+        operation,
+        ...this.operationsHistory.filter((history) => history.expression != operation.expression),
+      ];
+      return false;
+    }
+
+    if (this.operationsHistory.length >= HISTORY_SIZE) {
+      this.operationsHistory.pop();
+    }
+    this.operationsHistory.unshift(operation);
+
+    return true;
+  }
+
+  calculate() {
+    if (containsOperations.call(this, this.expression)) {
+      this.notify(Events.MODEL_CALCULATE_REQUEST, this.expression);
+    } else {
+      this.notify(Events.MODEL_INVALID_INPUT);
+    }
   }
 
   //------ Observers

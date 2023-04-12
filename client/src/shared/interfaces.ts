@@ -9,3 +9,8 @@ export interface IConstant {
   key: string;
   value: number;
 }
+
+export interface IOperation {
+  result: string;
+  expression: string;
+}

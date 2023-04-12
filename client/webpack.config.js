@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Dotenv = require("dotenv-webpack");
 
 module.exports = {
   entry: "./src/index.ts",
@@ -14,6 +15,10 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.svg$/,
+        loader: "svg-inline-loader",
       },
     ],
   },
@@ -30,12 +35,13 @@ module.exports = {
       template: "./src/public/index.html",
       favicon: "./src/public/favicon.ico",
     }),
+    new Dotenv(),
   ],
   devServer: {
     static: {
       directory: path.join(__dirname, "public"),
     },
     compress: true,
-    port: 3411,
+    port: 4123,
   },
 };

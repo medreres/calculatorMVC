@@ -2,11 +2,6 @@ html {
   box-sizing: border-box;
 }
 
-body {
-  /* display: flex; */
-  /* justify-content: center; */
-}
-
 button {
   height: 60px;
   min-width: 60px;
@@ -25,7 +20,19 @@ button {
   border-radius: 5px;
   padding: 10px;
   margin: 1em auto;
-  width: fit-content
+  width: fit-content;
+}
+
+.history-icon {
+  height: 8px;
+  width: 8px;
+  color: white;
+  position: absolute;
+  transform: translate(25%, 25%);
+}
+
+.history-icon:hover {
+  cursor: pointer;
 }
 
 .calculator-screen {
@@ -35,13 +42,28 @@ button {
   background-color: #252525 !important;
   color: #fff !important;
   text-align: right;
+  padding-top: 30px;
   padding-right: 0.75rem !important;
   padding-left: 10px;
-  line-height: 80px;
-  font-size: 40px;
+  font-size: 36px;
 }
+
+.dropdown-toggle {
+  transform: translate(0%, 10%);
+}
+
+.history-btn {
+  width: max-content;
+  max-height: 3em !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 300px;
+}
+
 .form-control.is-invalid {
-  background-position: left calc(0.375em + 0.1875rem) center !important;
+  background-position: 100% 5% !important;
+  background-size: 5%;
 }
 
 .result-screen {
@@ -63,9 +85,16 @@ button {
   white-space: normal;
 }
 
+.dropdown-menu {
+  min-width: 100%;
+}
+
+.dropdown-menu:hover {
+  cursor: initial;
+}
+
 .equal-sign {
   height: 98%;
-  /* grid-area: 2 / 4 / 5 / 5; */
 }
 
 .zero-btn {
@@ -85,10 +114,8 @@ button {
 .calculator-keys-container {
   height: fit-content;
   display: flex;
-  /* flex-flow: column; */
   align-items: stretch;
   justify-content: stretch;
-  /* flex-flow: column; */
 }
 
 .operations-keys {
