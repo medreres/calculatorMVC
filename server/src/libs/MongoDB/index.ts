@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { DB_NAME, QUERY_LIMIT, CREATED_AT, UPDATED_AT, ID } from "./config";
+import { DB_NAME, QUERY_LIMIT, CREATED_AT, UPDATED_AT } from "./config";
 import {
   DefaultPropertiesWithId,
   ReplaceAttributes,
@@ -9,6 +9,8 @@ import {
   SORT_ATTRIBUTE,
   QueryAttributes,
   DefaultPropertiesWithoutId,
+  WithoutId,
+  WithId,
 } from "./interfaces";
 
 export * from "./interfaces";
@@ -106,8 +108,8 @@ export default class MongoDB {
 
   static model<T>(name: string) {
     // interfaces for property access
-    type IModelWithId = DefaultPropertiesWithId & T;
-    type IModelWithoutId = T & Omit<DefaultPropertiesWithId, typeof ID>;
+    type IModelWithId = WithId<T>;
+    type IModelWithoutId = WithoutId<T>;
 
     class Document {
       // save ref to the collection

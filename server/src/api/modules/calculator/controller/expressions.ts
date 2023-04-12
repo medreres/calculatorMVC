@@ -1,7 +1,7 @@
-import { Errors, HISTORY_SIZE } from "../../../../config";
+import { Errors, HISTORY_SIZE } from "@/config";
 import { Request, Response } from "express";
-import logger from "../../../../logger";
-import Expression from "../model";
+import logger from "@/logger";
+import { Expression } from "../model";
 import { calculator } from "./services";
 
 export const evaluate = (req: Request, res: Response) => {

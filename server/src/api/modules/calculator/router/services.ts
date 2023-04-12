@@ -1,5 +1,5 @@
 import { body, check } from "express-validator";
-import { QUERY_LIMIT } from "../../../../libs/MongoDB";
+import { QUERY_LIMIT } from "@/libs/MongoDB";
 
 export const evaluateValidator = body("expression").isString().isLength({
   min: 1,

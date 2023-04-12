@@ -1,10 +1,12 @@
 import express from "express";
-import Expression from "../src/api/modules/calculator/model";
-import { calculatorRoutes } from "../src/api/modules/calculator/router";
-import MongoDB from "../src/libs/MongoDB";
+import { Expression } from "@/api/modules/calculator/model";
+import MongoDB from "@/libs/MongoDB";
+import { calculatorRoutes } from "@/api/modules/calculator/router";
+
+const TEST_DB_URL = "mongodb+srv://admin:admin@cluster0.kym1fnu.mongodb.net/?retryWrites=true&w=majority";
 
 export async function initializeDb() {
-  await MongoDB.connect("mongodb+srv://admin:admin@cluster0.kym1fnu.mongodb.net/?retryWrites=true&w=majority");
+  await MongoDB.connect(TEST_DB_URL);
   await Expression.deleteMany({});
 }
 

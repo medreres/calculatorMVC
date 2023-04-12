@@ -51,9 +51,10 @@ Response object:
 }
 ```
 
+// TODO doc
 ## GET expressions
 
-`GET /expressions?limit=<number>` - returns a list of available operations with optional limit,
+`GET /expressions?limit=<number>&sort=<key:value>&skip=<number>` - returns a list of available operations with optional limit,
 that specifies max number of expressions to be returned
 
 Response object:

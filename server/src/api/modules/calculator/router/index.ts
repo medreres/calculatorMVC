@@ -10,7 +10,7 @@ const router = Router();
  * @param expression - expression to evaluate, must be stated in the body
  *  */
 // TODO errorhandler could be merged into validator
-router.post("/evaluate", evaluateValidator, errorHandler, evaluate);
+router.post("/expression", evaluateValidator, errorHandler, evaluate);
 
 // return list of available operations
 router.get("/operations", getOperations);

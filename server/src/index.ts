@@ -3,8 +3,8 @@ dotenv.config();
 import cors from "cors";
 import express from "express";
 import { calculatorRoutes } from "./api/modules/calculator/router";
-import MongoDB from "./libs/MongoDB";
 import logger from "./logger";
+import MongoDB from "./libs/MongoDB";
 
 const app = express();
 app.use(express.json()); // to support JSON-encoded bodies

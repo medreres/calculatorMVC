@@ -1,6 +1,9 @@
 import { ObjectId } from "mongodb";
 import { CREATED_AT, ID, UPDATED_AT } from "./config";
 
+export type WithoutId<T> = Omit<DefaultPropertiesWithId, typeof ID> & T;
+export type WithId<T> = DefaultPropertiesWithId & T;
+
 // default properties for abstract model
 export type DefaultPropertiesWithId = {
   [ID]: ObjectId;
