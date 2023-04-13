@@ -103,6 +103,7 @@ export default class MongoDB {
       result.limit(QUERY_LIMIT);
     }
 
+    // TODO return separate class for aggregation
     return result.toArray();
   }
 

@@ -23,7 +23,7 @@ class CalculatorController implements ICalculatorController, IObserver {
     this.observer.on(event, callback);
   }
 
-  notify(event: string, data?: any): void {
+  notify(event: Events, data?: any): void {
     this.observer.notify(event, data);
   }
 

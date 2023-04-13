@@ -1,7 +1,6 @@
 import { evaluateValidator, getExpressionsValidator } from "./services";
 import { Router } from "express";
 import { evaluate, getOperations, getConstants, getExpressions } from "../controller";
-import { errorHandler } from "../middleware";
 
 const router = Router();
 
@@ -9,8 +8,7 @@ const router = Router();
  * @description evaluates expression
  * @param expression - expression to evaluate, must be stated in the body
  *  */
-// TODO errorhandler could be merged into validator
-router.post("/expression", evaluateValidator, errorHandler, evaluate);
+router.post("/expression", evaluateValidator, evaluate);
 
 // return list of available operations
 router.get("/operations", getOperations);
@@ -26,6 +24,6 @@ router.get("/constants", getConstants);
  * For example
  *  updatedAt:asc
  */
-router.get("/expressions", getExpressionsValidator, errorHandler, getExpressions);
+router.get("/expressions", getExpressionsValidator, getExpressions);
 
 export { router as calculatorRoutes };

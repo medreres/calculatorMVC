@@ -1,9 +1,13 @@
 import { body, check } from "express-validator";
 import { QUERY_LIMIT } from "@/libs/MongoDB";
+import { errorHandler } from "../middleware";
 
-export const evaluateValidator = body("expression").isString().isLength({
-  min: 1,
-});
+export const evaluateValidator = [
+  body("expression").isString().isLength({
+    min: 1,
+  }),
+  errorHandler,
+];
 
 export const getExpressionsValidator = [
   check("limit")
@@ -31,4 +35,5 @@ export const getExpressionsValidator = [
 
       return true;
     }),
+  errorHandler,
 ];

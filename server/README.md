@@ -51,11 +51,15 @@ Response object:
 }
 ```
 
-// TODO doc
 ## GET expressions
 
-`GET /expressions?limit=<number>&sort=<key:value>&skip=<number>` - returns a list of available operations with optional limit,
-that specifies max number of expressions to be returned
+`GET /expressions`  - Returns expressions saved in db.
+Params:
+`limit=<number>` - max number of documents to be returned
+`sort=<key:value>` - sorts documents by key, value could either 'asc' or 'desc'
+`skip=<number>` - skips n number of document
+
+
 
 Response object:
 
