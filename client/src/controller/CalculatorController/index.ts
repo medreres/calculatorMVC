@@ -19,6 +19,7 @@ class CalculatorController implements ICalculatorController {
     initializeExpressions.call(this);
   }
 
+  
   on<EventName extends keyof EventTypes>(event: EventName, callback: (arg: EventTypes[EventName]) => void): void {
     this.observer.on(event, callback);
   }

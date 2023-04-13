@@ -5,6 +5,4 @@ export default interface ICalculatorView extends IObserver {
   getExpression(): string;
 
   render(): void;
-
-  // TODO specific events to view
 }

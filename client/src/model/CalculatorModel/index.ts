@@ -71,7 +71,6 @@ class CalculatorModel implements ICalculatorModel {
   }
 
   //------ Observers
-  // TODO specific events to model
   on<EventName extends keyof IModelEvents>(event: EventName, callback: (arg: IModelEvents[EventName]) => void): void {
     this.observer.on(event, callback);
   }

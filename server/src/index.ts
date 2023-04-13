@@ -14,6 +14,7 @@ app.use(cors({ origin: "*" }));
 
 app.use(calculatorRoutes);
 
+// TODO everything should be logged
 MongoDB.connect(DB_URL as string)
   .then(() => {
     logger.info("db connected");

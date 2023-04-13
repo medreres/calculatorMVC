@@ -1,32 +1,19 @@
-import { ModelEvents as ModelEvt, IModelEvents as ModelEvtTypes } from "./model";
-import { ViewEvents as ViewEvt, IViewEvents as ViewEvtTypes } from "./view";
+import { GeneralEvents, IGeneralEvents } from "./general";
+import { ModelEvents, IModelEvents as IME } from "./model";
+import { ViewEvents, IViewEvents as IVE } from "./view";
 
-export enum GeneralEvents {
-  CONNECTION_FAILED = "connectionFailed",
-}
-export interface IGeneralEvents {
-  [GeneralEvents.CONNECTION_FAILED]: void;
-}
+export { ViewEvents };
+export type IViewEvents = IVE & IGeneralEvents; // add support for general events
 
-export type IViewEvents = ViewEvtTypes & IGeneralEvents;
-export const ViewEvents = {
-  ...ViewEvt,
-  ...GeneralEvents,
-};
+export { ModelEvents };
+export type IModelEvents = IME & IGeneralEvents; // add support for general events
 
-export type IModelEvents = ModelEvtTypes & IGeneralEvents;
-export const ModelEvents = {
-  ...ModelEvt,
-  ...GeneralEvents,
-};
-
-export type EventTypes = ModelEvtTypes & ViewEvtTypes & IGeneralEvents;
+// combine all types for controller to be able to handle all events
+export type EventTypes = IModelEvents & IViewEvents & IGeneralEvents;
 export const Events = {
-  ...ModelEvt,
-  ...ViewEvt,
+  ...ViewEvents,
+  ...ModelEvents,
   ...GeneralEvents,
 };
 
-// export type IViewEvents = ViewEvtTypes & GeneralEventsTypes;
-
-// export type ModelEventTypes = ModelEvtTypes & GeneralEventsTypes;
+export { GeneralEvents, IGeneralEvents };

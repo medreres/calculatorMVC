@@ -1,6 +1,6 @@
-import { IGeneralEvents, IModelEvents, IViewEvents } from "./events";
+import { IModelEvents, IViewEvents } from "./events";
 
-type GenericEventType = IViewEvents | IModelEvents | IGeneralEvents;
+type GenericEventType = IViewEvents | IModelEvents;
 
 export interface IObserver {
   notify<EventName extends keyof GenericEventType>(event: EventName, data: GenericEventType[EventName]): void;
