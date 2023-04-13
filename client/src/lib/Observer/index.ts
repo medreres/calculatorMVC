@@ -1,5 +1,7 @@
+type KeyType = string | number | symbol;
+
 export default class Observer {
-  private observers = new Map<string, Function[]>();
+  private observers = new Map<KeyType, Function[]>();
   private static instance: Observer | null = null;
 
   static getInstance(): Observer {
@@ -12,21 +14,24 @@ export default class Observer {
 
   private constructor() {}
 
-  on(evt: string, fn: Function) {
-    if (this.observers.has(evt)) return this.observers.get(evt)?.push(fn);
+  on(event: KeyType, callback: Function): void {
+    if (this.observers.has(event)) {
+      this.observers.get(event)?.push(callback);
+      return;
+    }
 
-    this.observers.set(evt, [fn]);
+    this.observers.set(event, [callback]);
   }
 
-  unsubscribe(evt: string, func: Function) {
-    if (this.observers.get(evt))
+  notify(event: KeyType, data?: any): void {
+    this.observers.get(event)?.forEach((subscription) => subscription(data));
+  }
+
+  unsubscribe(event: KeyType, func: Function) {
+    if (this.observers.get(event))
       return this.observers.set(
-        evt,
-        this.observers.get(evt)!.filter((fn) => fn != func)
+        event,
+        this.observers.get(event)!.filter((fn) => fn != func)
       );
-  }
-
-  notify(evt: string, data?: any) {
-    this.observers.get(evt)?.forEach((subscription) => subscription(data));
   }
 }

@@ -1,5 +1,5 @@
 import CalculatorView from "..";
-import { Events } from "../../../shared/events";
+import { ViewEvents } from "../../../shared/events";
 import { IOperation } from "../../../shared/interfaces";
 import { Actions } from "../config";
 import {
@@ -19,7 +19,7 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
 
   const clearInput = () => {
     this.setExpression("");
-    this.notify(Events.VIEW_INPUT_CHANGED, "");
+    this.notify(ViewEvents.INPUT_CHANGED, "");
     setCalculateButtonDisabled(true);
   };
 
@@ -41,7 +41,7 @@ export function btnClickHandler(this: CalculatorView, btnValue: string): () => v
         }
 
         this.setExpression(newExpression);
-        this.notify(Events.VIEW_INPUT_CHANGED, newExpression);
+        this.notify(ViewEvents.INPUT_CHANGED, newExpression);
       };
       break;
 
@@ -88,11 +88,11 @@ export function expressionInputSubmitHandler(this: CalculatorView) {
 
 export function calculateHandler(this: CalculatorView) {
   setCalculateButtonDisabled(true);
-  this.notify(Events.VIEW_CALCULATE);
+  this.notify(ViewEvents.CALCULATE);
 }
 
 export function inputChangeHandler(this: CalculatorView, value: string) {
-  this.notify(Events.VIEW_INPUT_CHANGED, value);
+  this.notify(ViewEvents.INPUT_CHANGED, value);
   this.setExpression(value);
 }
 

@@ -1,6 +1,6 @@
-import { IOperation } from "@/shared";
+import { IOperation, IObserver } from "@/shared";
 
-export default interface ICalculatorModel {
+export default interface ICalculatorModel extends IObserver {
   setExpression(expression: string): void;
   getExpression(): string;
 

@@ -1,6 +1,6 @@
 import { CalculatorController } from "@/controller";
 import { CalculatorModel } from "@/model";
-import { Events } from "@/shared";
+import { ViewEvents } from "@/shared";
 import { CalculatorView } from "@/view";
 import * as requests from "../../src/controller/CalculatorController/utils/requests";
 
@@ -35,13 +35,13 @@ export const initializeApp = () => {
   });
 
   afterEach(() => {
-    controller.notify(Events.VIEW_SET_INPUT, "");
+    controller.notify(ViewEvents.SET_INPUT, "");
   });
 };
 
 export const setExpression = (value: string) => {
   return Promise.resolve(() => {
     view.setExpression(value);
-    controller.notify(Events.VIEW_INPUT_CHANGED, value);
+    controller.notify(ViewEvents.INPUT_CHANGED, value);
   });
 };

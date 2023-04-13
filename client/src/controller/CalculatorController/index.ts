@@ -1,11 +1,11 @@
 import Observer from "@/lib/Observer";
 import ICalculatorModel from "@/model/interface";
-import { Events, IObserver } from "@/shared";
+import { ViewEvents, EventTypes } from "@/shared";
 import ICalculatorView from "@/view/interface";
 import ICalculatorController from "../interface";
 import { initializeHistory, initializeObservers, initializeExpressions } from "./services";
 
-class CalculatorController implements ICalculatorController, IObserver {
+class CalculatorController implements ICalculatorController {
   model: ICalculatorModel;
   view: ICalculatorView;
   private observer: Observer = Observer.getInstance();
@@ -19,16 +19,16 @@ class CalculatorController implements ICalculatorController, IObserver {
     initializeExpressions.call(this);
   }
 
-  on(event: string, callback: Function): void {
+  on<EventName extends keyof EventTypes>(event: EventName, callback: (arg: EventTypes[EventName]) => void): void {
     this.observer.on(event, callback);
   }
 
-  notify(event: Events, data?: any): void {
+  notify<EventName extends keyof EventTypes>(event: EventName, data?: EventTypes[EventName]): void {
     this.observer.notify(event, data);
   }
 
   render() {
-    this.observer.notify(Events.VIEW_RENDER);
+    this.observer.notify(ViewEvents.RENDER);
   }
 }
 
