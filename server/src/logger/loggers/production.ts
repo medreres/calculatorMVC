@@ -19,6 +19,8 @@ const logger = createLogger({
     new transports.Console(),
     new transports.File({
       // TODO errors log
+      // warnings log
+      // info log
       filename: "combined.log",
     }),
   ],

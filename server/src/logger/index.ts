@@ -10,7 +10,7 @@ const initializeLogger = () => {
       return dev;
 
     default:
-      return production;
+      return dev;
   }
 };
 

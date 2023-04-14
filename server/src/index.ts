@@ -4,7 +4,7 @@ import cors from "cors";
 import express from "express";
 import { calculatorRoutes } from "./api/modules/calculator/router";
 import logger from "./logger";
-import MongoDB from "./libs/MongoDB";
+import MongoDB from "./libs/Db/MongoDB";
 import { DB_URL, PORT } from "./config";
 
 const app = express();
@@ -15,7 +15,8 @@ app.use(cors({ origin: "*" }));
 app.use(calculatorRoutes);
 
 // TODO everything should be logged
-MongoDB.connect(DB_URL as string)
+// TODO sort imports
+MongoDB.connect(DB_URL)
   .then(() => {
     logger.info("db connected");
 

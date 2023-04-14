@@ -55,34 +55,34 @@ export const evaluate = (req: Request, res: Response) => {
   });
 };
 
-interface IGetExpressions {
-  limit: number;
-  skip: number;
-  sort: string;
-}
 export const getExpressions = (req: Request, res: Response) => {
-  // data is already validated
-  const { limit = HISTORY_SIZE, sort = "updatedAt:desc", skip = 0 } = req.query as unknown as IGetExpressions;
-  const [property, order] = sort.split(":");
+  const { limit = HISTORY_SIZE, sort, skip = 0 } = req.query;
+  let property, order;
+
+  if (typeof sort === "string") {
+    [property, order] = sort.split(":");
+  } else {
+    [property, order] = ["updatedAt", "desc"];
+  }
 
   try {
-    Expression.findMany(
-      {},
-      {
-        $sort: {
-          [property]: order == "asc" ? 1 : -1,
-        },
-        $limit: +limit,
-        $skip: +skip,
-      }
-    ).then((result) => {
-      const dataSerialized = result.map((result) => ({
-        ...result,
-        result: result.result.toString(),
-      }));
+    Expression.findMany({})
+      .limit(+limit)
+      .skip(+skip)
+      .sort({
+        // TODO could be broken
+        [property]: order,
+      })
+      .toArray()
+      .then((result) => {
+        // result[0].
+        const dataSerialized = result.map((result) => ({
+          ...result,
+          result: result.result.toString(),
+        }));
 
-      return res.status(200).json({ data: dataSerialized });
-    });
+        return res.status(200).json({ data: dataSerialized });
+      });
   } catch (error) {
     logger.error(error);
     return res.status(500).json({ error: "Internal server error" });

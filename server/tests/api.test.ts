@@ -16,6 +16,7 @@ const invalidTestCases = ["1*", "1-", "(", "()", "2*(3-"];
 beforeAll(initializeDb);
 afterAll(clearDb);
 
+//TODO TEST limit, sort, etc
 describe("Testing endpoints", () => {
   it("GET /operations fetches available operations", async () => {
     const { body } = await req.get("/operations");
@@ -39,8 +40,8 @@ describe("Testing endpoints", () => {
               expression,
             })
             .set("Content-Type", "application/json")
-            .set("Accept", "application/json")
-            // .expect(200);
+            .set("Accept", "application/json");
+          // .expect(200);
 
           expect(body.data).toBe(result);
         });

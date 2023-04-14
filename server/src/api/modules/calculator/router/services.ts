@@ -1,5 +1,5 @@
 import { body, check } from "express-validator";
-import { QUERY_LIMIT } from "@/libs/MongoDB";
+import { QUERY_LIMIT } from "@/libs/Db/MongoDB";
 import { errorHandler } from "../middleware";
 
 export const evaluateValidator = [

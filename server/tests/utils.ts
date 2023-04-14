@@ -1,6 +1,6 @@
 import express from "express";
 import { Expression } from "@/api/modules/calculator/model";
-import MongoDB from "@/libs/MongoDB";
+import MongoDB from "@/libs/Db/MongoDB";
 import { calculatorRoutes } from "@/api/modules/calculator/router";
 import { TEST_DB_URL } from "@/config";
 
