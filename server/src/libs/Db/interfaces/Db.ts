@@ -1,3 +1,4 @@
+// import { z } from "zod";
 import { DefaultProperties, IStaticDocument } from "./Document";
 
 export enum AttributeKeys {
@@ -28,5 +29,6 @@ export interface IStaticDb {
 
   disconnect(): Promise<void>;
 
-  model<T extends DefaultProperties>(name: string): IStaticDocument<T>;
+  // TODO any?
+  model<T extends DefaultProperties>(name: string, schema: any): IStaticDocument<T>;
 }

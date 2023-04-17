@@ -1,14 +1,16 @@
+import { z } from "zod";
 import { MongoDB } from "@/libs/Db";
 import { DefaultProperties, FilterOptions, staticImplements, WithId } from "@/libs/Db/interfaces";
 import { Filter, IStaticDocumentService, ReplaceAttributes } from "./interfaces";
-// import { Filter, IStaticDocumentService, ReplaceAttributes } from "./interfaces";
 
-type ExpressionAttributes = {
-  expression: string;
-  result: number;
-};
+const expressionSchema = z.object({
+  expression: z.string(),
+  result: z.number(),
+});
 
-const ExpressionModel = MongoDB.model<ExpressionAttributes>("Expression");
+type ExpressionAttributes = z.infer<typeof expressionSchema>;
+
+const ExpressionModel = MongoDB.model<ExpressionAttributes>("Expression", expressionSchema);
 
 // const Expression: IStaticDocumentService<ExpressionAttributes> = {
 //   findOne(params) {

@@ -15,6 +15,7 @@ import {
   WithoutId,
 } from "../interfaces";
 import { CREATED_AT, DB_NAME, UPDATED_AT } from "../config/attributes";
+import { z } from "zod";
 
 export * from "./interfaces";
 export * from "../config";
@@ -119,7 +120,7 @@ export default class MongoDB {
     return new Aggregator();
   }
 
-  static model<T extends Document>(name: string) {
+  static model<T extends Document>(name: string, schema: z.AnyZodObject) {
     // interfaces for property access
     type IModelWithId = WithId<T & DefaultProperties>;
     type IModelWithoutId = WithoutId<T & DefaultProperties>;
@@ -131,8 +132,11 @@ export default class MongoDB {
       attributes: IModelWithoutId;
 
       constructor(params: T) {
+        // TODO avoid type casting
+        const parsedParams = schema.parse(params) as T;
+
         this.attributes = {
-          ...params,
+          ...parsedParams,
           [CREATED_AT]: new Date(),
           [UPDATED_AT]: new Date(),
         };
