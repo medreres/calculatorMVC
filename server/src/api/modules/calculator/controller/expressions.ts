@@ -70,7 +70,6 @@ export const getExpressions = (req: Request, res: Response) => {
       .limit(+limit)
       .skip(+skip)
       .sort({
-        // TODO could be broken
         [property]: order,
       })
       .toArray()

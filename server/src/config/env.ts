@@ -1,12 +1,12 @@
-import Joi from "joi";
+import { z } from "zod";
 
 export const TEST_DB_URL = "mongodb://localhost:27017";
 
-const portSchema = Joi.number().min(0).max(65536).default(3000).required();
-export const PORT = portSchema.validate(process.env.PORT).value;
+const portSchema = z.number().min(0).max(65536).default(3000);
+export const PORT = portSchema.parse(process.env.PORT);
 
-const dbUrlSchema = Joi.string().required().default(TEST_DB_URL);
-export const DB_URL = dbUrlSchema.validate(process.env.DB_URL).value as string;
+const dbUrlSchema = z.string().default(TEST_DB_URL);
+export const DB_URL = dbUrlSchema.parse(process.env.DB_URL);
 
-const envSchema = Joi.string().valid("production", "development").required();
-export const NODE_ENV = envSchema.validate(process.env.NODE_ENV).value;
+const envSchema = z.union([z.literal("production"), z.literal("development")]).default("development");
+export const NODE_ENV = envSchema.parse(process.env.NODE_ENV);
