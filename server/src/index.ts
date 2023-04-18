@@ -4,9 +4,7 @@ import cors from "cors";
 import express from "express";
 import { calculatorRoutes } from "./api/modules/calculator/router";
 import logger from "./logger";
-import MongoDB from "./libs/Db/MongoDB";
-import { DB_URL, PORT } from "./config";
-import PostgresDB from "./libs/Db/PostgresDB";
+import { DB, DB_URL, PORT } from "./config";
 
 const app = express();
 app.use(express.json()); // to support JSON-encoded bodies
@@ -17,7 +15,7 @@ app.use(calculatorRoutes);
 
 // TODO everything should be logged
 // TODO sort imports
-PostgresDB.connect(DB_URL)
+DB.connect(DB_URL)
   .then(() => {
     logger.info("db connected");
 

@@ -1,8 +1,9 @@
 import { z } from "zod";
-import { MongoDB } from "@/libs/Db";
-import { DefaultProperties, FilterOptions, staticImplements, WithId } from "@/libs/Db/interfaces";
-import { Filter, IStaticDocumentService, ReplaceAttributes } from "./interfaces";
-import PostgresDB from "@/libs/Db/PostgresDB";
+import { DefaultProperties, WithId } from "@/libs/Db/interfaces";
+import { DB } from "@/config";
+import logger from "@/logger";
+import { calculator } from "./services";
+// import { IStaticDocumentService } from "./interfaces";
 
 const expressionSchema = z.object({
   expression: z.string(),
@@ -11,29 +12,7 @@ const expressionSchema = z.object({
 
 type ExpressionAttributes = z.infer<typeof expressionSchema>;
 
-const ExpressionModel = PostgresDB.model("Expression", expressionSchema);
-
-// const Expression: IStaticDocumentService<ExpressionAttributes> = {
-//   findOne(params) {
-//     return ExpressionModel.findOne(params);
-//   },
-
-//   updateOne(param, updateFields) {},
-
-//   create: function (attributes: any) {
-//     throw new Error("Function not implemented.");
-//   },
-
-//   findMany: function (attributes: any) {
-//     throw new Error("Function not implemented.");
-//   },
-
-//   deleteMany: function (attributes: any) {
-//     throw new Error("Function not implemented.");
-//   },
-// };
-
-// export default Expression;
+const ExpressionModel = DB.model("Expression", expressionSchema);
 
 // TODO method evaluate move to this service
 // @staticImplements<IStaticDocumentService<ExpressionAttributes>>()
@@ -55,7 +34,7 @@ export default class Expression {
     const instance = new ExpressionModel(params);
     return ExpressionModel.insertOne(instance.attributes);
   }
-  // // TODO types to mongodb get collection
+  // TODO types to mongodb get collection
   // static findMany(params: FilterOptions<WithId<ExpressionAttributes & DefaultProperties>> = {}) {
   static findMany(params: Partial<WithId<ExpressionAttributes & DefaultProperties>> = {}) {
     return ExpressionModel.findMany(params);
@@ -64,5 +43,53 @@ export default class Expression {
   static deleteMany(params: Partial<WithId<ExpressionAttributes & DefaultProperties>>) {
     return ExpressionModel.deleteMany(params);
   }
-  // static evaluate(expression: string) {}
+  // TODO make do with id
+  static evaluate(expression: string): Promise<string> {
+    expression = expression.replaceAll(" ", "");
+    // find this expression in db, if exists - return result
+    return Expression.findOne({ expression }).then((history) => {
+      if (history) {
+        logger.info("Fetched expression from db\n" + JSON.stringify(history));
+
+        return Expression.updateOne({ expression }, { updatedAt: new Date() }).then(() => {
+          return history.result.toString();
+        });
+      }
+
+      logger.info("Expression not found. Calculating...");
+
+      if (!calculator.isExpressionValid(expression)) {
+        return Promise.reject(`Invalid expression ${expression}`);
+      }
+
+      let result: number;
+
+      try {
+        result = calculator.evaluate(expression);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+
+      logger.info(`Calculated. Result: ${result}`);
+
+      // save expression to db
+      return Expression.create({
+        expression,
+        result,
+      }).then(() => {
+        return result.toString();
+      });
+    });
+  }
+
+  static getOperationSymbols() {
+    const operations = calculator.getOperations();
+    const operationsSymbols = operations.map((operation) => operation.symbol);
+    return operationsSymbols;
+  }
+
+  static getConstants() {
+    const constants = calculator.getConstants();
+    return constants;
+  }
 }

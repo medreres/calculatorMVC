@@ -1,7 +1,7 @@
 import ICalculatingAlgorithm from "./CalculatingAlgorithms/interface";
 import { evaluatingAlgorithm } from "./config";
 import { Constant } from "./interfaces";
-import Operation from "./utils/Operation";
+import Operation, { Notation } from "./utils/Operation";
 
 /**
  * @description Class that allows to add custom defined operations and evaluates expressions
@@ -44,5 +44,12 @@ export default class Calculator {
   }
 }
 
-// const calc = new Calculator();
-// calc.evaluate('π*10')
+const calc = new Calculator();
+const operation = new Operation({
+  symbol: "sign",
+  precedence: 3,
+  notation: Notation.PREFIX,
+  evaluate: (a: number) => Math.sign(a),
+});
+calc.addOperation(operation);
+calc.evaluate('sign 10')

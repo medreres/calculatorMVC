@@ -17,13 +17,13 @@ export enum AttributeKeys {
   UPDATED_AT = "updatedAt",
 }
 
-export interface IDb {
-  //   connect: (url: string) => Promise<any>;
-}
+// export interface IDb {
+//   //   connect: (url: string) => Promise<any>;
+// }
 
 // interface for static methods
 export interface IStaticDb {
-  new (collection: string): IDb;
+  // private new (collection: string): IDb;
 
   connect(url: string): Promise<any>;
 

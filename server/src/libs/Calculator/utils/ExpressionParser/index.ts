@@ -63,6 +63,8 @@ export default class ExpressionParser {
     this.isValidityRegexUpdated = false;
   }
 
+  // FIXME replaces letter within function names
+  // for example sign -> si9.81n
   replaceConstants(exp: string): string {
     Object.entries(getAvailableConstants.call(this)).forEach(([key, value]) => {
       exp = exp.replaceAll(key, value.toString());

@@ -1,19 +1,23 @@
 import { NODE_ENV } from "@/config";
-import { dev, production } from "./loggers";
+import { createLogger, format, transports } from "winston";
+const { combine, timestamp, printf, colorize, json } = format;
 
-const initializeLogger = () => {
-  switch (NODE_ENV) {
-    case "production":
-      return production;
+const myFormat = printf(({ level, message, timestamp }) => {
+  return `${timestamp} [${level}] ${message}`;
+});
 
-    case "development":
-      return dev;
-
-    default:
-      return dev;
-  }
-};
-
-let logger = initializeLogger();
+const logger = createLogger({
+  level: NODE_ENV === "production" ? "warning" : "debug",
+  format: combine(
+    timestamp({
+      format: "YYYY-MM-DD HH:mm:ss",
+    }),
+    colorize(),
+    json(),
+    myFormat
+  ),
+  // TODO save to files
+  transports: [new transports.Console()],
+});
 
 export default logger;

@@ -68,9 +68,7 @@ export type AggregationAttributes<T> = {
 };
 
 // interface for data to replace the old one
-export type ReplaceAttributes<T> = {
-  [AttributeKeys.SET]: Partial<T>;
-};
+export type ReplaceAttributes<T> = Partial<T>;
 
 // interface for querying db
 // allows use of $or, $in, $gt and etc.

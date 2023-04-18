@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { Filter, MongoClient, OptionalUnlessRequiredId, UpdateFilter, Document } from "mongodb";
 import { QUERY_LIMIT } from "../config";
-// import { ReplaceAttributes, WithId, SortAttribute, WithoutId, DefaultProperties, FilterOptions } from "./interfaces";
 import {
+  AttributeKeys,
   DefaultProperties,
   FilterOptions,
   IAggregator,
@@ -17,8 +17,20 @@ import {
 } from "../interfaces";
 import { CREATED_AT, DB_NAME, UPDATED_AT } from "../config/attributes";
 
-export * from "./interfaces";
 export * from "../config";
+
+// TODO fix type casting
+export function formatDocument<T>(doc: T) {
+  if (!doc) {
+    return doc;
+  }
+
+  Object.defineProperty(doc, "id", Object.getOwnPropertyDescriptor(doc, "_id")!);
+
+  delete doc["_id" as keyof typeof doc];
+
+  return doc;
+}
 
 // TODO? class collection?
 @staticImplements<IStaticDb>()
@@ -82,7 +94,9 @@ export default class MongoDB {
   }
 
   private findOne<T extends Document>(data: Filter<T>) {
-    return this.getCollection<T>().findOne(data);
+    return this.getCollection<T>()
+      .findOne(data)
+      .then((result) => formatDocument(result));
   }
 
   private findMany<T extends DefaultProperties>(params: Filter<T>) {
@@ -113,7 +127,7 @@ export default class MongoDB {
       }
 
       exec() {
-        return this.collection.toArray();
+        return this.collection.toArray().then((result) => result.map((document) => formatDocument(document)));
       }
     }
 
@@ -130,7 +144,6 @@ export default class MongoDB {
       // save ref to the collection
       private static collectionRef: MongoDB = new MongoDB(`${name}s`);
       attributes: IModelWithoutId;
-
 
       // TODo zod extend
       constructor(params: T) {
@@ -176,7 +189,16 @@ export default class MongoDB {
       // TODO more abstract filtering
       // TODO $set is removed
       static updateOne(params: FilterOptions<IModelWithId>, replaceData: ReplaceAttributes<IModelWithId>) {
-        return Document.collectionRef.updateOne(params, replaceData);
+        if ("id" in params) {
+          params = Object.assign(params, {
+            _id: params.id,
+            id: undefined,
+          });
+        }
+
+        return Document.collectionRef.updateOne(params, {
+          [AttributeKeys.SET]: replaceData,
+        });
       }
 
       // TODO custom query b

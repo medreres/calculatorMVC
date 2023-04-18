@@ -1,9 +1,9 @@
-import Operation from "../../../utils/Operation";
-import { Notation } from "../../../utils/Operation/interfaces";
+import Operation, { Notation } from "@/libs/Calculator/utils/Operation";
 import { initializeCalculator } from "./utils";
 
 const calc = initializeCalculator();
 
+// TODO
 describe("Adding operations", () => {
   test("Adding sign", () => {
     const operation = new Operation({

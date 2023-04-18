@@ -2,10 +2,15 @@ import express from "express";
 import { Expression } from "@/api/modules/calculator/model";
 import MongoDB from "@/libs/Db/MongoDB";
 import { calculatorRoutes } from "@/api/modules/calculator/router";
-import { TEST_DB_URL } from "@/config";
+import { DB, MONGODB_TEST_URL, POSTGRES_TEST_URL } from "@/config";
+
+const TEST_URLS = {
+  MONGODB_TEST_URL,
+  POSTGRES_TEST_URL,
+};
 
 export async function initializeDb() {
-  await MongoDB.connect(TEST_DB_URL);
+  await DB.connect(TEST_URLS.POSTGRES_TEST_URL);
   await Expression.deleteMany({});
 }
 
