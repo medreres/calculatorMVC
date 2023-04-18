@@ -29,6 +29,7 @@ export type WithId<T> = T & {
   [AttributeKeys.ID]: ObjectId;
 };
 
+// TODO single source of truth
 // default properties for abstract model
 export type DefaultProperties = {
   [AttributeKeys.CREATED_AT]: Date;
@@ -50,8 +51,10 @@ export type FilterOperators<T> = {
 // export type Or<T> = {
 //   $or?: Partial<GenericInterface<T>>[];
 // };
-
-export type SortAttribute<T> = { [Property in keyof T]: 1 | -1 | "asc" | "desc" | "ascending" | "descending" };
+export type SortingValue = "asc" | "desc";
+export type SortAttribute<T> = {
+  [Property in keyof T]: SortingValue;
+};
 
 // interface for aggregating results
 // allows use of $limit, $sort and etc.

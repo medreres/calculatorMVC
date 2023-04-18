@@ -43,3 +43,6 @@ export default class Calculator {
     return this.calculatingAlgorithm.isExpressionValid(expression);
   }
 }
+
+// const calc = new Calculator();
+// calc.evaluate('π*10')

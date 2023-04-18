@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { Filter, MongoClient, OptionalUnlessRequiredId, UpdateFilter, Document } from "mongodb";
 import { QUERY_LIMIT } from "../config";
 // import { ReplaceAttributes, WithId, SortAttribute, WithoutId, DefaultProperties, FilterOptions } from "./interfaces";
@@ -15,7 +16,6 @@ import {
   WithoutId,
 } from "../interfaces";
 import { CREATED_AT, DB_NAME, UPDATED_AT } from "../config/attributes";
-import { z } from "zod";
 
 export * from "./interfaces";
 export * from "../config";
@@ -112,7 +112,7 @@ export default class MongoDB {
         return this;
       }
 
-      toArray() {
+      exec() {
         return this.collection.toArray();
       }
     }
@@ -131,6 +131,8 @@ export default class MongoDB {
       private static collectionRef: MongoDB = new MongoDB(`${name}s`);
       attributes: IModelWithoutId;
 
+
+      // TODo zod extend
       constructor(params: T) {
         // TODO avoid type casting
         const parsedParams = schema.parse(params) as T;
@@ -172,6 +174,7 @@ export default class MongoDB {
       // }
 
       // TODO more abstract filtering
+      // TODO $set is removed
       static updateOne(params: FilterOptions<IModelWithId>, replaceData: ReplaceAttributes<IModelWithId>) {
         return Document.collectionRef.updateOne(params, replaceData);
       }

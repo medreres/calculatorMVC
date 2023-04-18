@@ -18,9 +18,12 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-validator": "^6.15.0",
+    "knex": "^2.4.2",
     "mongodb": "^5.1.0",
+    "pg": "^8.10.0",
     "winston": "^3.8.2",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zod-to-json-schema": "^3.20.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",

@@ -12,7 +12,7 @@ export enum AttributeKeys {
   OR = "$or",
   NOR = "$nor",
   SET = "$set",
-  ID = "_id",
+  ID = "id", // TODO deal with id at mongo and postgress simultaneously
   CREATED_AT = "createdAt",
   UPDATED_AT = "updatedAt",
 }
