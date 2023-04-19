@@ -1,6 +1,7 @@
 import knex, { Knex } from "knex";
 import {
   AttributeKeys,
+  defaultProperties,
   DefaultProperties,
   FilterOptions,
   IAggregator,
@@ -13,9 +14,8 @@ import {
   WithoutId,
 } from "../interfaces";
 import { z } from "zod";
-import { defaultProperties } from "../utils";
 import { QUERY_LIMIT } from "../config";
-import { InferType, initializeTable } from "./utils";
+import { initializeTable } from "./utils";
 
 @staticImplements<IStaticDb>()
 export default class PostgresDB {
@@ -37,7 +37,7 @@ export default class PostgresDB {
     return Promise.resolve();
   }
 
-  protected getCollection<T extends {}>() {
+  protected getCollection<T extends DefaultProperties>() {
     return PostgresDB.client<T>(this.collectionName);
   }
 
@@ -110,22 +110,20 @@ export default class PostgresDB {
   }
 
   static model<T extends z.AnyZodObject>(collectionName: string, schema: T) {
-    type Attributes = InferType<typeof schema>;
-
+    type Attributes = z.infer<typeof schema>;
+    type IModelWithId = WithId<Attributes> & DefaultProperties;
+    type IModelWithoutId = Attributes & DefaultProperties;
     const validator = schema.merge(defaultProperties);
-
-    type IModelWithId = WithId<Attributes & DefaultProperties>;
-    type IModelWithoutId = WithoutId<Attributes & DefaultProperties>;
 
     setImmediate(initializeTable.bind(null, collectionName, validator));
 
     @staticImplements<IStaticDocument<IModelWithoutId>>()
     class Document implements IDocument<IModelWithoutId> {
-      attributes: WithoutId<Attributes & DefaultProperties> & {};
       private static collectionRef = new PostgresDB(collectionName);
+      attributes: WithoutId<Attributes & DefaultProperties> & {};
 
-      private static getCollection() {
-        return Document.collectionRef.getCollection<IModelWithId>();
+      private static getCollection<T extends DefaultProperties>() {
+        return Document.collectionRef.getCollection<T>();
       }
 
       constructor(params: Attributes) {
@@ -136,7 +134,11 @@ export default class PostgresDB {
 
       save() {
         // TODo type casting
-        return Document.getCollection().insert(this.attributes as any);
+        return Document.getCollection()
+          .insert(this.attributes, ["id"])
+          .then((result) => {
+            return (result[0] as any).id;
+          });
       }
 
       static create(params: Attributes) {
@@ -144,20 +146,23 @@ export default class PostgresDB {
         return instance.save();
       }
 
-      static updateOne(params: FilterOptions<Attributes>, updateFields: Partial<Attributes>) {
+      static updateOne(params: FilterOptions<IModelWithId>, updateFields: Partial<Attributes>) {
         return Document.getCollection()
           .where(params)
-          .update(updateFields as any);
+          .update(updateFields)
+          .then((r) => Boolean(r));
       }
 
       static insertOne(data: IModelWithoutId) {
         // TODO type casting
-        return Document.getCollection().insert(data as any);
+        return Document.getCollection()
+          .insert(data)
+          .then((result) => (result[0] as any).id as string);
       }
 
       //? should be recursive in case of nested queries
-      static findOne(params: FilterOptions<Attributes>) {
-        let query = Document.getCollection();
+      static findOne(params: FilterOptions<IModelWithId>) {
+        let query = Document.getCollection<IModelWithId>();
 
         Object.entries(params).forEach(([key, value]) => {
           if (key === AttributeKeys.OR && Array.isArray(value)) {
@@ -186,18 +191,23 @@ export default class PostgresDB {
           }
         });
 
-        return query.then((result) => result[0]);
+        // TODO type casting
+        return query.then((result: any) => result[0] as Promise<IModelWithId | null>);
       }
 
-      static findMany(params: FilterOptions<Attributes>) {
+      static findMany(params: FilterOptions<IModelWithId>) {
         return this.collectionRef.findMany<IModelWithId>(params);
       }
 
-      static deleteOne(params: FilterOptions<Attributes>) {
-        return Document.getCollection().where(params);
+      static deleteOne(params: FilterOptions<IModelWithId>) {
+        return Document.getCollection()
+          .where(params)
+          .limit(1)
+          .delete()
+          .then((r) => Boolean(r));
       }
 
-      static deleteMany(params: FilterOptions<Attributes>) {
+      static deleteMany(params: FilterOptions<IModelWithId>) {
         return Document.getCollection()
           .where(params)
           .delete()

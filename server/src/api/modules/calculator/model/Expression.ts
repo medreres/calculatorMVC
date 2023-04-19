@@ -28,7 +28,7 @@ export default class Expression {
 
   static create(params: ExpressionAttributes) {
     const instance = new ExpressionModel(params);
-    return ExpressionModel.insertOne(instance.attributes);
+    return instance.save();
   }
 
   static findMany(params: Filter<WithId<ExpressionAttributes & DefaultProperties>> = {}) {

@@ -1,4 +1,5 @@
-import { DefaultProperties, IStaticDocument } from "./Document";
+import { z } from "zod";
+import { IStaticDocument } from "./Document";
 
 export enum AttributeKeys {
   LIMIT = "limit",
@@ -21,6 +22,5 @@ export interface IStaticDb {
 
   disconnect(): Promise<void>;
 
-  // TODO any?
-  model<T extends DefaultProperties>(name: string, schema: any): IStaticDocument<T>;
+  model<T extends z.AnyZodObject>(name: string, schema: T): IStaticDocument<z.infer<T>>;
 }

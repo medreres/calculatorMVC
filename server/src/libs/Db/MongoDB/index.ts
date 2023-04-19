@@ -1,38 +1,25 @@
 import { z } from "zod";
-import { Filter, MongoClient, OptionalUnlessRequiredId, UpdateFilter, Document } from "mongodb";
+import { Filter, MongoClient, OptionalUnlessRequiredId, UpdateFilter } from "mongodb";
 import { QUERY_LIMIT } from "../config";
 import {
   AttributeKeys,
-  // AttributeKeys,
   DefaultProperties,
   FilterOptions,
   IAggregator,
   IDocument,
-  IStaticDb,
   IStaticDocument,
   ReplaceAttributes,
   SortAttribute,
   staticImplements,
   WithId,
   WithoutId,
+  Document,
+  IStaticDb,
 } from "../interfaces";
-import { CREATED_AT, DB_NAME, UPDATED_AT } from "../config/attributes";
+import { DB_NAME } from "../config/attributes";
 import { renameProperty } from "../utils";
 
 export * from "../config";
-
-// TODO fix type casting
-export function formatDocument<T>(doc: T) {
-  if (!doc) {
-    return doc;
-  }
-
-  Object.defineProperty(doc, "id", Object.getOwnPropertyDescriptor(doc, "_id")!);
-
-  delete doc["_id" as keyof typeof doc];
-
-  return doc;
-}
 
 @staticImplements<IStaticDb>()
 export default class MongoDB {
@@ -108,7 +95,13 @@ export default class MongoDB {
 
     return this.getCollection<T>()
       .findOne(data)
-      .then((result) => formatDocument(result));
+      .then((result) => {
+        if (result) {
+          renameProperty(result, "_id", "id");
+        }
+
+        return result;
+      });
   }
 
   private findMany<T extends DefaultProperties>(params: Filter<T>) {
@@ -139,38 +132,33 @@ export default class MongoDB {
       }
 
       exec() {
-        return this.collection.toArray().then((result) => result.map((document) => formatDocument(document)));
+        return this.collection.toArray().then((result) => result.map((document) => document));
       }
     }
 
     return new Aggregator();
   }
 
-  static model<T extends Document>(name: string, schema: z.AnyZodObject) {
-    // interfaces for property access
-    type IModelWithId = WithId<T & DefaultProperties>;
-    type IModelWithoutId = WithoutId<T & DefaultProperties>;
+  static model<T extends z.AnyZodObject>(name: string, schema: T) {
+    type Attributes = z.infer<typeof schema>;
+    type IModelWithId = WithId<Attributes & DefaultProperties>;
+    type IModelWithoutId = WithoutId<Attributes & DefaultProperties>;
 
     @staticImplements<IStaticDocument<IModelWithoutId>>()
     class Document implements IDocument<IModelWithoutId> {
-      // save ref to the collection
       private static collectionRef: MongoDB = new MongoDB(`${name}s`);
       attributes: IModelWithoutId;
 
-      // TODo zod extend
-      constructor(params: T) {
+      // TODO zod extend
+      constructor(params: Attributes) {
         // TODO avoid type casting
-        const parsedParams = schema.parse(params) as T;
+        const parsedParams = schema.parse(params) as IModelWithoutId;
 
-        this.attributes = {
-          ...parsedParams,
-          [CREATED_AT]: new Date(),
-          [UPDATED_AT]: new Date(),
-        };
+        this.attributes = parsedParams;
       }
 
       save() {
-        return Document.collectionRef.insertOne(this.attributes);
+        return Document.collectionRef.insertOne(this.attributes).then((result) => result.insertedId.toString());
       }
 
       /**
@@ -178,9 +166,12 @@ export default class MongoDB {
        * @param params Main attributes of document
        * @returns Promise which resolve on successful creation of document
        */
-      static create(params: T) {
+      static create(params: Attributes) {
         const newDocument = new Document(params);
-        return this.collectionRef.insertOne(newDocument.attributes);
+        return this.collectionRef.insertOne(newDocument.attributes).then((result) => {
+          console.log(result);
+          return result.insertedId.toString();
+        });
       }
 
       /**
@@ -190,7 +181,7 @@ export default class MongoDB {
        *
        */
       static insertOne(data: IModelWithoutId) {
-        return this.collectionRef.insertOne(data);
+        return this.collectionRef.insertOne(data).then((result) => result.insertedId.toString());
       }
 
       // TODO more abstract filtering
@@ -202,9 +193,11 @@ export default class MongoDB {
           });
         }
 
-        return Document.collectionRef.updateOne(params, {
-          $set: replaceData,
-        });
+        return Document.collectionRef
+          .updateOne(params, {
+            $set: replaceData,
+          })
+          .then(({ acknowledged }) => acknowledged);
       }
 
       static findOne(params: FilterOptions<IModelWithId>) {
@@ -212,7 +205,14 @@ export default class MongoDB {
           renameProperty(params, AttributeKeys.OR, "$or");
         }
 
-        return Document.collectionRef.findOne<IModelWithId>(params);
+        return Document.collectionRef.findOne<IModelWithId>(params).then((r) => {
+          if (r) {
+            renameProperty(r, "_id", AttributeKeys.ID);
+            r.id = r.id.toString();
+          }
+
+          return r as IModelWithId | null;
+        });
       }
 
       static findMany(params: FilterOptions<IModelWithId>) {
@@ -220,11 +220,11 @@ export default class MongoDB {
       }
 
       static deleteOne(params: FilterOptions<IModelWithId>) {
-        return Document.collectionRef.deleteOne(params);
+        return Document.collectionRef.deleteOne(params).then(({ acknowledged }) => acknowledged);
       }
 
       static deleteMany(params: FilterOptions<IModelWithId>) {
-        return Document.collectionRef.deleteMany(params);
+        return Document.collectionRef.deleteMany(params).then((r) => r.deletedCount);
       }
     }
 

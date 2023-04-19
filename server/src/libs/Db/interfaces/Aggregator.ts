@@ -1,7 +1,6 @@
-import { SortAttribute } from "./Document";
+import { DefaultProperties, SortAttribute } from "./Document";
 
-// TODO sort by id?
-export interface IAggregator<T> {
+export interface IAggregator<T extends DefaultProperties> {
   limit(value: number): IAggregator<T>;
   skip(value: number): IAggregator<T>;
   sort(value: SortAttribute<T>): IAggregator<T>;
