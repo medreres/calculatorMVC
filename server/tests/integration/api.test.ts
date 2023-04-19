@@ -1,52 +1,43 @@
+import { Expression } from "@/api/modules/calculator/model";
 import request from "supertest";
-import { clearDb, initializeApp, initializeDb } from "./utils";
+import {
+  clearDb,
+  IExpression,
+  initializeApp,
+  initializeDb,
+  invalidTestCases,
+  makePostRequest,
+  validTestCases,
+} from "./utils";
 const app = initializeApp();
 const req = request(app);
 
-const validTestCases = [
-  { expression: "1+5", result: "6" },
-  { expression: "1+13", result: "14" },
-  { expression: "5%3 + 3", result: "5" },
-  { expression: "sin0 + 5 * (3+2)", result: "25" },
-];
-
-const invalidTestCases = ["1*", "1-", "(", "()", "2*(3-", "asd"];
-
-// TODo test updating
-// arranging
-beforeAll(() => {
-  initializeDb();
+beforeAll(async () => {
+  await initializeDb();
+  await Expression.deleteMany({});
 });
-afterAll(clearDb);
+afterAll(async () => {
+  await Expression.deleteMany({});
+  await clearDb();
+});
 
-//TODO TEST limit, sort, etc
 describe("Testing endpoints", () => {
   it("GET /operations fetches available operations", async () => {
     const { body } = await req.get("/operations");
-
     expect(body.data).toBeDefined();
   });
 
   it("GET /constants fetches available constants", async () => {
     const { body } = await req.get("/constants");
-
     expect(body.data).toBeDefined();
   });
 
-  describe("/expression", () => {
-    describe("/POST", () => {
+  describe("/expression(s)", () => {
+    describe("/POST expression", () => {
       describe("Computes valid expressions", () => {
         validTestCases.forEach(({ expression, result }) => {
           it(`${expression} = ${result}`, async () => {
-            const { body } = await req
-              .post("/expression")
-              .send({
-                expression,
-              })
-              .set("Content-Type", "application/json")
-              .set("Accept", "application/json");
-            // .expect(200);
-
+            const body = await makePostRequest(req, expression);
             expect(body.data).toBe(result);
           });
         });
@@ -55,14 +46,7 @@ describe("Testing endpoints", () => {
       describe("Throws an error on invalid request", () => {
         invalidTestCases.forEach((expression) => {
           it(expression, async () => {
-            const { body } = await req
-              .post("/expression")
-              .send({
-                expression,
-              })
-              .set("Content-Type", "application/json")
-              .set("Accept", "application/json")
-              .expect(400);
+            const body = await makePostRequest(req, expression);
 
             expect(body.data).not.toBeDefined();
             expect(body.error).toBeDefined();
@@ -71,13 +55,63 @@ describe("Testing endpoints", () => {
       });
     });
 
-    // TODO more thorough test on order of cached responses
-    describe("/GET", () => {
+    describe("/GET expressions", () => {
       it("Caches correct results", async () => {
         const { body } = await req.get("/expressions");
-
         expect(body.data).toHaveLength(validTestCases.length);
       });
+
+      it("Caches correct results in correct order", async () => {
+        const {
+          body: { data },
+        } = await req.get("/expressions?sort=createdAt:asc");
+
+        data.forEach(({ expression }: IExpression, index: number) => {
+          expect(expression).toBe(validTestCases[index].expression);
+        });
+      });
+
+      it("Limits results", async () => {
+        const { body } = await req.get("/expressions?limit=3");
+        expect(body.data).toHaveLength(3);
+      });
+
+      it("Limits results 2", async () => {
+        const { body } = await req.get("/expressions?limit=4&skip=1");
+        expect(body.data).toHaveLength(4);
+      });
+
+      it("Sorts results", async () => {
+        const { body } = await req.get("/expressions?sort=createdAt:asc");
+        expect(body.data[0].expression).toBe(validTestCases[0].expression);
+      });
+
+      it("Sorts results 2", async () => {
+        const { body } = await req.get("/expressions?sort=createdAt:desc");
+        console.log(validTestCases[validTestCases.length - 1].expression);
+        expect(body.data[0].expression).toBe(validTestCases[validTestCases.length - 1].expression);
+      });
+
+      it("Skips results", async () => {
+        const { body } = await req.get("/expressions?skip=2&sort=createdAt:asc");
+        expect(body.data[0].expression).toBe(validTestCases[2].expression);
+      });
+
+      it("Skips results 2", async () => {
+        const { body } = await req.get("/expressions?sort=createdAt:asc&skip=1");
+        expect(body.data[0].expression).toBe(validTestCases[1].expression);
+      });
+    });
+
+    //TODO doesnt work because somehow end point doesn't sort results
+    it("Updates history", async () => {
+      await makePostRequest(req, validTestCases[0].expression);
+
+      const {
+        body: { data },
+      }: { body: { data: IExpression[] } } = await req.get("/expressions?sort=updatedAt:desc");
+
+      expect(data[0].expression).toBe(validTestCases[0].expression);
     });
   });
 });

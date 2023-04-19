@@ -1,5 +1,8 @@
+import knex, { Knex } from "knex";
 import {
+  AttributeKeys,
   DefaultProperties,
+  FilterOptions,
   IAggregator,
   IDocument,
   IStaticDb,
@@ -9,7 +12,6 @@ import {
   WithId,
   WithoutId,
 } from "../interfaces";
-import knex, { Knex } from "knex";
 import { z } from "zod";
 import { defaultProperties } from "../utils";
 import { QUERY_LIMIT } from "../config";
@@ -155,10 +157,41 @@ export default class PostgresDB {
         return Document.getCollection().insert(data as any);
       }
 
-      static findOne(params: Partial<Attributes>) {
-        return Document.getCollection()
-          .where(params)
-          .then((result) => result[0]);
+      //? should be recursive in case of nested queries
+      static findOne(params: FilterOptions<Attributes>) {
+        let query = Document.getCollection();
+
+        Object.entries(params).forEach(([key, value]) => {
+          if (key === AttributeKeys.OR && Array.isArray(value)) {
+            value.forEach((attribute, index) => {
+              Object.entries(attribute).forEach(([key, value]) => {
+                if (index === 0) {
+                  query.where({
+                    [key]: value,
+                  });
+                } else {
+                  query.orWhere({
+                    [key]: value,
+                  });
+                }
+              });
+            });
+            /**
+             * value = [
+             * {expression: '1+5'}
+             * ]
+             */
+          } else if (Array.isArray(value)) {
+            query.whereIn(key, value);
+          } else {
+            query.where(key, value);
+          }
+        });
+
+        return query.then((result) => result[0]);
+        // return Document.getCollection()
+        //   .where(params)
+        //   .then((result) => result[0]);
       }
 
       static findMany(params: Partial<Attributes>) {

@@ -3,6 +3,7 @@ import { Filter, MongoClient, OptionalUnlessRequiredId, UpdateFilter, Document }
 import { QUERY_LIMIT } from "../config";
 import {
   AttributeKeys,
+  // AttributeKeys,
   DefaultProperties,
   FilterOptions,
   IAggregator,
@@ -16,6 +17,7 @@ import {
   WithoutId,
 } from "../interfaces";
 import { CREATED_AT, DB_NAME, UPDATED_AT } from "../config/attributes";
+import { renameProperty } from "../utils";
 
 export * from "../config";
 
@@ -94,6 +96,17 @@ export default class MongoDB {
   }
 
   private findOne<T extends Document>(data: Filter<T>) {
+    // TODO or
+    // TODO { expression: ['1+2','3']}
+
+    /**
+     * or: [
+     * {
+     * expression:}]
+     */
+
+    // console.log(data)c
+
     return this.getCollection<T>()
       .findOne(data)
       .then((result) => formatDocument(result));
@@ -181,13 +194,7 @@ export default class MongoDB {
         return this.collectionRef.insertOne(data);
       }
 
-      // ? if updatedAt and createdAt are not passed, they will be undefined
-      // static insertMany(data: IModelWithoutId[]) {
-      //   return Document.collectionRef.insertMany(data);
-      // }
-
       // TODO more abstract filtering
-      // TODO $set is removed
       static updateOne(params: FilterOptions<IModelWithId>, replaceData: ReplaceAttributes<IModelWithId>) {
         if ("id" in params) {
           params = Object.assign(params, {
@@ -197,12 +204,18 @@ export default class MongoDB {
         }
 
         return Document.collectionRef.updateOne(params, {
-          [AttributeKeys.SET]: replaceData,
+          $set: replaceData,
         });
       }
 
       // TODO custom query b
       static findOne(params: FilterOptions<IModelWithId>) {
+        if (AttributeKeys.OR in params) {
+          renameProperty(params, AttributeKeys.OR, "$or");
+        }
+
+        // console.log(params);
+
         return Document.collectionRef.findOne<IModelWithId>(params);
       }
 

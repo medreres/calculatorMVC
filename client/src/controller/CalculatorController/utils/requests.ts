@@ -4,6 +4,7 @@ import { IConstant, IOperation } from "@/shared";
 export function fetchHistory(limit?: number): Promise<IOperation[]> {
   const url = buildUrl("/expressions", process.env.BASE_URL, {
     limit: (limit || HISTORY_SIZE).toString(),
+    sort: "updatedAt:desc",
   });
 
   return fetch(url)
@@ -27,6 +28,7 @@ export function fetchOperationsSymbols(): Promise<string[]> {
 
 export function fetchResult(expression: string) {
   const url = buildUrl("/expression", process.env.BASE_URL);
+
   return fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

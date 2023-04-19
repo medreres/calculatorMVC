@@ -17,10 +17,10 @@ app.use(calculatorRoutes);
 // TODO sort imports
 DB.connect(DB_URL)
   .then(() => {
-    logger.info("db connected");
+    logger.info("Db connected.");
 
     app.listen(PORT, () => {
-      logger.info(`Server listening on ${PORT}`);
+      logger.info(`Server listening on ${PORT}.`);
     });
   })
   .catch((err) => {

@@ -39,18 +39,11 @@ export type DefaultProperties = {
 // export type DefaultPropertiesWittId = Omit<DefaultPropertiesWithId, typeof ID>;
 
 export type FilterOperators<T> = {
-  [AttributeKeys.IN]?: T[];
+  // [AttributeKeys.IN]?: T[];
   [AttributeKeys.GT]?: T;
   [AttributeKeys.LT]?: T;
 };
 
-// interface for declaring schema for model
-// export type GenericInterface<T> = T | FilterOperators<T>;
-
-// allows to search using logical OR statement
-// export type Or<T> = {
-//   $or?: Partial<GenericInterface<T>>[];
-// };
 export type SortingValue = "asc" | "desc";
 export type SortAttribute<T> = {
   [Property in keyof T]: SortingValue;
@@ -70,13 +63,6 @@ export type AggregationAttributes<T> = {
 // interface for data to replace the old one
 export type ReplaceAttributes<T> = Partial<T>;
 
-// interface for querying db
-// allows use of $or, $in, $gt and etc.
-// export type QueryAttributes<T> = Partial<T & DefaultPropertiesWithId & Or<T>>;
-// export type Filter<T> = {
-//   [P in keyof T]: FilterOperators<WithId<T>>;
-// };
-
 export type RootFilterOperators<T> = {
   [AttributeKeys.AND]?: FilterOptions<T>[];
 
@@ -85,7 +71,7 @@ export type RootFilterOperators<T> = {
   [AttributeKeys.OR]?: FilterOptions<T>[];
 };
 
-export type Condition<T> = FilterOperators<T> | T;
+export type Condition<T> = FilterOperators<T> | T | T[];
 
 export type FilterOptions<T> = {
   [P in keyof T]?: Condition<WithId<T>[P]>;

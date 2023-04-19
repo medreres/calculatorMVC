@@ -12,7 +12,7 @@ export const PORT = portSchema.parse(process.env.PORT);
 
 // TODO custom error messages
 // TODO switch db url
-const dbUrlSchema = z.string().default(POSTGRES_TEST_URL);
+const dbUrlSchema = z.string().default(POSTGRES_DB_URL);
 export const DB_URL = dbUrlSchema.parse(process.env.DB_URL);
 
 const envSchema = z.string().default("development");

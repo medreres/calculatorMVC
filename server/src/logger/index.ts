@@ -7,7 +7,7 @@ const myFormat = printf(({ level, message, timestamp }) => {
 });
 
 const logger = createLogger({
-  level: NODE_ENV === "production" ? "warning" : "debug",
+  level: NODE_ENV === "production" ? "warning" : "info",
   format: combine(
     timestamp({
       format: "YYYY-MM-DD HH:mm:ss",

@@ -7,6 +7,4 @@ export interface IAggregator<T> {
   sort(value: SortAttribute<T>): IAggregator<T>;
 
   exec(): Promise<any[]>;
-
-  // TODO to array
 }

@@ -1,4 +1,4 @@
-import { Errors, HISTORY_SIZE } from "@/config";
+import { Errors } from "@/config";
 import { Request, Response } from "express";
 import logger from "@/logger";
 import { Expression } from "../model";
@@ -20,32 +20,42 @@ export const evaluate = (req: Request, res: Response) => {
 };
 
 export const getExpressions = (req: Request, res: Response) => {
-  const { limit = HISTORY_SIZE, sort, skip = 0 } = req.query;
+  const { limit, sort, skip } = req.query;
+
+  logger.info("GET /expressions");
+  logger.info(`limit, sort, skip: ${limit}, ${sort}, ${skip}`);
+
   let property: string = "updatedAt";
   let order: SortingValue = "desc";
 
+  const request = Expression.findMany({});
+
   if (typeof sort === "string") {
     [property, order] = sort.split(":") as [string, SortingValue];
+    request.sort({
+      [property]: order,
+    });
+  }
+
+  if (limit) {
+    request.limit(+limit);
+  }
+
+  if (skip) {
+    request.skip(+skip);
   }
 
   try {
-    return Expression.findMany({})
-      .sort({
-        [property]: order,
-      })
-      .limit(+limit)
-      .skip(+skip)
-      .exec()
-      .then((result) => {
-        const dataSerialized = result.map((result) => {
-          return {
-            ...result,
-            result: result.result.toString(),
-          };
-        });
-
-        return res.status(200).json({ data: dataSerialized });
+    return request.exec().then((result) => {
+      const dataSerialized = result.map((result) => {
+        return {
+          ...result,
+          result: result.result.toString(),
+        };
       });
+
+      return res.status(200).json({ data: dataSerialized });
+    });
   } catch (error) {
     logger.error(error);
     return res.status(500).json({ error: "Internal server error" });
