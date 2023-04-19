@@ -21,5 +21,5 @@ export interface IAggregator<T> {
   limit(value: number): IAggregator<T>;
   skip(value: number): IAggregator<T>;
   sort(value: ISort<T>): IAggregator<T>;
-  exec(): Promise<any>;
+  exec(): Promise<T[]>;
 }

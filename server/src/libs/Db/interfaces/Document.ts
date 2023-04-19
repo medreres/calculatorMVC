@@ -1,7 +1,9 @@
 import { z } from "zod";
-import { CREATED_AT, UPDATED_AT } from "../config";
+
 import { IAggregator } from "./Aggregator";
 import { AttributeKeys } from "./Db";
+import { CREATED_AT, UPDATED_AT } from "../config";
+import { InferType } from "../PostgresDB/utils";
 
 export interface IDocument<T> {
   attributes: WithoutId<T>;
@@ -58,7 +60,7 @@ export const defaultProperties = z.object({
   [CREATED_AT]: z.date().default(new Date()),
   [UPDATED_AT]: z.date().default(new Date()),
 });
-export type DefaultProperties = z.infer<typeof defaultProperties>;
+export type DefaultProperties = InferType<typeof defaultProperties>;
 
 export type SortingValue = "asc" | "desc";
 export type SortAttribute<T> = {

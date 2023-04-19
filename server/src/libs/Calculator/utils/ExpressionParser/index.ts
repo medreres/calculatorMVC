@@ -1,7 +1,3 @@
-import { defaultConstants, defaultOperations } from "../../config";
-import { Constant } from "../../interfaces";
-import Operation from "../Operation";
-
 import {
   createExpressionValidityRegex,
   getAvailableConstants,
@@ -10,12 +6,15 @@ import {
   parseSimpleOperations,
   parseTokens,
 } from "./services";
+import { defaultConstants, defaultOperations } from "../../config";
+import { Constant } from "../../interfaces";
+import Operation from "../Operation";
 
 export default class ExpressionParser {
   protected expressionValidityRegex: RegExp | null = null;
-  protected isValidityRegexUpdated: boolean = false;
+  protected isValidityRegexUpdated = false;
 
-  protected isRegexUpdated: boolean = false;
+  protected isRegexUpdated = false;
   protected operationsRaw: Map<string, Operation> = new Map();
   protected operationsRegex: RegExp | null = null;
 

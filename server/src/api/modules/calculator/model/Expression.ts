@@ -1,16 +1,19 @@
 import { z } from "zod";
-import { DefaultProperties, WithId } from "@/libs/Db/interfaces";
-import { DB } from "@/config";
-import logger from "@/logger";
-import { calculator } from "./services";
+
 import { Filter, ReplaceAttributes } from "./interfaces";
+import { calculator } from "./services";
+
+import { DB } from "@/config";
+import { DefaultProperties, WithId } from "@/libs/Db/interfaces";
+import { InferType } from "@/libs/Db/PostgresDB/utils";
+import logger from "@/logger";
 
 const expressionSchema = z.object({
   expression: z.string(),
   result: z.number(),
 });
 
-type ExpressionAttributes = z.infer<typeof expressionSchema>;
+type ExpressionAttributes = InferType<typeof expressionSchema>;
 
 const ExpressionModel = DB.model("Expression", expressionSchema);
 

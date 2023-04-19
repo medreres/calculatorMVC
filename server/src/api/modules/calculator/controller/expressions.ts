@@ -1,11 +1,13 @@
-import { Errors } from "@/config";
 import { Request, Response } from "express";
-import logger from "@/logger";
+
 import { Expression } from "../model";
+
+import { Errors } from "@/config";
 import { SortingValue } from "@/libs/Db";
+import logger from "@/logger";
 
 export const evaluate = (req: Request, res: Response) => {
-  let expression = req.body.expression as string;
+  const expression = req.body.expression as string;
   logger.info("Expression: " + expression);
 
   return Expression.evaluate(expression)
@@ -25,7 +27,7 @@ export const getExpressions = (req: Request, res: Response) => {
   logger.info("GET /expressions");
   logger.info(`limit, sort, skip: ${limit}, ${sort}, ${skip}`);
 
-  let property: string = "updatedAt";
+  let property = "updatedAt";
   let order: SortingValue = "desc";
 
   const request = Expression.findMany({});

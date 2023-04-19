@@ -1,22 +1,25 @@
-import { z } from "zod";
 import { Filter, MongoClient, OptionalUnlessRequiredId, UpdateFilter } from "mongodb";
+import { z } from "zod";
+
 import { QUERY_LIMIT } from "../config";
+import { DB_NAME } from "../config/attributes";
 import {
   AttributeKeys,
   DefaultProperties,
+  Document,
   FilterOptions,
   IAggregator,
   IDocument,
+  IStaticDb,
   IStaticDocument,
   ReplaceAttributes,
   SortAttribute,
-  staticImplements,
   WithId,
   WithoutId,
-  Document,
-  IStaticDb,
+  defaultProperties,
+  staticImplements,
 } from "../interfaces";
-import { DB_NAME } from "../config/attributes";
+import { InferType } from "../PostgresDB/utils";
 import { renameProperty } from "../utils";
 
 export * from "../config";
@@ -31,7 +34,11 @@ export default class MongoDB {
   }
 
   private getCollection<TSchema extends Document>() {
-    return MongoDB.client!.db(DB_NAME).collection<TSchema>(this.collectionName);
+    if (!MongoDB.client) {
+      throw new Error("Database is not connected.");
+    }
+
+    return MongoDB.client.db(DB_NAME).collection<TSchema>(this.collectionName);
   }
 
   public static connect(uri: string) {
@@ -45,7 +52,6 @@ export default class MongoDB {
       .connect()
       .then((client) => {
         MongoDB.client = client;
-        return client;
       })
       .catch((err) => {
         throw new Error(err);
@@ -72,7 +78,6 @@ export default class MongoDB {
     return this.getCollection<T>().updateOne(data, newData);
   }
 
-  // TODO
   private deleteOne<T extends Document>(data: Filter<T>) {
     return this.getCollection<T>().deleteOne(data);
   }
@@ -84,14 +89,6 @@ export default class MongoDB {
   private findOne<T extends Document>(data: Filter<T>) {
     // TODO or
     // TODO { expression: ['1+2','3']}
-
-    /**
-     * or: [
-     * {
-     * expression:}]
-     */
-
-    // console.log(data)c
 
     return this.getCollection<T>()
       .findOne(data)
@@ -140,19 +137,18 @@ export default class MongoDB {
   }
 
   static model<T extends z.AnyZodObject>(name: string, schema: T) {
-    type Attributes = z.infer<typeof schema>;
+    type Attributes = InferType<typeof schema>;
     type IModelWithId = WithId<Attributes & DefaultProperties>;
     type IModelWithoutId = WithoutId<Attributes & DefaultProperties>;
+    const validator = schema.merge(defaultProperties);
 
     @staticImplements<IStaticDocument<IModelWithoutId>>()
     class Document implements IDocument<IModelWithoutId> {
       private static collectionRef: MongoDB = new MongoDB(`${name}s`);
       attributes: IModelWithoutId;
 
-      // TODO zod extend
       constructor(params: Attributes) {
-        // TODO avoid type casting
-        const parsedParams = schema.parse(params) as IModelWithoutId;
+        const parsedParams = validator.parse(params) as IModelWithoutId;
 
         this.attributes = parsedParams;
       }
@@ -169,7 +165,6 @@ export default class MongoDB {
       static create(params: Attributes) {
         const newDocument = new Document(params);
         return this.collectionRef.insertOne(newDocument.attributes).then((result) => {
-          console.log(result);
           return result.insertedId.toString();
         });
       }
@@ -184,9 +179,8 @@ export default class MongoDB {
         return this.collectionRef.insertOne(data).then((result) => result.insertedId.toString());
       }
 
-      // TODO more abstract filtering
       static updateOne(params: FilterOptions<IModelWithId>, replaceData: ReplaceAttributes<IModelWithId>) {
-        if ("id" in params) {
+        if (AttributeKeys.ID in params) {
           params = Object.assign(params, {
             _id: params.id,
             id: undefined,
@@ -219,6 +213,7 @@ export default class MongoDB {
         return Document.collectionRef.findMany<IModelWithId>(params);
       }
 
+      // TODO parse T[] case
       static deleteOne(params: FilterOptions<IModelWithId>) {
         return Document.collectionRef.deleteOne(params).then(({ acknowledged }) => acknowledged);
       }

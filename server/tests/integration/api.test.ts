@@ -1,16 +1,26 @@
-import { Expression } from "@/api/modules/calculator/model";
 import request from "supertest";
-import {
-  clearDb,
-  IExpression,
-  initializeApp,
-  initializeDb,
-  invalidTestCases,
-  makePostRequest,
-  validTestCases,
-} from "./utils";
+
+import { IExpression, clearDb, initializeApp, initializeDb, invalidTestCases, validTestCases } from "./utils";
+
+import { Expression } from "@/api/modules/calculator/model";
+
 const app = initializeApp();
 const req = request(app);
+
+export async function makePostRequest(expression: string) {
+  const { body } = await req
+    .post("/expression")
+    .send({
+      expression,
+    })
+    .set("Content-Type", "application/json")
+    .set("Accept", "application/json");
+
+  return body as {
+    data: string;
+    error: string;
+  };
+}
 
 beforeAll(async () => {
   await initializeDb();
@@ -37,7 +47,7 @@ describe("Testing endpoints", () => {
       describe("Computes valid expressions", () => {
         validTestCases.forEach(({ expression, result }) => {
           it(`${expression} = ${result}`, async () => {
-            const body = await makePostRequest(req, expression);
+            const body = await makePostRequest(expression);
             expect(body.data).toBe(result);
           });
         });
@@ -46,7 +56,7 @@ describe("Testing endpoints", () => {
       describe("Throws an error on invalid request", () => {
         invalidTestCases.forEach((expression) => {
           it(expression, async () => {
-            const body = await makePostRequest(req, expression);
+            const body = await makePostRequest(expression);
 
             expect(body.data).not.toBeDefined();
             expect(body.error).toBeDefined();
@@ -105,7 +115,7 @@ describe("Testing endpoints", () => {
     });
 
     it("Updates history", async () => {
-      await makePostRequest(req, validTestCases[0].expression);
+      await makePostRequest(validTestCases[0].expression);
 
       const {
         body: { data },

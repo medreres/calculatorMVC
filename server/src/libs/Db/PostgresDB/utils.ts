@@ -1,7 +1,11 @@
-import logger from "@/logger";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
+
+import { Document } from "../interfaces";
+
 import PostgresDB from ".";
+
+import logger from "@/logger";
 
 export const initializeTable = async (collectionName: string, schema: z.AnyZodObject) => {
   const properties = Object.entries(getProperties(schema));
@@ -16,7 +20,6 @@ export const initializeTable = async (collectionName: string, schema: z.AnyZodOb
         table.increments("id");
 
         properties.forEach(([key, value]) => {
-          console.log(key, value);
           let mainAttribute;
 
           if (value.type === "string") {
@@ -51,4 +54,4 @@ function getProperties<T extends z.AnyZodObject>(schema: T) {
   return keys;
 }
 
-export type InferType<T extends z.AnyZodObject> = z.infer<T> & { [key: string]: any };
+export type InferType<T extends z.AnyZodObject> = z.infer<T> & Document;

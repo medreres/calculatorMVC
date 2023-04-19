@@ -1,7 +1,8 @@
-import RegularExpression from ".";
+import { IFormattedOperation, IPerformOperation } from "./interfaces";
 import { parenthesesGroupRegex } from "../../config";
 import Operation, { Notation } from "../../utils/Operation";
-import { IFormattedOperation, IPerformOperation } from "./interfaces";
+
+import RegularExpression from ".";
 
 export function evaluateParenthesesGroup(this: RegularExpression, expression: string) {
   let group: RegExpMatchArray | null;
@@ -34,11 +35,12 @@ export function calculate(this: RegularExpression, expression: string): string {
 }
 
 export function performOperation(this: RegularExpression, params: IPerformOperation) {
-  let { expression, operation, operationIndexInString } = params;
+  let { expression } = params;
+  const { operation, operationIndexInString } = params;
 
   // left and right hand sides of operation
-  let leftPart: string | undefined;
-  let rightPart: string | undefined;
+  let leftPart: string;
+  let rightPart: string;
 
   switch (operation.notation) {
     case Notation.INFIX:

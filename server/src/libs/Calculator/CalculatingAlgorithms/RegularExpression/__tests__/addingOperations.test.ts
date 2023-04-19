@@ -1,5 +1,6 @@
-import Operation, { Notation } from "@/libs/Calculator/utils/Operation";
 import { initializeCalculator } from "./utils";
+
+import Operation, { Notation } from "@/libs/Calculator/utils/Operation";
 
 const calc = initializeCalculator();
 
@@ -14,7 +15,7 @@ describe("Adding operations", () => {
     });
     calc.addOperation(operation);
 
-    let result = calc.evaluate("sign 10");
+    const result = calc.evaluate("sign 10");
 
     expect(result).toEqual(1);
   });

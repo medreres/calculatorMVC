@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { IStaticDocument } from "./Document";
+
+import { DefaultProperties, IStaticDocument } from "./Document";
+import { InferType } from "../PostgresDB/utils";
 
 export enum AttributeKeys {
   LIMIT = "limit",
@@ -18,9 +20,9 @@ export enum AttributeKeys {
 }
 
 export interface IStaticDb {
-  connect(url: string): Promise<any>;
+  connect(url: string): Promise<void>;
 
   disconnect(): Promise<void>;
 
-  model<T extends z.AnyZodObject>(name: string, schema: T): IStaticDocument<z.infer<T>>;
+  model<T extends z.AnyZodObject>(name: string, schema: T): IStaticDocument<InferType<T> & DefaultProperties>;
 }

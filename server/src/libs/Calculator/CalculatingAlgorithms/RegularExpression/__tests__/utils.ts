@@ -1,8 +1,8 @@
 import Calculator from "../../..";
-import CalculatingAlgorithms from "../..";
+import RegularExpression from "..";
 
 export function initializeCalculator() {
   const calc = new Calculator();
-  calc.setCalculatingAlgorithm(new CalculatingAlgorithms.RegularExpression());
+  calc.setCalculatingAlgorithm(new RegularExpression());
   return calc;
 }

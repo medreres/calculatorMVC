@@ -1,25 +1,23 @@
 import knex, { Knex } from "knex";
+import { z } from "zod";
+
+import { initializeTable } from "./utils";
+import { QUERY_LIMIT } from "../config";
 import {
   AttributeKeys,
-  defaultProperties,
   DefaultProperties,
+  defaultProperties,
+  Document,
   FilterOptions,
   IAggregator,
   IDocument,
-  IStaticDb,
-  IStaticDocument,
   SortAttribute,
-  staticImplements,
   WithId,
   WithoutId,
 } from "../interfaces";
-import { z } from "zod";
-import { QUERY_LIMIT } from "../config";
-import { initializeTable } from "./utils";
 
-@staticImplements<IStaticDb>()
 export default class PostgresDB {
-  static client: Knex<any, unknown[]>;
+  static client: Knex<Document, unknown[]>;
   protected collectionName: string;
 
   private constructor(collection: string) {
@@ -37,39 +35,81 @@ export default class PostgresDB {
     return Promise.resolve();
   }
 
-  protected getCollection<T extends DefaultProperties>() {
-    return PostgresDB.client<T>(this.collectionName);
+  protected static getClient<T extends Document>(collectionName: string) {
+    if (!PostgresDB.client) {
+      throw new Error("Database is not connected.");
+    }
+
+    return PostgresDB.client<T>(collectionName);
   }
 
-  // TODO crutches
+  protected getCollection<T extends DefaultProperties>() {
+    return PostgresDB.getClient<T>(this.collectionName);
+  }
+
   static disconnect() {
     return Promise.resolve();
   }
 
-  // private insertOne<T extends DefaultProperties>(data: T) {
-  //   return this.getCollection().insert(data);
-  // }
+  private insertOne<T extends DefaultProperties>(data: T) {
+    return this.getCollection()
+      .insert(data, ["id"])
+      .then((result) => {
+        return result[0].id;
+      });
+  }
 
-  // // private insertMany(data: DefaultPropertiesWithoutId[]) {
-  // //   return this.getCollection().insertMany(data);
-  // // }
+  private updateOne<T extends DefaultProperties>(params: FilterOptions<T>, updateFields: Partial<T>) {
+    return this.getCollection()
+      .where(params)
+      .update(updateFields)
+      .then((r) => Boolean(r));
+  }
 
-  // // private updateOne<T extends Document>(data: Partial<T>, newData: UpdateFilter<T>) {
-  // //   return Promise.resolve();
-  // // }
+  private deleteOne<T extends Document>(data: FilterOptions<T>) {
+    return this.getCollection()
+      .where(data)
+      .limit(1)
+      .delete()
+      .then((r) => Boolean(r));
+  }
 
-  // // // TODO
-  // // private deleteOne<T extends Document>(data: Partial<T>) {
-  // //   return Promise.resolve();
-  // // }
+  private deleteMany<T extends Document>(data: FilterOptions<T>) {
+    return this.getCollection()
+      .where(data)
+      .delete()
+      .then((result) => result);
+  }
 
-  // // private deleteMany<T extends Document>(data: Partial<T>) {
-  // //   return Promise.resolve();
-  // // }
+  //? should be recursive in case of nested queries}
+  //? like {or: [{expression: ['1+2', '3], {result: 3}}
+  private findOne<T extends DefaultProperties>(params: FilterOptions<T>) {
+    const query = this.getCollection<T>();
 
-  // // private findOne<T extends Document>(data: Partial<T>) {
-  // //   return this.getCollection().select().where(data);
-  // // }
+    Object.entries(params).forEach(([key, value]) => {
+      if (key === AttributeKeys.OR && Array.isArray(value)) {
+        value.forEach((attribute, index) => {
+          Object.entries(attribute).forEach(([key, value]) => {
+            if (index === 0) {
+              query.where({
+                [key]: value,
+              });
+            } else {
+              query.orWhere({
+                [key]: value,
+              });
+            }
+          });
+        });
+      } else if (Array.isArray(value)) {
+        query.whereIn(key, value);
+      } else {
+        query.where(key, value);
+      }
+    });
+
+    return query.then((result) => result[0]);
+  }
 
   private findMany<T extends DefaultProperties>(params: FilterOptions<T>) {
     const collection = this.getCollection<T>();
@@ -79,7 +119,6 @@ export default class PostgresDB {
 
       constructor() {
         this.collection = collection;
-        // set default limit
         this.collection.limit(QUERY_LIMIT);
       }
 
@@ -115,30 +154,19 @@ export default class PostgresDB {
     type IModelWithoutId = Attributes & DefaultProperties;
     const validator = schema.merge(defaultProperties);
 
+    // initialize table
     setImmediate(initializeTable.bind(null, collectionName, validator));
 
-    @staticImplements<IStaticDocument<IModelWithoutId>>()
     class Document implements IDocument<IModelWithoutId> {
       private static collectionRef = new PostgresDB(collectionName);
-      attributes: WithoutId<Attributes & DefaultProperties> & {};
-
-      private static getCollection<T extends DefaultProperties>() {
-        return Document.collectionRef.getCollection<T>();
-      }
+      attributes: WithoutId<Attributes & DefaultProperties>;
 
       constructor(params: Attributes) {
-        // parse data
-        // TODO type casting
         this.attributes = validator.parse(params) as IModelWithoutId;
       }
 
       save() {
-        // TODo type casting
-        return Document.getCollection()
-          .insert(this.attributes, ["id"])
-          .then((result) => {
-            return (result[0] as any).id;
-          });
+        return Document.collectionRef.insertOne(this.attributes);
       }
 
       static create(params: Attributes) {
@@ -147,52 +175,15 @@ export default class PostgresDB {
       }
 
       static updateOne(params: FilterOptions<IModelWithId>, updateFields: Partial<Attributes>) {
-        return Document.getCollection()
-          .where(params)
-          .update(updateFields)
-          .then((r) => Boolean(r));
+        return this.collectionRef.updateOne(params, updateFields);
       }
 
       static insertOne(data: IModelWithoutId) {
-        // TODO type casting
-        return Document.getCollection()
-          .insert(data)
-          .then((result) => (result[0] as any).id as string);
+        return this.collectionRef.insertOne(data);
       }
 
-      //? should be recursive in case of nested queries
       static findOne(params: FilterOptions<IModelWithId>) {
-        let query = Document.getCollection<IModelWithId>();
-
-        Object.entries(params).forEach(([key, value]) => {
-          if (key === AttributeKeys.OR && Array.isArray(value)) {
-            value.forEach((attribute, index) => {
-              Object.entries(attribute).forEach(([key, value]) => {
-                if (index === 0) {
-                  query.where({
-                    [key]: value,
-                  });
-                } else {
-                  query.orWhere({
-                    [key]: value,
-                  });
-                }
-              });
-            });
-            /**
-             * value = [
-             * {expression: '1+5'}
-             * ]
-             */
-          } else if (Array.isArray(value)) {
-            query.whereIn(key, value);
-          } else {
-            query.where(key, value);
-          }
-        });
-
-        // TODO type casting
-        return query.then((result: any) => result[0] as Promise<IModelWithId | null>);
+        return this.collectionRef.findOne(params);
       }
 
       static findMany(params: FilterOptions<IModelWithId>) {
@@ -200,18 +191,11 @@ export default class PostgresDB {
       }
 
       static deleteOne(params: FilterOptions<IModelWithId>) {
-        return Document.getCollection()
-          .where(params)
-          .limit(1)
-          .delete()
-          .then((r) => Boolean(r));
+        return this.collectionRef.deleteOne(params);
       }
 
       static deleteMany(params: FilterOptions<IModelWithId>) {
-        return Document.getCollection()
-          .where(params)
-          .delete()
-          .then((result) => result);
+        return this.collectionRef.deleteMany(params);
       }
     }
 

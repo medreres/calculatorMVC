@@ -1,5 +1,6 @@
-import { NODE_ENV } from "@/config";
 import winston, { createLogger, format, transports } from "winston";
+
+import { NODE_ENV } from "@/config";
 const { combine, timestamp, printf, colorize, json } = format;
 
 const myFormat = printf(({ level, message, timestamp }) => {
