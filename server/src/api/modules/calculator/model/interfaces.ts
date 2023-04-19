@@ -1,6 +1,6 @@
-import { AttributeKeys, FilterOperators, WithId } from "@/libs/Db";
+import { AttributeKeys, WithId } from "@/libs/Db";
 
-type Condition<T> = FilterOperators<T> | T | T[];
+type Condition<T> = T | T[];
 
 export type Filter<T> = {
   [P in keyof T]?: Condition<WithId<T>[P]>;
@@ -8,8 +8,6 @@ export type Filter<T> = {
 
 type RootFilterOperators<T> = {
   [AttributeKeys.OR]?: Filter<T>[];
-  [AttributeKeys.NOR]?: Filter<T>[];
-  [AttributeKeys.AND]?: Filter<T>[];
 };
 
 export type ReplaceAttributes<T> = Partial<T>;

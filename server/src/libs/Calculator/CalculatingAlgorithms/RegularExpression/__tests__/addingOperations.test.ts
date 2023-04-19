@@ -3,7 +3,7 @@ import { initializeCalculator } from "./utils";
 
 const calc = initializeCalculator();
 
-// TODO
+// FIXME g in sign could potentially be replaced sign -> si9.81n
 describe("Adding operations", () => {
   test("Adding sign", () => {
     const operation = new Operation({

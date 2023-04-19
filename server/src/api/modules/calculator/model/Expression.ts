@@ -15,8 +15,6 @@ type ExpressionAttributes = z.infer<typeof expressionSchema>;
 const ExpressionModel = DB.model("Expression", expressionSchema);
 
 export default class Expression {
-  // TODO too much dependency in types from mongodb
-  // TODO query attributes support
   static findOne(params: Filter<WithId<ExpressionAttributes & DefaultProperties>>) {
     return ExpressionModel.findOne(params);
   }
@@ -28,22 +26,19 @@ export default class Expression {
     return ExpressionModel.updateOne(params, updateFields);
   }
 
-  // TODO mongodb dependency
   static create(params: ExpressionAttributes) {
     const instance = new ExpressionModel(params);
     return ExpressionModel.insertOne(instance.attributes);
   }
 
-  // TODO types to mongodb get collection
-  static findMany(params: Partial<WithId<ExpressionAttributes & DefaultProperties>> = {}) {
+  static findMany(params: Filter<WithId<ExpressionAttributes & DefaultProperties>> = {}) {
     return ExpressionModel.findMany(params);
   }
 
-  static deleteMany(params: Partial<WithId<ExpressionAttributes & DefaultProperties>>) {
+  static deleteMany(params: Filter<WithId<ExpressionAttributes & DefaultProperties>>) {
     return ExpressionModel.deleteMany(params);
   }
 
-  // TODO make do with id
   static evaluate(expression: string): Promise<string> {
     expression = expression.replaceAll(" ", "");
     // find this expression in db, if exists - return result

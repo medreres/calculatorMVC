@@ -71,7 +71,7 @@ export default class PostgresDB {
   // //   return this.getCollection().select().where(data);
   // // }
 
-  private findMany<T extends DefaultProperties>(params: Partial<T>) {
+  private findMany<T extends DefaultProperties>(params: FilterOptions<T>) {
     const collection = this.getCollection<T>();
 
     class Aggregator implements IAggregator<WithId<T>> {
@@ -119,8 +119,6 @@ export default class PostgresDB {
 
     setImmediate(initializeTable.bind(null, collectionName, validator));
 
-    // TODO create table if not exist
-
     @staticImplements<IStaticDocument<IModelWithoutId>>()
     class Document implements IDocument<IModelWithoutId> {
       attributes: WithoutId<Attributes & DefaultProperties> & {};
@@ -146,7 +144,7 @@ export default class PostgresDB {
         return instance.save();
       }
 
-      static updateOne(params: Partial<Attributes>, updateFields: Partial<Attributes>) {
+      static updateOne(params: FilterOptions<Attributes>, updateFields: Partial<Attributes>) {
         return Document.getCollection()
           .where(params)
           .update(updateFields as any);
@@ -189,22 +187,17 @@ export default class PostgresDB {
         });
 
         return query.then((result) => result[0]);
-        // return Document.getCollection()
-        //   .where(params)
-        //   .then((result) => result[0]);
       }
 
-      static findMany(params: Partial<Attributes>) {
+      static findMany(params: FilterOptions<Attributes>) {
         return this.collectionRef.findMany<IModelWithId>(params);
       }
 
-      // TODO
-      static deleteOne(params: Partial<Attributes>) {
+      static deleteOne(params: FilterOptions<Attributes>) {
         return Document.getCollection().where(params);
       }
 
-      // TODO
-      static deleteMany(params: Partial<Attributes>) {
+      static deleteMany(params: FilterOptions<Attributes>) {
         return Document.getCollection()
           .where(params)
           .delete()

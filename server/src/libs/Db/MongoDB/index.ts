@@ -34,7 +34,6 @@ export function formatDocument<T>(doc: T) {
   return doc;
 }
 
-// TODO? class collection?
 @staticImplements<IStaticDb>()
 export default class MongoDB {
   protected static client: MongoClient | null = null;
@@ -208,13 +207,10 @@ export default class MongoDB {
         });
       }
 
-      // TODO custom query b
       static findOne(params: FilterOptions<IModelWithId>) {
         if (AttributeKeys.OR in params) {
           renameProperty(params, AttributeKeys.OR, "$or");
         }
-
-        // console.log(params);
 
         return Document.collectionRef.findOne<IModelWithId>(params);
       }

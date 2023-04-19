@@ -1,5 +1,5 @@
 import { NODE_ENV } from "@/config";
-import { createLogger, format, transports } from "winston";
+import winston, { createLogger, format, transports } from "winston";
 const { combine, timestamp, printf, colorize, json } = format;
 
 const myFormat = printf(({ level, message, timestamp }) => {
@@ -16,8 +16,12 @@ const logger = createLogger({
     json(),
     myFormat
   ),
-  // TODO save to files
-  transports: [new transports.Console()],
+  transports: [
+    new transports.Console(),
+    new winston.transports.File({ filename: "./logs/errors.log", level: "error" }),
+    new winston.transports.File({ filename: "./logs/warnings.log", level: "warning" }),
+    // new winston.transports.File({ filename: "./logs/info.log", level: "info" }),
+  ],
 });
 
 export default logger;
