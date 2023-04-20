@@ -27,7 +27,7 @@ export const getExpressions = (req: Request, res: Response) => {
   logger.info("GET /expressions");
   logger.info(`limit, sort, skip: ${limit}, ${sort}, ${skip}`);
 
-  Expression.getExpressions({
+  return Expression.getExpressions({
     limit: +(limit || QUERY_LIMIT),
     sort: sort as string,
     skip: +(skip || 0),

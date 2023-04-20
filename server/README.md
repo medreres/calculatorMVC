@@ -18,7 +18,7 @@ Response object:
 
 ## POST evaluate
 
-`POST /evaluate` - evaluates math expression given via expression param
+`POST /expression` - evaluates math expression given via expression param
 
 ```ts
 body: {
@@ -67,7 +67,7 @@ Response object:
 {
   data: [
     {
-      _id: "6433c20a9db5dd90e7a95bad",
+      id: "6433c20a9db5dd90e7a95bad",
       createdAt: "2023-04-10T08:00:10.242Z",
       updatedAt: "2023-04-10T08:00:10.242Z",
       expression: "1262-123",
