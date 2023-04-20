@@ -21,8 +21,8 @@ export type WithId<T> = T & {
 
 // default properties for abstract model
 export const defaultProperties = z.object({
-  [CREATED_AT]: z.date().default(new Date()),
-  [UPDATED_AT]: z.date().default(new Date()),
+  [CREATED_AT]: z.date().default(() => new Date()),
+  [UPDATED_AT]: z.date().default(() => new Date()),
 });
 export type DefaultProperties = InferType<typeof defaultProperties>;
 
