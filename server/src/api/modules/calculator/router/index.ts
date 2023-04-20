@@ -2,7 +2,6 @@ import { Router } from "express";
 
 import { evaluateValidator, getExpressionsValidator } from "./services";
 import { evaluate, getConstants, getExpressions, getOperations } from "../controller";
-import { Expression } from "../model";
 
 const router = Router();
 
@@ -17,27 +16,6 @@ router.get("/operations", getOperations);
 
 // return list of available constants
 router.get("/constants", getConstants);
-
-router.get("/test", (_req, res) => {
-  Expression.findOne({
-    or: [
-      {
-        expression: "1+52",
-      },
-      {
-        expression: "5%3-1051+1232",
-      },
-      {
-        result: 25,
-      },
-      {
-        result: -12326,
-      },
-    ],
-  }).then((result) => {
-    res.send(result);
-  });
-});
 
 /**
  * @description returns all the expressions

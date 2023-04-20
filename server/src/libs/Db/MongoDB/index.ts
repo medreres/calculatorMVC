@@ -1,30 +1,25 @@
 import { Filter, MongoClient, OptionalUnlessRequiredId, UpdateFilter } from "mongodb";
 import { z } from "zod";
 
+import { preformatData, formatResponse } from "./utils";
 import { QUERY_LIMIT } from "../config";
 import { DB_NAME } from "../config/attributes";
 import {
-  AttributeKeys,
   DefaultProperties,
   Document,
   FilterOptions,
   IAggregator,
   IDocument,
-  IStaticDb,
-  IStaticDocument,
   ReplaceAttributes,
   SortAttribute,
   WithId,
   WithoutId,
   defaultProperties,
-  staticImplements,
 } from "../interfaces";
 import { InferType } from "../PostgresDB/utils";
-import { renameProperty } from "../utils";
 
 export * from "../config";
 
-@staticImplements<IStaticDb>()
 export default class MongoDB {
   protected static client: MongoClient | null = null;
   protected collectionName: string;
@@ -43,7 +38,7 @@ export default class MongoDB {
 
   public static connect(uri: string) {
     if (!uri) {
-      throw new Error("Db url is required");
+      throw new Error("Url is required.");
     }
 
     const client = new MongoClient(uri);
@@ -67,7 +62,11 @@ export default class MongoDB {
   }
 
   private insertOne(data: OptionalUnlessRequiredId<DefaultProperties>) {
-    return this.getCollection().insertOne(data);
+    preformatData(data);
+
+    return this.getCollection()
+      .insertOne(data)
+      .then((result) => result.insertedId.toString());
   }
 
   // private insertMany(data: DefaultPropertiesWithoutId[]) {
@@ -75,33 +74,38 @@ export default class MongoDB {
   // }
 
   private updateOne<T extends Document>(data: Filter<T>, newData: UpdateFilter<T>) {
+    preformatData(data);
+
     return this.getCollection<T>().updateOne(data, newData);
   }
 
   private deleteOne<T extends Document>(data: Filter<T>) {
+    preformatData(data);
+
     return this.getCollection<T>().deleteOne(data);
   }
 
   private deleteMany<T extends Document>(data: Filter<T>) {
+    preformatData(data);
+
     return this.getCollection<T>().deleteMany(data);
   }
 
   private findOne<T extends Document>(data: Filter<T>) {
-    // TODO or
-    // TODO { expression: ['1+2','3']}
+    preformatData(data);
 
     return this.getCollection<T>()
       .findOne(data)
       .then((result) => {
-        if (result) {
-          renameProperty(result, "_id", "id");
-        }
+        result && formatResponse(result);
 
         return result;
       });
   }
 
   private findMany<T extends DefaultProperties>(params: Filter<T>) {
+    preformatData(params);
+
     const collection = this.getCollection<T & DefaultProperties>().find(params);
 
     class Aggregator implements IAggregator<WithId<T>> {
@@ -129,7 +133,12 @@ export default class MongoDB {
       }
 
       exec() {
-        return this.collection.toArray().then((result) => result.map((document) => document));
+        return this.collection.toArray().then((result) =>
+          result.map((document) => {
+            formatResponse(document);
+            return document;
+          })
+        );
       }
     }
 
@@ -142,7 +151,6 @@ export default class MongoDB {
     type IModelWithoutId = WithoutId<Attributes & DefaultProperties>;
     const validator = schema.merge(defaultProperties);
 
-    @staticImplements<IStaticDocument<IModelWithoutId>>()
     class Document implements IDocument<IModelWithoutId> {
       private static collectionRef: MongoDB = new MongoDB(`${name}s`);
       attributes: IModelWithoutId;
@@ -154,7 +162,7 @@ export default class MongoDB {
       }
 
       save() {
-        return Document.collectionRef.insertOne(this.attributes).then((result) => result.insertedId.toString());
+        return Document.collectionRef.insertOne(this.attributes);
       }
 
       /**
@@ -164,9 +172,7 @@ export default class MongoDB {
        */
       static create(params: Attributes) {
         const newDocument = new Document(params);
-        return this.collectionRef.insertOne(newDocument.attributes).then((result) => {
-          return result.insertedId.toString();
-        });
+        return this.collectionRef.insertOne(newDocument.attributes);
       }
 
       /**
@@ -176,17 +182,10 @@ export default class MongoDB {
        *
        */
       static insertOne(data: IModelWithoutId) {
-        return this.collectionRef.insertOne(data).then((result) => result.insertedId.toString());
+        return this.collectionRef.insertOne(data);
       }
 
       static updateOne(params: FilterOptions<IModelWithId>, replaceData: ReplaceAttributes<IModelWithId>) {
-        if (AttributeKeys.ID in params) {
-          params = Object.assign(params, {
-            _id: params.id,
-            id: undefined,
-          });
-        }
-
         return Document.collectionRef
           .updateOne(params, {
             $set: replaceData,
@@ -195,25 +194,13 @@ export default class MongoDB {
       }
 
       static findOne(params: FilterOptions<IModelWithId>) {
-        if (AttributeKeys.OR in params) {
-          renameProperty(params, AttributeKeys.OR, "$or");
-        }
-
-        return Document.collectionRef.findOne<IModelWithId>(params).then((r) => {
-          if (r) {
-            renameProperty(r, "_id", AttributeKeys.ID);
-            r.id = r.id.toString();
-          }
-
-          return r as IModelWithId | null;
-        });
+        return Document.collectionRef.findOne<IModelWithId>(params);
       }
 
       static findMany(params: FilterOptions<IModelWithId>) {
         return Document.collectionRef.findMany<IModelWithId>(params);
       }
 
-      // TODO parse T[] case
       static deleteOne(params: FilterOptions<IModelWithId>) {
         return Document.collectionRef.deleteOne(params).then(({ acknowledged }) => acknowledged);
       }

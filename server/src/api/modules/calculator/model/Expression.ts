@@ -49,7 +49,7 @@ export default class Expression {
       if (history) {
         logger.info("Fetched expression from db\n" + JSON.stringify(history));
 
-        return Expression.updateOne({ expression }, { updatedAt: new Date() }).then(() => {
+        return Expression.updateOne({ id: history.id }, { updatedAt: new Date() }).then(() => {
           return history.result.toString();
         });
       }

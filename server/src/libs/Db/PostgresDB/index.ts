@@ -1,10 +1,9 @@
 import knex, { Knex } from "knex";
 import { z } from "zod";
 
-import { initializeTable } from "./utils";
+import { buildQuery, initializeTable } from "./utils";
 import { QUERY_LIMIT } from "../config";
 import {
-  AttributeKeys,
   DefaultProperties,
   defaultProperties,
   Document,
@@ -60,22 +59,24 @@ export default class PostgresDB {
   }
 
   private updateOne<T extends DefaultProperties>(params: FilterOptions<T>, updateFields: Partial<T>) {
-    return this.getCollection()
-      .where(params)
-      .update(updateFields)
-      .then((r) => Boolean(r));
+    const query = this.getCollection();
+    buildQuery(query, params);
+    return query.update(updateFields).then((r) => Boolean(r));
   }
 
   private deleteOne<T extends Document>(data: FilterOptions<T>) {
-    return this.getCollection()
-      .where(data)
+    const query = this.getCollection();
+    buildQuery(query, data);
+    return query
       .limit(1)
       .delete()
       .then((r) => Boolean(r));
   }
 
   private deleteMany<T extends Document>(data: FilterOptions<T>) {
-    return this.getCollection()
+    const query = this.getCollection();
+    buildQuery(query, data);
+    return query
       .where(data)
       .delete()
       .then((result) => result);
@@ -85,34 +86,14 @@ export default class PostgresDB {
   //? like {or: [{expression: ['1+2', '3], {result: 3}}
   private findOne<T extends DefaultProperties>(params: FilterOptions<T>) {
     const query = this.getCollection<T>();
-
-    Object.entries(params).forEach(([key, value]) => {
-      if (key === AttributeKeys.OR && Array.isArray(value)) {
-        value.forEach((attribute, index) => {
-          Object.entries(attribute).forEach(([key, value]) => {
-            if (index === 0) {
-              query.where({
-                [key]: value,
-              });
-            } else {
-              query.orWhere({
-                [key]: value,
-              });
-            }
-          });
-        });
-      } else if (Array.isArray(value)) {
-        query.whereIn(key, value);
-      } else {
-        query.where(key, value);
-      }
-    });
+    buildQuery(query, params);
 
     return query.then((result) => result[0]);
   }
 
   private findMany<T extends DefaultProperties>(params: FilterOptions<T>) {
     const collection = this.getCollection<T>();
+    buildQuery(collection, params);
 
     class Aggregator implements IAggregator<WithId<T>> {
       collection;
@@ -134,14 +115,14 @@ export default class PostgresDB {
 
       sort(params: SortAttribute<Partial<T>>) {
         Object.entries(params).map(([key, value]) => {
-          this.collection.orderBy(key, value as string);
+          this.collection.orderBy(key, value);
         });
 
         return this;
       }
 
       exec() {
-        return this.collection.select().where(params);
+        return this.collection.select();
       }
     }
 

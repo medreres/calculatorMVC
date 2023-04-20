@@ -1,11 +1,36 @@
+import { Knex } from "knex";
 import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
-import { Document } from "../interfaces";
+import { AttributeKeys, Document } from "../interfaces";
 
 import PostgresDB from ".";
 
 import logger from "@/logger";
+
+export const buildQuery = (query: Knex.QueryBuilder, params: object) => {
+  Object.entries(params).forEach(([key, value]) => {
+    if (key === AttributeKeys.OR && Array.isArray(value)) {
+      value.forEach((attribute, index) => {
+        Object.entries(attribute).forEach(([key, value]) => {
+          if (index === 0) {
+            query.where({
+              [key]: value,
+            });
+          } else {
+            query.orWhere({
+              [key]: value,
+            });
+          }
+        });
+      });
+    } else if (Array.isArray(value)) {
+      query.whereIn(key, value);
+    } else {
+      query.where(key, value);
+    }
+  });
+};
 
 export const initializeTable = async (collectionName: string, schema: z.AnyZodObject) => {
   const properties = Object.entries(getProperties(schema));
@@ -50,6 +75,7 @@ type IProperties<T> = {
   };
 };
 function getProperties<T extends z.AnyZodObject>(schema: T) {
+  // casting to any because cant access the property the other way
   const keys: IProperties<T> = (zodToJsonSchema(schema) as any).properties;
   return keys;
 }
