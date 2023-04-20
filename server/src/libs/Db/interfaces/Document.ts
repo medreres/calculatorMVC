@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { IAggregator } from "./Aggregator";
 import { AttributeKeys } from "./Db";
 import { CREATED_AT, UPDATED_AT } from "../config";
 import { InferType } from "../PostgresDB/utils";
@@ -12,41 +11,6 @@ export interface IDocument<T> {
    * returns id of saved document
    */
   save(): Promise<string>;
-}
-
-export interface IStaticDocument<T> {
-  new (params: T): IDocument<T>;
-
-  // Creation
-  /**
-   *
-   * @param params Attributes needed for constructor to create document and save
-   */
-  create(params: T): Promise<string>;
-
-  /**
-   *
-   * @param params Attributes essential for document to be in database
-   */
-  insertOne(attributes: T): Promise<string>;
-
-  // Update
-  updateOne(
-    params: FilterOptions<WithId<T>>,
-    replaceAttributes: Partial<WithoutId<T & DefaultProperties>>
-  ): Promise<boolean>;
-
-  // Read
-  findOne(params: FilterOptions<WithId<T>>): Promise<WithId<T & DefaultProperties> | null>;
-  findMany(params: FilterOptions<WithId<T>>): IAggregator<WithId<T & DefaultProperties>>;
-
-  // Delete
-  /**
-   *
-   * @return {Promise<number>} number of documents deleted
-   */
-  deleteMany(params: FilterOptions<WithId<T>>): Promise<number>;
-  deleteOne(params: FilterOptions<WithId<T>>): Promise<boolean>;
 }
 
 export type WithoutId<T> = DefaultProperties & T;

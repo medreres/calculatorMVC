@@ -23,3 +23,9 @@ export interface IAggregator<T> {
   sort(value: ISort<T>): IAggregator<T>;
   exec(): Promise<T[]>;
 }
+
+export interface IGetExpressions {
+  skip?: number;
+  sort?: string;
+  limit?: number;
+}

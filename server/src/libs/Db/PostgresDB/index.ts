@@ -82,7 +82,7 @@ export default class PostgresDB {
       .then((result) => result);
   }
 
-  //? should be recursive in case of nested queries}
+  //TODO should be recursive in case of nested queries}
   //? like {or: [{expression: ['1+2', '3], {result: 3}}
   private findOne<T extends DefaultProperties>(params: FilterOptions<T>) {
     const query = this.getCollection<T>();

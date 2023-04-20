@@ -9,12 +9,12 @@ import {
   Document,
   FilterOptions,
   IAggregator,
-  IDocument,
   ReplaceAttributes,
   SortAttribute,
   WithId,
   WithoutId,
   defaultProperties,
+  IDocument,
 } from "../interfaces";
 import { InferType } from "../PostgresDB/utils";
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Filter, ReplaceAttributes } from "./interfaces";
+import { Filter, IGetExpressions, ReplaceAttributes, SortingValue } from "./interfaces";
 import { calculator } from "./services";
 
 import { DB } from "@/config";
@@ -89,5 +89,42 @@ export default class Expression {
   static getConstants() {
     const constants = calculator.getConstants();
     return constants;
+  }
+
+  static async getExpressions({ skip, sort, limit }: IGetExpressions) {
+    let property = "updatedAt";
+    let order: SortingValue = "desc";
+
+    const request = Expression.findMany({});
+
+    if (typeof sort === "string") {
+      [property, order] = sort.split(":") as [string, SortingValue];
+      request.sort({
+        [property]: order,
+      });
+    }
+
+    if (limit) {
+      request.limit(limit);
+    }
+
+    if (skip) {
+      request.skip(skip);
+    }
+
+    try {
+      return request.exec().then((result) => {
+        const dataSerialized = result.map((result) => {
+          return {
+            ...result,
+            result: result.result.toString(),
+          };
+        });
+
+        return dataSerialized;
+      });
+    } catch (error) {
+      return Promise.reject(error);
+    }
   }
 }
