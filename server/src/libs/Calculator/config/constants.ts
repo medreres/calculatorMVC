@@ -1,5 +1,5 @@
 export const defaultConstants = {
   PI: Math.PI,
-  E: Math.E,
+  e: Math.E,
   G: 9.81,
 };

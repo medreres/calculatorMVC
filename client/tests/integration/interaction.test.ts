@@ -1,62 +1,27 @@
-import { initializeApp } from "./utils";
+import { connectionFailed, initializeApp } from "./utils";
+const input = document.querySelector("input") as HTMLInputElement;
 
 describe("Interaction", () => {
   initializeApp();
 
   it("Click on button changes input", () => {
-    // arrange
     const button = document.querySelector(".btn-light") as HTMLButtonElement;
-    const input = document.querySelector("input") as HTMLInputElement;
 
-    // act
     button.click();
-
-    // assert
 
     expect(input.value).toBe(button.value);
   });
 
-  // click on clear button clears the input
   it("Click on clear button clears input", () => {
-    // arrange
     const button = document.querySelector(".btn-light") as HTMLButtonElement;
     const clearButton = document.querySelector(".all-clear") as HTMLButtonElement;
-    const input = document.querySelector("input") as HTMLInputElement;
 
-    // act
     button.click();
     expect(input.value).toBe(button.value);
 
-    // assert
     clearButton.click();
     expect(input.value).toBe("");
   });
-
-  // TODO how to implement
-  // it("Click on evaluate button evaluates the input", async () => {
-  //   const calcBtn = document.querySelector(".equal-sign") as HTMLButtonElement;
-  //   const clearButton = document.querySelector(".all-clear") as HTMLButtonElement;
-  //   const input = document.querySelector("input") as HTMLInputElement;
-  //   const expr = ["7", "+", "3"];
-  //   expr.forEach((symbol) => {
-  //     (document.querySelector(`button[value="${symbol}"]`) as HTMLButtonElement).click();
-  //   });
-
-  //   // console.log((document.querySelector(".equal-sign") as any).disabled);
-
-  //   // act
-
-  //   await new Promise<void>((resolve, reject) => {
-  //     setTimeout(() => {
-  //       console.log(calcBtn.disabled);
-  //       resolve();
-  //     }, 1000);
-  //   });
-  //   //  = false;
-  //   // calcBtn.click();
-
-  //   console.log(input.value);
-  // });
 });
 
 describe("Rendering", () => {
@@ -75,7 +40,25 @@ describe("Rendering", () => {
     expect(additionalOperationContainer.style.display).not.toBe("none");
   });
 
-  // TODO banner of absence of connection is shown
+  it("Banner of absence of connection to server is shown", () => {
+    connectionFailed();
 
-  // TODO history is shown and clickable
+    const alert = document.querySelector(".alert");
+
+    expect(alert).not.toBeNull();
+  });
+
+  it("Banner of absence of connection to server is shown", () => {
+    connectionFailed();
+
+    const alert = document.querySelector(".alert");
+
+    expect(alert).not.toBeNull();
+  });
+
+  it("History is shown", async () => {
+    const historyBtn = document.querySelector("button[value='1+2']") as HTMLButtonElement;
+
+    expect(historyBtn).not.toBeNull();
+  });
 });

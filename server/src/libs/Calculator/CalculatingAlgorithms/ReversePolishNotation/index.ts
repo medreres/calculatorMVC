@@ -1,10 +1,10 @@
+import { IParams } from "./interfaces";
+import { handleParenthesis, evaluateExpression, performResidualOperations } from "./services";
 import { Operations } from "../../config";
 import { Constant } from "../../interfaces";
 import ExpressionParser from "../../utils/ExpressionParser";
 import Operation from "../../utils/Operation";
 import ICalculatingAlgorithm from "../interface";
-import { IParams } from "./interfaces";
-import { handleParenthesis, evaluateExpression, performResidualOperations } from "./services";
 
 /**
  * @description Shunting Yard Algorithm, parses expression, splits it into operands

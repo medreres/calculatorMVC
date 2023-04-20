@@ -1,8 +1,9 @@
-import Operation from "../Operation";
-import ExpressionParser from ".";
+import { functionRegex, numberRegexRaw, Operations, parenthesesSetRegexRaw } from "../../config";
 import { Constants } from "../../interfaces";
+import Operation from "../Operation";
 import { Notation } from "../Operation/interfaces";
-import { numberRegexRaw, parenthesesSetRegexRaw, Operations, functionRegex } from "../../config";
+
+import ExpressionParser from ".";
 
 export interface ParsedOperation {
   operationSymbol: string;
@@ -12,15 +13,13 @@ export interface ParsedOperation {
 export function performOperation(this: ExpressionParser, exp: string, op: Operation) {
   const regex = makeRegex(op, "g");
 
-  try {
-    const operands = regex
-      .exec(exp)!
-      .slice(1)
-      .map((number) => +number);
-    return op.evaluate(...operands);
-  } catch (error) {
+  const operands = regex.exec(exp);
+
+  if (!operands) {
     throw new SyntaxError("Invalid expression");
   }
+
+  return op.evaluate(...operands.map((number) => +number));
 }
 
 export function createExpressionValidityRegex(this: ExpressionParser) {
@@ -92,7 +91,7 @@ export function updateRegex(this: ExpressionParser) {
 export function makeRegex(op: Operation, option?: string) {
   let regexRaw;
 
-  const escapeSymbol = /\w/.test(op!.symbol) ? "" : `\\`;
+  const escapeSymbol = /\w/.test(op.symbol) ? "" : `\\`;
 
   /**
    * ${numberRegexRaw} - ensures previous symbol is a number
@@ -138,7 +137,7 @@ export function getRegex(this: ExpressionParser): RegExp {
 }
 
 export function parseFunctions(this: ExpressionParser, expression: string): ParsedOperation[] {
-  let result: ParsedOperation[] = [];
+  const result: ParsedOperation[] = [];
 
   /**
    * gets all functions names and combines them using alternate (|) operation,
@@ -166,7 +165,7 @@ export function parseFunctions(this: ExpressionParser, expression: string): Pars
 }
 
 export function parseSimpleOperations(this: ExpressionParser, expression: string): ParsedOperation[] {
-  let result: ParsedOperation[] = [];
+  const result: ParsedOperation[] = [];
   const simpleOperationsRegex = getRegex.call(this);
 
   let match: RegExpExecArray | null = null;

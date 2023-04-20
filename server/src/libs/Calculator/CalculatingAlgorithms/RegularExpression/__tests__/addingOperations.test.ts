@@ -1,9 +1,10 @@
-import Operation from "../../../utils/Operation";
-import { Notation } from "../../../utils/Operation/interfaces";
 import { initializeCalculator } from "./utils";
+
+import Operation, { Notation } from "@/libs/Calculator/utils/Operation";
 
 const calc = initializeCalculator();
 
+// FIXME g in sign could potentially be replaced sign -> si9.81n
 describe("Adding operations", () => {
   test("Adding sign", () => {
     const operation = new Operation({
@@ -14,7 +15,7 @@ describe("Adding operations", () => {
     });
     calc.addOperation(operation);
 
-    let result = calc.evaluate("sign 10");
+    const result = calc.evaluate("sign 10");
 
     expect(result).toEqual(1);
   });

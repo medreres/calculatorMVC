@@ -1,6 +1,7 @@
-import { evaluateValidator, getExpressionsValidator } from "./services";
 import { Router } from "express";
-import { evaluate, getOperations, getConstants, getExpressions } from "../controller";
+
+import { evaluateValidator, getExpressionsValidator } from "./services";
+import { evaluate, getConstants, getExpressions, getOperations } from "../controller";
 
 const router = Router();
 
