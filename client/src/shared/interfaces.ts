@@ -1,8 +1,13 @@
-import { Events } from "./events";
+import { IModelEvents, IViewEvents } from "./events";
+
+type GenericEventType = IViewEvents | IModelEvents;
 
 export interface IObserver {
-  on(event: Events, callback: Function): void;
-  notify(events: Events, data?: any): void;
+  notify<EventName extends keyof GenericEventType>(event: EventName, data: GenericEventType[EventName]): void;
+  on<EventName extends keyof GenericEventType>(
+    event: EventName,
+    callback: (arg: GenericEventType[EventName]) => void
+  ): void;
 }
 
 export interface IConstant {

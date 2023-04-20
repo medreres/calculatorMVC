@@ -1,7 +1,8 @@
-import Operation from "../../utils/Operation";
-import Evaluator from ".";
-import { Operations } from "../../config";
 import { IParams } from "./interfaces";
+import { Operations } from "../../config";
+import Operation from "../../utils/Operation";
+
+import Evaluator from ".";
 
 /**
  * @description takes last operation from operation stack and performs it
@@ -36,11 +37,12 @@ export function performOperation({ numberStack, operation }: IParams): number {
   }
 
   // reverse because operands come in reverse order
-  return operation!.evaluate(...(operands.reverse() as number[]));
+  return +operation!.evaluate(...(operands.reverse() as number[]));
 }
 
 export function handleParenthesis(params: IParams) {
-  let { symbol, operatorStack } = params;
+  let { symbol } = params;
+  const { operatorStack } = params;
 
   // just push to the operators stack and wait until closing parenthesis occurs
   if (symbol === Operations.LEFT_PARENTHESIS) {
@@ -68,7 +70,7 @@ export function handleParenthesis(params: IParams) {
 }
 
 export function evaluateExpression(params: IParams) {
-  let { operation, operatorStack, getOperation } = params;
+  const { operation, operatorStack, getOperation } = params;
 
   if (operatorStack.length === 0) {
     return operatorStack.push(operation!.symbol);

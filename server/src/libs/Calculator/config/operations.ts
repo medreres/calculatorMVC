@@ -1,4 +1,4 @@
-import Operation, { Notation } from "../utils/Operation";
+import Operation, { IOperation, Notation } from "../utils/Operation";
 
 export enum Operations {
   ADDITION = "+",
@@ -18,12 +18,6 @@ export enum Operations {
   SQRT = "√",
 }
 
-interface IOperation {
-  symbol: string;
-  precedence: number;
-  notation: Notation;
-  evaluate: Function;
-}
 const operations: IOperation[] = [
   {
     symbol: Operations.LEFT_PARENTHESIS,

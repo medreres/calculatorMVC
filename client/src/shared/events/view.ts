@@ -1,13 +1,29 @@
+import { IOperation } from "../interfaces";
+
 export enum ViewEvents {
-  VIEW_INPUT_CHANGED = "viewInputChanged",
-  VIEW_SET_INPUT = "viewSetInput",
-  VIEW_INVALID_INPUT = "viewInvalidInput",
-  VIEW_VALID_INPUT = "viewValidInput",
+  INPUT_CHANGED = "viewInputChanged",
+  SET_INPUT = "viewSetInput",
+  INVALID_INPUT = "viewInvalidInput",
+  VALID_INPUT = "viewValidInput",
 
-  VIEW_CALCULATE = "viewCalculate",
-  VIEW_ADD_BUTTONS = "viewAddButtons",
+  CALCULATE = "viewCalculate",
+  ADD_BUTTONS = "viewAddButtons",
 
-  VIEW_RENDER_OPERATIONS = "viewRenderOperations",
-  VIEW_RENDER_HISTORY = "viewRenderHistory",
-  VIEW_RENDER = "viewRender",
+  RENDER_OPERATIONS = "viewRenderOperations",
+  RENDER_HISTORY = "viewRenderHistory",
+  RENDER = "viewRender",
+}
+
+export interface IViewEvents {
+  [ViewEvents.INPUT_CHANGED]: string;
+  [ViewEvents.SET_INPUT]: string;
+  [ViewEvents.INVALID_INPUT]: void;
+  [ViewEvents.VALID_INPUT]: void;
+
+  [ViewEvents.CALCULATE]: void;
+  [ViewEvents.ADD_BUTTONS]: void;
+
+  [ViewEvents.RENDER_OPERATIONS]: string[];
+  [ViewEvents.RENDER_HISTORY]: IOperation[];
+  [ViewEvents.RENDER]: void;
 }

@@ -18,7 +18,7 @@ Response object:
 
 ## POST evaluate
 
-`POST /evaluate` - evaluates math expression given via expression param
+`POST /expression` - evaluates math expression given via expression param
 
 ```ts
 body: {
@@ -53,8 +53,13 @@ Response object:
 
 ## GET expressions
 
-`GET /expressions?limit=<number>` - returns a list of available operations with optional limit,
-that specifies max number of expressions to be returned
+`GET /expressions`  - Returns expressions saved in db.
+Params:
+`limit=<number>` - max number of documents to be returned
+`sort=<key:value>` - sorts documents by key, value could either 'asc' or 'desc'
+`skip=<number>` - skips n number of document
+
+
 
 Response object:
 
@@ -62,7 +67,7 @@ Response object:
 {
   data: [
     {
-      _id: "6433c20a9db5dd90e7a95bad",
+      id: "6433c20a9db5dd90e7a95bad",
       createdAt: "2023-04-10T08:00:10.242Z",
       updatedAt: "2023-04-10T08:00:10.242Z",
       expression: "1262-123",

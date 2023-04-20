@@ -1,26 +1,25 @@
-import dotenv from "dotenv";
-dotenv.config();
 import cors from "cors";
-import express from "express";
+import { config } from "dotenv";
+config();
+import express, { json, urlencoded } from "express";
+
 import { calculatorRoutes } from "./api/modules/calculator/router";
-import MongoDB from "./libs/MongoDB";
+import { DB, DB_URL, PORT } from "./config";
 import logger from "./logger";
 
 const app = express();
-app.use(express.json()); // to support JSON-encoded bodies
-app.use(express.urlencoded({ extended: true }));
+app.use(json()); // to support JSON-encoded bodies
+app.use(urlencoded({ extended: true }));
 app.use(cors({ origin: "*" }));
 
 app.use(calculatorRoutes);
 
-MongoDB.connect(process.env.DB_URL as string)
+DB.connect(DB_URL)
   .then(() => {
-    logger.info("db connected");
+    logger.info("Db connected.");
 
-    const port = process.env.SERVER_PORT || 7890;
-
-    app.listen(port, () => {
-      logger.info(`Server listening on ${port}`);
+    app.listen(PORT, () => {
+      logger.info(`Server listening on ${PORT}.`);
     });
   })
   .catch((err) => {

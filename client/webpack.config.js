@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const Dotenv = require("dotenv-webpack");
 
 module.exports = {
@@ -23,6 +24,7 @@ module.exports = {
     ],
   },
   resolve: {
+    plugins: [new TsconfigPathsPlugin()],
     extensions: [".tsx", ".ts", ".js"],
   },
   output: {
@@ -42,6 +44,6 @@ module.exports = {
       directory: path.join(__dirname, "public"),
     },
     compress: true,
-    port: 4123,
+    port: 4150,
   },
 };

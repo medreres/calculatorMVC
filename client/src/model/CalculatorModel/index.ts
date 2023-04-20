@@ -1,14 +1,11 @@
-import Observer from "../../lib/Observer";
 import ICalculatorModel from "../interface";
-import { IObserver, IOperation } from "../../shared/interfaces";
 import { initializeObservers } from "./services";
-import { Events } from "../../shared/events";
-import { removeSpaces } from "../../shared/utils";
-import { MainOperations } from "../../shared/operations";
-import { HISTORY_SIZE } from "../../config";
 import { containsOperations, isInputValid } from "./utils";
+import { HISTORY_SIZE } from "@/config";
+import Observer from "@/lib/Observer";
+import { IModelEvents, IOperation, MainOperations, ModelEvents, removeSpaces } from "@/shared";
 
-class CalculatorModel implements ICalculatorModel, IObserver {
+class CalculatorModel implements ICalculatorModel {
   private expression: string;
   private observer: Observer = Observer.getInstance();
   protected operations: string[];
@@ -31,9 +28,9 @@ class CalculatorModel implements ICalculatorModel, IObserver {
     const isValid = isInputValid(expression, this.operations);
 
     if (isValid) {
-      this.notify(Events.MODEL_VALID_INPUT);
+      this.notify(ModelEvents.VALID_INPUT);
     } else {
-      this.notify(Events.MODEL_INVALID_INPUT);
+      this.notify(ModelEvents.INVALID_INPUT);
     }
   }
 
@@ -67,18 +64,18 @@ class CalculatorModel implements ICalculatorModel, IObserver {
 
   calculate() {
     if (containsOperations.call(this, this.expression)) {
-      this.notify(Events.MODEL_CALCULATE_REQUEST, this.expression);
+      this.notify(ModelEvents.CALCULATE_REQUEST, this.expression);
     } else {
-      this.notify(Events.MODEL_INVALID_INPUT);
+      this.notify(ModelEvents.INVALID_INPUT);
     }
   }
 
   //------ Observers
-  on(event: Events, callback: Function): void {
+  on<EventName extends keyof IModelEvents>(event: EventName, callback: (arg: IModelEvents[EventName]) => void): void {
     this.observer.on(event, callback);
   }
 
-  notify(event: Events, data?: any): void {
+  notify<EventName extends keyof IModelEvents>(event: EventName, data?: IModelEvents[EventName]): void {
     this.observer.notify(event, data);
   }
 }

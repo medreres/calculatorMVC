@@ -1,10 +1,1 @@
-import MongoDB, { GenericInterface } from "../../../../libs/MongoDB";
-
-type ExpressionAttributes = {
-  expression: GenericInterface<string>;
-  result: GenericInterface<number>;
-};
-
-const Expression = MongoDB.model<ExpressionAttributes>("Expression");
-
-export default Expression;
+export { default as Expression } from "./Expression";

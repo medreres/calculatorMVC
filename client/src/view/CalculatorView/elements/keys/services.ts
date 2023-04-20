@@ -1,7 +1,7 @@
 import { getButtonClasses, getInnerHtml, createButton } from ".";
 import CalculatorView from "../..";
 import { buttonValues, Actions } from "../../config";
-import { btnClickHandler } from "../../utils/handlers";
+import { btnClickHandler } from "../../utils";
 import { ICreateButton } from "./interface";
 
 interface ButtonsContainer {

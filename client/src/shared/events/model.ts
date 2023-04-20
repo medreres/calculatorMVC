@@ -1,16 +1,35 @@
+import { IOperation } from "../interfaces";
+
 export enum ModelEvents {
-  MODEL_CHANGE_INPUT = "changeModelInput",
-  MODEL_INVALID_INPUT = "modelInvalidInput",
-  MODEL_VALID_INPUT = "modelValidInput",
+  CHANGE_INPUT = "changeModelInput",
+  INVALID_INPUT = "modelInvalidInput",
+  VALID_INPUT = "modelValidInput",
 
-  MODEL_CALCULATE = "modelCalculate",
-  MODEL_CALCULATED = "modelCalculated",
+  CALCULATE = "modelCalculate",
+  CALCULATED = "modelCalculated",
 
-  MODEL_OPERATIONS_FETCHED = "modelOperationsFetched",
-  MODEL_HISTORY_FETCHED = "viewHistoryFetch",
+  OPERATIONS_FETCHED = "modelOperationsFetched",
+  HISTORY_FETCHED = "viewHistoryFetch",
 
-  MODEL_RENDER_HISTORY = "modelRendererHistory",
-  MODEL_ADD_HISTORY = "modelAddHistory",
+  RENDER_HISTORY = "modelRendererHistory",
+  ADD_HISTORY = "modelAddHistory",
 
-  MODEL_CALCULATE_REQUEST = "modelCalculateRequest",
+  CALCULATE_REQUEST = "modelCalculateRequest",
+}
+
+export interface IModelEvents {
+  [ModelEvents.CHANGE_INPUT]: string;
+  [ModelEvents.INVALID_INPUT]: string;
+  [ModelEvents.VALID_INPUT]: string;
+
+  [ModelEvents.CALCULATE]: string;
+  [ModelEvents.CALCULATED]: string;
+
+  [ModelEvents.OPERATIONS_FETCHED]: string[];
+  [ModelEvents.HISTORY_FETCHED]: IOperation[];
+
+  [ModelEvents.RENDER_HISTORY]: IOperation[];
+  [ModelEvents.ADD_HISTORY]: IOperation;
+
+  [ModelEvents.CALCULATE_REQUEST]: string;
 }

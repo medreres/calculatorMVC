@@ -1,42 +1,40 @@
+import { GeneralEvents, ModelEvents, ViewEvents } from "@/shared";
 import CalculatorController from ".";
-import { Events } from "../../shared/events";
-import { IOperation } from "../../shared/interfaces";
-import { calculateRequestHandler } from "./utils/handlers";
-import { fetchHistory, fetchOperationsSymbols } from "./utils/requests";
+import { calculateRequestHandler, fetchHistory, fetchOperationsSymbols } from "./utils";
 
 export function initializeObservers(this: CalculatorController) {
-  this.on(Events.VIEW_INPUT_CHANGED, (inputValue: string) => this.notify(Events.MODEL_CHANGE_INPUT, inputValue));
+  this.on(ViewEvents.INPUT_CHANGED, (inputValue: string) => this.notify(ModelEvents.CHANGE_INPUT, inputValue));
 
-  this.on(Events.VIEW_CALCULATE, () => this.notify(Events.MODEL_CALCULATE));
+  this.on(ViewEvents.CALCULATE, () => this.notify(ModelEvents.CALCULATE));
 
-  this.on(Events.MODEL_INVALID_INPUT, () => this.notify(Events.VIEW_INVALID_INPUT));
+  this.on(ModelEvents.INVALID_INPUT, () => this.notify(ViewEvents.INVALID_INPUT));
 
-  this.on(Events.MODEL_VALID_INPUT, () => this.notify(Events.VIEW_VALID_INPUT));
+  this.on(ModelEvents.VALID_INPUT, () => this.notify(ViewEvents.VALID_INPUT));
 
-  this.on(Events.MODEL_CALCULATED, (value: string) => this.notify(Events.VIEW_SET_INPUT, value));
+  this.on(ModelEvents.CALCULATED, (value: string) => this.notify(ViewEvents.SET_INPUT, value));
 
-  this.on(Events.MODEL_RENDER_HISTORY, (value: IOperation[]) => this.notify(Events.VIEW_RENDER_HISTORY, value));
+  this.on(ModelEvents.RENDER_HISTORY, (value) => this.notify(ViewEvents.RENDER_HISTORY, value));
 
-  this.on(Events.MODEL_CALCULATE_REQUEST, calculateRequestHandler.bind(this));
+  this.on(ModelEvents.CALCULATE_REQUEST, calculateRequestHandler.bind(this));
 }
 
 export function initializeHistory(this: CalculatorController) {
   fetchHistory()
     .then((data) => {
-      this.notify(Events.MODEL_HISTORY_FETCHED, data);
+      this.notify(ModelEvents.HISTORY_FETCHED, data);
     })
     .catch(() => {
-      this.notify(Events.CONNECTION_FAILED);
+      this.notify(GeneralEvents.CONNECTION_FAILED);
     });
 }
 
 export function initializeExpressions(this: CalculatorController) {
   fetchOperationsSymbols()
     .then((symbols) => {
-      this.notify(Events.MODEL_OPERATIONS_FETCHED, symbols);
-      this.notify(Events.VIEW_RENDER_OPERATIONS, symbols);
+      this.notify(ModelEvents.OPERATIONS_FETCHED, symbols);
+      this.notify(ViewEvents.RENDER_OPERATIONS, symbols);
     })
     .catch(() => {
-      this.notify(Events.CONNECTION_FAILED);
+      this.notify(GeneralEvents.CONNECTION_FAILED);
     });
 }

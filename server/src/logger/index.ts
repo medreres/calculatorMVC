@@ -1,18 +1,28 @@
-import { dev, production } from "./loggers";
+import winston, { createLogger, format, transports } from "winston";
 
-const initializeLogger = () => {
-  switch (process.env.NODE_ENV) {
-    case "production":
-      return production;
+import { NODE_ENV } from "@/config";
+const { combine, timestamp, printf, colorize, json } = format;
 
-    case "development":
-      return dev;
+const myFormat = printf(({ level, message, timestamp }) => {
+  return `${timestamp} [${level}] ${message}`;
+});
 
-    default:
-      return production;
-  }
-};
-
-let logger = initializeLogger();
+const logger = createLogger({
+  level: NODE_ENV === "production" ? "warning" : "info",
+  format: combine(
+    timestamp({
+      format: "YYYY-MM-DD HH:mm:ss",
+    }),
+    colorize(),
+    json(),
+    myFormat
+  ),
+  transports: [
+    new transports.Console(),
+    new winston.transports.File({ filename: "./logs/errors.log", level: "error" }),
+    new winston.transports.File({ filename: "./logs/warnings.log", level: "warning" }),
+    new winston.transports.File({ filename: "./logs/info.log", level: "info" }),
+  ],
+});
 
 export default logger;

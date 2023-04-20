@@ -8,4 +8,5 @@ export enum Errors {
 
   // validation errors
   INVALID_LIMIT = "Please provide valid limit for expressions(1-50)",
+  INVALID_SORT = "Please provide valid sort for expressions. For example: updatedAt",
 }

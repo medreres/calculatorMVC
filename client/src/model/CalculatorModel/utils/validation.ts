@@ -1,5 +1,5 @@
+import { AdditionalOperations } from "@/shared";
 import CalculatorModel from "..";
-import { AdditionalOperations } from "../../../shared/operations";
 import { simpleValidityRegex } from "./regex";
 
 let validityRegex: RegExp;

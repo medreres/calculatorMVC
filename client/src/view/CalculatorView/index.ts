@@ -1,3 +1,6 @@
+import Observer from "@/lib/Observer";
+import { IViewEvents } from "@/shared";
+import ICalculatorView from "../interface";
 import {
   createExpressionInput,
   expressionInputSubmitHandler,
@@ -6,14 +9,11 @@ import {
   createAdditionalButtons,
   createButtonsContainer,
   createScientificViewButton,
-} from "./utils";
-import Observer from "../../lib/Observer";
-import { IObserver, Events } from "../../shared";
-import ICalculatorView from "../interface";
+} from "./elements";
 import { initializeObservers } from "./services";
 import "./styles.css";
 
-class CalculatorView implements ICalculatorView, IObserver {
+class CalculatorView implements ICalculatorView {
   private observer: Observer = Observer.getInstance();
   protected container: HTMLDivElement;
   protected expressionInput: HTMLInputElement;
@@ -61,11 +61,11 @@ class CalculatorView implements ICalculatorView, IObserver {
     return this.expressionInput.value;
   }
 
-  on(event: Events, callback: Function): void {
+  on<EventName extends keyof IViewEvents>(event: EventName, callback: (arg: IViewEvents[EventName]) => void): void {
     this.observer.on(event, callback);
   }
 
-  notify(event: Events, data?: any): void {
+  notify<EventName extends keyof IViewEvents>(event: EventName, data?: IViewEvents[EventName]): void {
     this.observer.notify(event, data);
   }
 
